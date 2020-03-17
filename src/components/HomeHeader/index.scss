@@ -1,0 +1,40 @@
+.HomeHeader {
+  height: 55px;
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .tabs {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    a {
+      display: inline-block;
+      width: 60px;
+      height: 32px;
+      line-height: 32px;
+      text-align: center;
+      color: #5c5b5b;
+    }
+    a.active {
+      color: black;
+      font-size: 17px;
+      font-weight: 700;
+    }
+  }
+  .icon-caidan {
+    font-size: 20px;
+  }
+  .icon-souduo {
+    font-size: 20px;
+  }
+}
