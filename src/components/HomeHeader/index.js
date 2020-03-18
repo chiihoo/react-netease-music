@@ -13,7 +13,7 @@ const HomeHeader = () => {
           <Link to="/home/my" className={classNames({ active: pathname === '/home/my' })}>
             我的
           </Link>
-          <Link to="/home" className={classNames({ active: pathname === '/home' })}>
+          <Link to="/home/find" className={classNames({ active: pathname === '/home/find' })}>
             发现
           </Link>
           <Link to="/home/yuncun" className={classNames({ active: pathname === '/home/yuncun' })}>

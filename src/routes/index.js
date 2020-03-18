@@ -4,13 +4,13 @@ import Home from '../containers/Home'
 import Find from '../containers/Find'
 
 const routes = [
-  { path: '/', exact: true, render: () => <Redirect to="/home" /> },
+  { path: '/', exact: true, render: () => <Redirect to="/home/find" /> },
   {
     path: '/home',
     component: Home,
     routes: [
       {
-        path: '/home',
+        path: '/home/find',
         exact: true,
         component: () => <Find />
       },
@@ -26,7 +26,7 @@ const routes = [
       },
       {
         path: '*',
-        render: () => <Redirect to="/home" />
+        render: () => <Redirect to="/home/find" />
       }
     ]
   },
@@ -36,7 +36,7 @@ const routes = [
   },
   {
     path: '*',
-    render: () => <Redirect to="/home" />
+    render: () => <Redirect to="/home/find" />
   }
 ]
 
