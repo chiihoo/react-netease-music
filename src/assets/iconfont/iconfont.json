@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4691064",
+      "name": "菜单",
+      "font_class": "toggle",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
       "icon_id": "11782956",
       "name": "点赞",
       "font_class": "zan",
@@ -43,7 +50,7 @@
     {
       "icon_id": "8685512",
       "name": "娱乐_音乐电台",
-      "font_class": "yule_yinlediantai",
+      "font_class": "diantai",
       "unicode": "e66d",
       "unicode_decimal": 58989
     },

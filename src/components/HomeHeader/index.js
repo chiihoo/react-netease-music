@@ -20,7 +20,9 @@ const HomeHeader = () => {
             云村
           </Link>
         </div>
-        <i className="iconfont icon-sousuo"></i>
+        <Link to="/search">
+          <i className="iconfont icon-sousuo"></i>
+        </Link>
       </div>
     </div>
   )

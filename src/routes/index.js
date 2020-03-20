@@ -23,21 +23,41 @@ const routes = [
         path: '/home/yuncun',
         exact: true,
         component: () => <>yuncun</>
-      },
-      {
-        path: '*',
-        render: () => <Redirect to="/home/find" />
       }
+      // {
+      //   path: '*',
+      //   render: () => <Redirect to="/home/find" />
+      // }
     ]
   },
   {
-    path: '/search',
-    component: () => <>search</>
+    path: '/play',
+    component: () => <>播放页面</>
   },
   {
-    path: '*',
-    render: () => <Redirect to="/home/find" />
+    path: '/search',
+    component: () => <>搜索</>
+  },
+  {
+    path: '/recommend/taste', //日推
+    component: () => <>日推</>
+  },
+  {
+    path: '/playlist',
+    component: () => <>歌单</>
+  },
+  {
+    path: '/toplist',
+    component: () => <>排行榜</>
+  },
+  {
+    path: '/radio',
+    component: () => <>电台</>
   }
+  // {
+  //   path: '*',
+  //   render: () => <Redirect to="/home/find" />
+  // }
 ]
 
 export default routes

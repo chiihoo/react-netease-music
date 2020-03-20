@@ -1,0 +1,53 @@
+.slider-container {
+  .swiper-slide {
+    text-align: center;
+    .slider-img-wrapper {
+      width: 92%;
+      margin: 0 auto;
+      position: relative;
+      display: inline-block;
+      height: 100%;
+      .slider-img {
+        width: 100%;
+        border-radius: 7px;
+        vertical-align: bottom; // 消除图片下方的空隙
+        // display: block;
+      }
+      .slider-img-typeTitle {
+        color: #fff;
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+        border-radius: 7px 0;
+        padding: 3px 10px;
+        font-size: 13px;
+        opacity: 0.85;
+      }
+      .typeTitle-red {
+        background-color: #ec2929;
+      }
+      .typeTitle-blue {
+        background-color: #3576df;
+      }
+    }
+  }
+  .swiper-container {
+    .swiper-pagination {
+      bottom: 5px;
+      width: 136px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 12px;
+      line-height: 7px;
+      .swiper-pagination-bullet {
+        width: 7px;
+        height: 7px;
+        outline: none;
+        background-color: #fff;
+      }
+      .swiper-pagination-bullet-active {
+        background-color: #ff3a3a;
+      }
+    }
+  }
+}
