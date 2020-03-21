@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Scroll from '../../components/Scroll'
 import Slider from '../../components/Slider'
-import { getBannerRequest } from '../../api'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { createSelector } from 'reselect'
+import { actions } from './store'
 import './index.scss'
 import 'swiper/css/swiper.css'
 
-const Find = () => {
-  const [bannerList, setBannerList] = useState()
+const Find = props => {
+  const dispatch = useDispatch()
+
+  // Find是最上层store里面定义的 Find: FindReducer
+  // const bannerList = useSelector(state => state.Find.bannerList)
+  const selectBannerList = useMemo(
+    () =>
+      createSelector(
+        state => state.Find.bannerList,
+        items => items
+      ),
+    []
+  )
+  const bannerList = useSelector(selectBannerList)
+
   useEffect(() => {
-    ;(async () => {
-      const bannerData = await getBannerRequest()
-      setBannerList(bannerData.banners)
-    })()
-  }, [])
-  const history = useHistory()
+    dispatch(actions.fetchBannerList())
+  }, [dispatch])
+
   return (
     <Scroll>
       <div className="Find">
-        {bannerList && <Slider bannerList={bannerList}></Slider>}
+        {bannerList.length > 0 && <Slider bannerList={bannerList}></Slider>}
         <div className="Find-nav">
           <Link to="/recommend/taste">
             <i className="iconfont icon-rili"></i>

@@ -9,12 +9,17 @@
     "axios": "^0.19.2",
     "better-scroll": "^1.15.2",
     "classnames": "^2.2.6",
+    "immer": "^6.0.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-id-swiper": "^3.0.0",
+    "react-redux": "^7.2.0",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "swiper": "^5.3.6"
   },
   "scripts": {
