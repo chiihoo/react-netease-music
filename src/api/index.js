@@ -1,5 +1,9 @@
 import axios from '../utils/axios'
 
 export const getBannerRequest = () => {
-  return axios.get('http://localhost:3001/banner?type=1')
+  return axios.get('/banner?type=1')
+}
+
+export const getHotwallRequest = () => {
+  return axios.get('/comment/hotwall/list')
 }

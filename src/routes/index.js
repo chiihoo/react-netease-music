@@ -18,12 +18,12 @@ const routes = [
         path: '/home/my',
         exact: true,
         component: () => <>my</>
-      },
-      {
-        path: '/home/yuncun',
-        exact: true,
-        component: () => <>yuncun</>
       }
+      // {
+      //   path: '/home/yuncun',
+      //   exact: true,
+      //   component: () => <>yuncun</>
+      // }
       // {
       //   path: '*',
       //   render: () => <Redirect to="/home/find" />
@@ -53,6 +53,10 @@ const routes = [
   {
     path: '/radio',
     component: () => <>电台</>
+  },
+  {
+    path: '/hotwall',
+    component: () => <>云村热评墙</>
   }
   // {
   //   path: '*',

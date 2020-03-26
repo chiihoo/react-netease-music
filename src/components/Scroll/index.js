@@ -9,9 +9,11 @@ const Scroll = props => {
   const scrollRef = useRef()
 
   useEffect(() => {
-    const scrollInstance = new BScroll(scrollRef.current, { click: true })
+    const scrollInstance = new BScroll(scrollRef.current, {
+      click: true,
+      mouseWheel: true
+    })
     setScroll(scrollInstance)
-    // console.log(scroll)
     return () => {
       setScroll(null)
     }

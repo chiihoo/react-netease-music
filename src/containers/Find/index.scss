@@ -1,25 +1,26 @@
 .Find {
-  // background-color: rgba(0, 0, 0, 0.05);
   padding-top: 10px;
-  .Find-nav {
-    margin-top: 13px;
+  .find-nav {
+    width: 345px;
+    margin: 13px auto 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     text-align: center;
     a {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      height: 60px;
+      height: 65px;
       i {
-        font-size: 24px;
+        font-size: 28px;
         display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
+        width: 45px;
+        height: 45px;
+        line-height: 45px;
         border-radius: 100%;
-        background-image: linear-gradient(to right, rgba(255, 58, 58, 0.8), #ff2222);
+        // background-image: linear-gradient(to right, rgba(255, 58, 58, 0.8), #fd1d11);
+        background-image: linear-gradient(to right, #f87266, #fd1d11);
         color: #fff;
       }
       i.icon-paihangbang {
@@ -29,5 +30,9 @@
         font-size: 12px;
       }
     }
+  }
+  .hotwall-nav {
+    width: 345px;
+    margin: 13px auto 0;
   }
 }

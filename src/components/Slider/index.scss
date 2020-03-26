@@ -2,11 +2,12 @@
   .swiper-slide {
     text-align: center;
     .slider-img-wrapper {
-      width: 92%;
+      width: 345px;
       margin: 0 auto;
       position: relative;
       display: inline-block;
       height: 100%;
+      border-radius: 7px;
       .slider-img {
         width: 100%;
         border-radius: 7px;
@@ -21,13 +22,13 @@
         border-radius: 7px 0;
         padding: 3px 10px;
         font-size: 13px;
-        opacity: 0.85;
+        opacity: 0.9;
       }
       .typeTitle-red {
-        background-color: #ec2929;
+        background-color: #e53738;
       }
       .typeTitle-blue {
-        background-color: #3576df;
+        background-color: #3686c2;
       }
     }
   }

@@ -1,0 +1,110 @@
+.HotwallNav {
+  width: 100%;
+  border-radius: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+  &::before {
+    // 模糊处理
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: inherit; // 要继承父元素的背景图
+    filter: blur(5px);
+    transform: scale(1.2); // 与父元素overflow: hidden结合起来，避免边缘没有模糊效果
+  }
+  &::after {
+    // 深色蒙版
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  a {
+    display: flex;
+    justify-content: space-around;
+    height: 85px;
+    border-radius: 8px;
+    color: #fff;
+    position: relative;
+    z-index: 10; // z-index只有在定位的情况下有效
+    .left-side {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 10px;
+      .title {
+        margin: 0;
+        padding-bottom: 10px;
+        font-weight: bold;
+        .icon-gengduo {
+          font-weight: lighter;
+        }
+      }
+      .text-marquee {
+        position: relative;
+        color: #d4d4d4;
+        height: 20px;
+        overflow: hidden;
+        .content-wrapper {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          position: absolute; //必须绝对定位
+          .avatar {
+            width: 15px;
+            height: 15px;
+            border-radius: 100%;
+            flex-shrink: 0;
+          }
+          .content {
+            padding-left: 5px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 11px;
+            overflow: hidden;
+          }
+        }
+        .marquee-wrapper-enter {
+          transform: translateY(-100%);
+        }
+        .marquee-wrapper-enter-active {
+          transform: translateY(0);
+          transition: all 350ms linear;
+        }
+        .marquee-wrapper-exit {
+          transform: translateY(0);
+        }
+        .marquee-wrapper-exit-active {
+          transform: translateY(100%);
+          transition: all 350ms linear;
+        }
+      }
+    }
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-right: 15px;
+      .month {
+        font-weight: 500;
+      }
+      .day {
+        font-weight: 500;
+        font-size: 27px;
+      }
+    }
+  }
+}

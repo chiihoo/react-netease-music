@@ -16,7 +16,7 @@
   }
   .tabs {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 200px;
     a {
       display: inline-block;
@@ -27,7 +27,7 @@
       color: #777676;
     }
     a.active {
-      color: black;
+      color: #282828;
       font-size: 17px;
       font-weight: 700;
     }
