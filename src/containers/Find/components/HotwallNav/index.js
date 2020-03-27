@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import useInterval from '../../hooks/useInterval'
+import useInterval from '../../../../hooks/useInterval'
+
 import './index.scss'
 
 const HotwallNav = props => {
@@ -12,7 +13,7 @@ const HotwallNav = props => {
 
   useEffect(() => {
     if (hotwallNavList) {
-      setCurrentItem(hotwallNavList[currentIndex])
+      setCurrentItem(hotwallNavList[0])
     }
   }, [hotwallNavList])
 

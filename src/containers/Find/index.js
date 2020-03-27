@@ -5,7 +5,7 @@ import { createSelector } from 'reselect'
 import { actions } from './store'
 import Scroll from '../../components/Scroll'
 import Slider from '../../components/Slider'
-import HotwallNav from '../../components/HotwallNav'
+import HotwallNav from './components/HotwallNav'
 import './index.scss'
 import 'swiper/css/swiper.css'
 
@@ -67,7 +67,6 @@ const Find = props => {
           </Link>
         </div>
         <div className="hotwall-nav">
-          {/* {hotwallNavList.length > 0 && <HotwallNav hotwallNavList={hotwallNavList} />} */}
           <HotwallNav hotwallNavList={hotwallNavList} />
         </div>
       </div>

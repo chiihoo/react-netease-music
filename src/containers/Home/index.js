@@ -1,5 +1,5 @@
 import React from 'react'
-import HomeHeader from '../../components/HomeHeader'
+import HomeHeader from './components/HomeHeader'
 import { renderRoutes } from 'react-router-config'
 import './index.scss'
 
