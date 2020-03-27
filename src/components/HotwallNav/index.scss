@@ -1,9 +1,6 @@
 .HotwallNav {
   width: 100%;
   border-radius: 8px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
   position: relative;
   overflow: hidden;
   &::before {
@@ -15,8 +12,12 @@
     bottom: 0;
     left: 0;
     background-image: inherit; // 要继承父元素的背景图
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     filter: blur(5px);
     transform: scale(1.2); // 与父元素overflow: hidden结合起来，避免边缘没有模糊效果
+    transition: background-image 1s;
   }
   &::after {
     // 深色蒙版
@@ -81,14 +82,14 @@
         }
         .marquee-wrapper-enter-active {
           transform: translateY(0);
-          transition: all 350ms linear;
+          transition: all 500ms linear;
         }
         .marquee-wrapper-exit {
           transform: translateY(0);
         }
         .marquee-wrapper-exit-active {
           transform: translateY(100%);
-          transition: all 350ms linear;
+          transition: all 500ms linear;
         }
       }
     }

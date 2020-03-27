@@ -41,7 +41,7 @@ const HotwallNav = props => {
           <div className="text-marquee">
             <TransitionGroup>
               {currentItem && (
-                <CSSTransition timeout={350} classNames="marquee-wrapper" key={currentItem.id}>
+                <CSSTransition timeout={500} classNames="marquee-wrapper" key={currentItem.id}>
                   <div className="content-wrapper">
                     <img className="avatar" src={currentItem.avatar} alt="avatar" />
                     <span className="content">{currentItem.content}</span>
