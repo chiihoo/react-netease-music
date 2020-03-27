@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import useInterval from '../../../../hooks/useInterval'
+import useInterval from '@/hooks/useInterval'
 
 import './index.scss'
 
