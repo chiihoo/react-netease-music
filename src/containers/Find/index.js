@@ -6,6 +6,7 @@ import { actions } from './store'
 import Scroll from '@/components/Scroll'
 import Slider from '@/components/Slider'
 import HotwallNav from './components/HotwallNav'
+import PlaylistRecommend from './components/PlaylistRecommend'
 import './index.scss'
 import 'swiper/css/swiper.css'
 
@@ -36,12 +37,22 @@ const Find = props => {
       ),
     []
   )
+  const selectRecommendPlaylists = useMemo(
+    () =>
+      createSelector(
+        state => state.Find.recommendPlaylists,
+        items => items
+      ),
+    []
+  )
   const bannerList = useSelector(selectBannerList)
   const hotwallNavList = useSelector(selectHotwallNavList)
+  const recommendPlaylists = useSelector(selectRecommendPlaylists)
 
   useEffect(() => {
     dispatch(actions.fetchBannerList())
     dispatch(actions.fetchHotwallList())
+    dispatch(actions.fetchRecommendPlaylist(6, '全部'))
   }, [dispatch])
 
   return (
@@ -68,6 +79,11 @@ const Find = props => {
         </div>
         <div className="hotwall-nav">
           <HotwallNav hotwallNavList={hotwallNavList} />
+        </div>
+        <div className="recommend-nav">
+          <div className="playlist-recommend">
+            <PlaylistRecommend recommendPlaylists={recommendPlaylists} />
+          </div>
         </div>
       </div>
     </Scroll>

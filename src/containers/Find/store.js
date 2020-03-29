@@ -1,35 +1,31 @@
 import produce from 'immer'
-import { getBannerRequest, getHotwallRequest } from '../../api'
+import { getBannerRequest, getHotwallRequest, getRecommendPlaylists } from '../../api'
 
 export const actionTypes = {
   CHANGE_BANNER_LIST: '/home/find/changeBannerList',
-  CHANGE_HOTWALL_LIST: '/home/find/changeHotwallList'
+  CHANGE_HOTWALL_LIST: '/home/find/changeHotwallList',
+  CHANGE_RECOMMENDPLAYLISTS: '/home/find/changeRecommendPlaylists'
 }
 
 export const actions = {
-  changeBannerList(data) {
-    return { type: actionTypes.CHANGE_BANNER_LIST, data }
-  },
-  changeHotwallList(data) {
-    return { type: actionTypes.CHANGE_HOTWALL_LIST, data }
-  },
-  // 在对象上定义方法不要用箭头函数，因为这样this不会指向该对象
-  // fetchBannerList: () => dispatch => {
-  //   getBannerRequest().then(data => {
-  //     dispatch(actions.changeBannerList(data))
-  //   })
-  // }
   fetchBannerList() {
     return dispatch => {
       getBannerRequest().then(data => {
-        dispatch(this.changeBannerList(data))
+        dispatch({ type: actionTypes.CHANGE_BANNER_LIST, data })
       })
     }
   },
   fetchHotwallList() {
     return dispatch => {
       getHotwallRequest().then(data => {
-        dispatch(this.changeHotwallList(data))
+        dispatch({ type: actionTypes.CHANGE_HOTWALL_LIST, data })
+      })
+    }
+  },
+  fetchRecommendPlaylist(...params) {
+    return dispatch => {
+      getRecommendPlaylists(...params).then(data => {
+        dispatch({ type: actionTypes.CHANGE_RECOMMENDPLAYLISTS, data })
       })
     }
   }
@@ -37,7 +33,8 @@ export const actions = {
 
 export const initState = {
   bannerList: [],
-  hotwallList: []
+  hotwallList: [],
+  recommendPlaylists: []
 }
 
 export const FindReducer = (state = initState, action) => {
@@ -49,6 +46,10 @@ export const FindReducer = (state = initState, action) => {
     case actionTypes.CHANGE_HOTWALL_LIST:
       return produce(state, state => {
         state.hotwallList = action.data.data
+      })
+    case actionTypes.CHANGE_RECOMMENDPLAYLISTS:
+      return produce(state, state => {
+        state.recommendPlaylists = action.data.playlists
       })
     default:
       return state

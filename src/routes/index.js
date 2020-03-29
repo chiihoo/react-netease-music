@@ -44,7 +44,11 @@ const routes = [
   },
   {
     path: '/playlist',
-    component: () => <>歌单</>
+    component: () => <>歌单广场</>
+  },
+  {
+    path: '/playlist/:id',
+    component: () => <>歌单详情页</>
   },
   {
     path: '/toplist',

@@ -6,6 +6,41 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "217421",
+      "name": "播放",
+      "font_class": "bofang5",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "4768123",
+      "name": "播放",
+      "font_class": "bofang4",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "3923362",
+      "name": "菜单",
+      "font_class": "caidan1",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "10601286",
+      "name": "放大镜",
+      "font_class": "sousuo",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "3080473",
+      "name": "播放",
+      "font_class": "bofang3",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
       "icon_id": "4691064",
       "name": "菜单",
       "font_class": "toggle",
@@ -316,7 +351,7 @@
     {
       "icon_id": "10263953",
       "name": "搜索",
-      "font_class": "sousuo",
+      "font_class": "sousuo2",
       "unicode": "e672",
       "unicode_decimal": 58994
     },

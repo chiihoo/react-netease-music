@@ -1,0 +1,33 @@
+.PlaylistItem {
+  width: 105px;
+  .img-wrapper {
+    position: relative;
+    .cover-img {
+      width: 105px;
+      height: 105px;
+      border-radius: 7px;
+    }
+    .play-count {
+      color: #fff;
+      font-size: 12px;
+      position: absolute;
+      top: 3px;
+      right: 6px;
+      .icon-bofang5 {
+        font-size: 9px;
+        position: relative;
+        bottom: 1px;
+      }
+      span {
+        padding-left: 2px;
+      }
+    }
+  }
+  .desc {
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
