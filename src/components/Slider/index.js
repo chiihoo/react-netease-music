@@ -1,6 +1,5 @@
 import React from 'react'
 import Swiper from 'react-id-swiper'
-import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 import './index.scss'
 import 'swiper/css/swiper.css'
@@ -20,12 +19,12 @@ const Slider = props => {
   }
 
   return (
-    <div className="slider-container">
+    <div className="Slider">
       <Swiper {...params}>
         {bannerList.map((item, index) => {
           return (
-            <div key={index} className="swiper-slide">
-              <Link to="/">
+            <div key={item.bannerId}>
+              <a href={item.url} target="_blank" rel="noopener noreferrer">
                 <div className="slider-img-wrapper">
                   <img src={item.pic} alt="" className="slider-img" />
                   <span
@@ -37,7 +36,7 @@ const Slider = props => {
                     {item.typeTitle}
                   </span>
                 </div>
-              </Link>
+              </a>
             </div>
           )
         })}

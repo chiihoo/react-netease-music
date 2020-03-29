@@ -1,4 +1,4 @@
-.slider-container {
+.Slider {
   .swiper-slide {
     text-align: center;
     .slider-img-wrapper {
@@ -34,7 +34,7 @@
   }
   .swiper-container {
     .swiper-pagination {
-      bottom: 5px;
+      bottom: 8px;
       width: 136px;
       left: 50%;
       transform: translateX(-50%);
