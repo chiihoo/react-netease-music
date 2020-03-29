@@ -13,10 +13,6 @@ module.exports = override(
       minPixelValue: 1, // (Number) Set the minimum pixel value to replace.
       mediaQuery: false // (Boolean) Allow px to be converted in media queries.
     }),
-    require('postcss-write-svg')({
-      // 主要用来处理移动端1px问题
-      utf8: false
-    }),
     require('cssnano')({
       // 主要用来压缩和清理CSS代码
       'cssnano-preset-advanced': {

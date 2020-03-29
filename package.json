@@ -49,7 +49,6 @@
     "customize-cra": "^0.9.1",
     "node-sass": "^4.13.1",
     "postcss-px-to-viewport": "^1.1.1",
-    "postcss-write-svg": "^3.0.1",
     "react-app-rewired": "^2.1.5"
   }
 }
