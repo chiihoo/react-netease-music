@@ -7,6 +7,7 @@ import Scroll from '@/components/Scroll'
 import Slider from '@/components/Slider'
 import HotwallNav from './components/HotwallNav'
 import PlaylistRecommend from './components/PlaylistRecommend'
+import SongAlbumRecommend from './components/SongAlbumRecommend'
 import './index.scss'
 import 'swiper/css/swiper.css'
 
@@ -45,14 +46,40 @@ const Find = props => {
       ),
     []
   )
+  const selectSceneRecommendPlaylists = useMemo(
+    () =>
+      createSelector(
+        state => state.Find.sceneRecommendPlaylists,
+        items => items
+      ),
+    []
+  )
+  const selectNewSongAlbum = useMemo(
+    () =>
+      createSelector(
+        state => state.Find.newSongs,
+        state => state.Find.newAlbums,
+        (newSongs, newAlbums) => ({
+          newSongs: newSongs.slice(0, 6),
+          newAlbums: newAlbums.slice(0, 6)
+        })
+      ),
+    []
+  )
+
   const bannerList = useSelector(selectBannerList)
   const hotwallNavList = useSelector(selectHotwallNavList)
   const recommendPlaylists = useSelector(selectRecommendPlaylists)
+  const sceneRecommendPlaylists = useSelector(selectSceneRecommendPlaylists)
+  const newSongAlbum = useSelector(selectNewSongAlbum)
 
   useEffect(() => {
     dispatch(actions.fetchBannerList())
     dispatch(actions.fetchHotwallList())
-    dispatch(actions.fetchRecommendPlaylist(6, '全部'))
+    dispatch(actions.fetchRecommendPlaylists())
+    dispatch(actions.fetchSceneRecommendPlaylists())
+    dispatch(actions.fetchNewSongs())
+    dispatch(actions.fetchNewAlbums())
   }, [dispatch])
 
   return (
@@ -82,9 +109,37 @@ const Find = props => {
         </div>
         <div className="recommend-nav">
           <div className="playlist-recommend">
-            <PlaylistRecommend recommendPlaylists={recommendPlaylists} />
+            <PlaylistRecommend
+              playlists={recommendPlaylists}
+              title={'歌单推荐'}
+              intro={'为你精挑细选'}
+              linkTo={'/playlist/recommend'}
+            />
+          </div>
+          <div className="scene-recommend">
+            <PlaylistRecommend
+              playlists={sceneRecommendPlaylists}
+              title={'场景推荐'}
+              intro={'音乐 照亮你心坎'}
+              linkTo={'/playlist/recommend/official'}
+            />
+          </div>
+          <div className="new-song-album-recommend">
+            <SongAlbumRecommend newSongAlbum={newSongAlbum} />
           </div>
         </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     </Scroll>
   )

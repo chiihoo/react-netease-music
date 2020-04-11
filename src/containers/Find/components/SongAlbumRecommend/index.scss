@@ -1,16 +1,26 @@
-.PlaylistRecommend {
-  width: 100%;
+.SongAlbumRecommend {
   .header {
+    padding: 0 15px;
     display: flex;
     justify-content: space-between;
-    padding: 0 15px;
     .header-left {
-      .title {
+      color: #6e6e6e;
+      .date {
         font-size: 12px;
         color: #6e6e6e;
       }
-      .intro {
+      .tabs {
         font-weight: bold;
+        .dividing-line {
+          border-right: 1px solid #6e6e6e;
+          margin: 0 10px;
+          display: inline-block;
+          height: 20px;
+          vertical-align: bottom;
+        }
+        .active {
+          color: #000;
+        }
       }
     }
     .header-right {
@@ -28,19 +38,8 @@
         border: 1px solid #e0e0e0;
         border-radius: 30px;
         transform-origin: 0 0;
-        transform: scale(0.5, 0.5);
-        z-index: -1; //由于伪类是绝对定位，而且长宽等于父类元素的长宽，是脱离了文档流覆盖在父类上的，会使父类的点击事件失效
-      }
-    }
-  }
-  .swiper-container {
-    padding: 10px 15px;
-    .swiper-wrapper {
-      .swiper-slide {
-        width: 105px !important;
-        &:not(:last-of-type) {
-          padding-right: 8px;
-        }
+        transform: scale(0.5 0.5);
+        z-index: -1;
       }
     }
   }

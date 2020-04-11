@@ -5,7 +5,7 @@ import PlaylistItem from '@/components/PlaylistItem'
 import './index.scss'
 
 const PlaylistRecommend = props => {
-  const { recommendPlaylists } = props
+  const { playlists, title, intro, linkTo } = props
   const params = {
     slidesPerView: 'auto',
     resistanceRatio: 0,
@@ -22,16 +22,16 @@ const PlaylistRecommend = props => {
     <div className="PlaylistRecommend">
       <div className="header">
         <div className="header-left">
-          <div className="title">推荐歌单</div>
-          <div className="intro">为你精挑细选</div>
+          <div className="title">{title}</div>
+          <div className="intro">{intro}</div>
         </div>
-        <Link to="/playlist/recommend" className="header-right">
+        <Link to={linkTo} className="header-right">
           查看更多
         </Link>
       </div>
-      {recommendPlaylists.length > 0 && (
+      {playlists.length > 0 && (
         <Swiper {...params}>
-          {recommendPlaylists.map(item => {
+          {playlists.map(item => {
             return (
               <div key={item.id}>
                 <PlaylistItem data={item} />

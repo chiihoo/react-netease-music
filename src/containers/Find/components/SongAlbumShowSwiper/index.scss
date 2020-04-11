@@ -1,0 +1,63 @@
+.SongAlbumShowSwiper {
+  .swiper-container {
+    padding: 15px;
+    .swiper-wrapper {
+      .swiper-slide {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 185px;
+        .item-info {
+          width: 95%;
+          display: flex;
+          border-radius: 6px;
+          z-index: 15;
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+          }
+          .item-cover-img {
+            display: inline-block;
+            width: 55px;
+            height: 55px;
+            border-radius: 6px;
+          }
+          .item-main {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+            padding: 0 10px;
+            .item-desc {
+              width: 220px;
+              .title {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                font-size: 14px;
+              }
+              .artists {
+                font-size: 12px;
+                color: #707070;
+              }
+            }
+            .item-play-status {
+              width: 30px;
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              .icon-svg {
+                width: 25px;
+                height: 25px;
+              }
+              .icon-laba {
+                font-size: 20px;
+                color: #ff0000;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
