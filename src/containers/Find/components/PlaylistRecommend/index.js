@@ -16,7 +16,8 @@ const PlaylistRecommend = props => {
     // slidesOffsetBefore: 15,  //在这里设置无法自动转成vw，改写在.swiper-container的padding中
     // slidesOffsetAfter: 15,
     observer: true,
-    observeParents: true
+    observeParents: true,
+    shouldSwiperUpdate: true // 可以解决设置slidesPerView:'auto'导致的初始显示最后一张slide的问题
   }
   return (
     <div className="PlaylistRecommend">
@@ -29,17 +30,15 @@ const PlaylistRecommend = props => {
           查看更多
         </Link>
       </div>
-      {playlists.length > 0 && (
-        <Swiper {...params}>
-          {playlists.map(item => {
-            return (
-              <div key={item.id}>
-                <PlaylistItem data={item} />
-              </div>
-            )
-          })}
-        </Swiper>
-      )}
+      <Swiper {...params}>
+        {playlists.map(item => {
+          return (
+            <div key={item.id}>
+              <PlaylistItem data={item} />
+            </div>
+          )
+        })}
+      </Swiper>
     </div>
   )
 }

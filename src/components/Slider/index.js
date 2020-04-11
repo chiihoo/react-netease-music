@@ -8,7 +8,10 @@ const Slider = props => {
   const { bannerList } = props
 
   const params = {
-    autoplay: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
     loop: true,
     pagination: {
       el: '.swiper-pagination',
@@ -21,7 +24,7 @@ const Slider = props => {
   return (
     <div className="Slider">
       <Swiper {...params}>
-        {bannerList.map((item, index) => {
+        {bannerList.map(item => {
           return (
             <div key={item.bannerId}>
               <a href={item.url} target="_blank" rel="noopener noreferrer">
