@@ -12,6 +12,7 @@
           display: flex;
           border-radius: 6px;
           z-index: 15;
+          cursor: pointer;
           &:hover {
             background-color: rgba(0, 0, 0, 0.2);
           }

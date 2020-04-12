@@ -2,7 +2,6 @@ import React from 'react'
 import Swiper from 'react-id-swiper'
 import classNames from 'classnames'
 import './index.scss'
-import 'swiper/css/swiper.css'
 
 const Slider = props => {
   const { bannerList } = props

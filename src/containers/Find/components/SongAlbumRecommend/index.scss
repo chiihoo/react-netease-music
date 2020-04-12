@@ -18,6 +18,9 @@
           height: 20px;
           vertical-align: bottom;
         }
+        span {
+          cursor: pointer;
+        }
         .active {
           color: #000;
         }
