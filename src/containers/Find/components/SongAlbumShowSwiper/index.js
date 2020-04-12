@@ -1,15 +1,11 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import Swiper from 'react-id-swiper'
-import _ from 'lodash'
 import './index.scss'
 
 const SongAlbumShowSwiper = props => {
   const [currentPlayingId, setCurrentPlayingId] = useState()
 
   const { isSong = true, data } = props
-
-  // 拆分成3个一组
-  const dataList = useMemo(() => _.chunk(data, 3), [data])
 
   const params = {
     resistanceRatio: 0,
@@ -21,7 +17,7 @@ const SongAlbumShowSwiper = props => {
     <div className="SongAlbumShowSwiper">
       {isSong ? (
         <Swiper {...params}>
-          {dataList.map(itemArr => {
+          {data.map(itemArr => {
             return (
               <div key={itemArr[0].id}>
                 {itemArr.map(item => {
@@ -65,7 +61,7 @@ const SongAlbumShowSwiper = props => {
         </Swiper>
       ) : (
         <Swiper {...params}>
-          {dataList.map(itemArr => {
+          {data.map(itemArr => {
             return (
               <div key={itemArr[0].id}>
                 {itemArr.map(item => {
