@@ -3,6 +3,7 @@ import Swiper from 'react-id-swiper'
 import classNames from 'classnames'
 import './index.scss'
 
+// 首页发现页面的轮播图组件
 const Slider = props => {
   const { bannerList } = props
 

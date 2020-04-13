@@ -10,6 +10,7 @@ import PlaylistRecommend from './components/PlaylistRecommend'
 import SongAlbumRecommend from './components/SongAlbumRecommend'
 import './index.scss'
 
+// 首页发现页面
 const Find = () => {
   const dispatch = useDispatch()
 
@@ -82,7 +83,7 @@ const Find = () => {
         </Link>
       </div>
       <div className="hotwall-nav">
-        <HotwallNav hotwallNavList={hotwallNavList} />
+        {hotwallNavList.length > 0 && <HotwallNav hotwallNavList={hotwallNavList} />}
       </div>
       <div className="recommend-nav">
         <div className="playlist-recommend">

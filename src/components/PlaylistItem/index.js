@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import './index.scss'
 
+// 单个歌单 方块形展示组件
 const PlaylistItem = props => {
   const { data } = props
   return (

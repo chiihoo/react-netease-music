@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Swiper from 'react-id-swiper'
 import './index.scss'
 
+// 新歌新碟卡片中的滑动展示区域
 const SongAlbumShowSwiper = props => {
   const [currentPlayingId, setCurrentPlayingId] = useState()
 
@@ -16,6 +17,7 @@ const SongAlbumShowSwiper = props => {
   return (
     <div className="SongAlbumShowSwiper">
       {isSong ? (
+        // 歌曲滑动区域
         <Swiper {...params}>
           {data.map(itemArr => {
             return (
@@ -60,6 +62,7 @@ const SongAlbumShowSwiper = props => {
           })}
         </Swiper>
       ) : (
+        // 专辑滑动区域
         <Swiper {...params}>
           {data.map(itemArr => {
             return (

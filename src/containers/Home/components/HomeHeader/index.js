@@ -4,7 +4,8 @@ import classNames from 'classnames'
 import './index.scss'
 
 const HomeHeader = props => {
-  const { swiperIndex, changeSwiperIndex } = props
+  // 首页swiper当前活动页的index，以及改变这个index存储的方法
+  const { activeIndex, changeActiveIndex } = props
 
   return (
     <div>
@@ -12,14 +13,14 @@ const HomeHeader = props => {
         <i className="iconfont icon-caidan"></i>
         <div className="tabs">
           <div
-            className={classNames('tab', { active: swiperIndex === 0 })}
-            onClick={() => changeSwiperIndex(0)}
+            className={classNames('tab', { active: activeIndex === 0 })}
+            onClick={() => changeActiveIndex(0)}
           >
             我的
           </div>
           <div
-            className={classNames('tab', { active: swiperIndex === 1 })}
-            onClick={() => changeSwiperIndex(1)}
+            className={classNames('tab', { active: activeIndex === 1 })}
+            onClick={() => changeActiveIndex(1)}
           >
             发现
           </div>

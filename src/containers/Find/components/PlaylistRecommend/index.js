@@ -4,8 +4,10 @@ import Swiper from 'react-id-swiper'
 import PlaylistItem from '@/components/PlaylistItem'
 import './index.scss'
 
+// 歌单推荐导航卡片
 const PlaylistRecommend = props => {
   const { playlists, title, intro, linkTo } = props
+
   const params = {
     slidesPerView: 'auto',
     resistanceRatio: 0,
@@ -19,6 +21,7 @@ const PlaylistRecommend = props => {
     observeParents: true,
     shouldSwiperUpdate: true // 可以解决设置slidesPerView:'auto'导致的初始显示最后一张slide的问题
   }
+
   return (
     <div className="PlaylistRecommend">
       <div className="header">

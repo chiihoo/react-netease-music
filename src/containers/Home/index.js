@@ -5,17 +5,21 @@ import HomeHeader from './components/HomeHeader'
 import Find from '../Find'
 import './index.scss'
 
+// 首页
 const Home = () => {
+  // swiper实例
   const [swiper, setSwiper] = useState()
-  const [swiperIndex, setSwiperIndex] = useState(1)
+  // swiper当前活动页的index
+  const [activeIndex, setActiveIndex] = useState(1)
 
+  // 当HomeHeader组件的导航按钮点击导致activeIndex改变时，swiper要跳转到指定页面
   useEffect(() => {
     if (swiper) {
-      swiper.slideTo(swiperIndex)
+      swiper.slideTo(activeIndex)
     }
-  }, [swiper, swiperIndex])
+  }, [swiper, activeIndex])
 
-  const handleSwiperIndex = useCallback(index => setSwiperIndex(index), [])
+  const handleActiveIndex = useCallback(index => setActiveIndex(index), [])
 
   const params = {
     containerClass: 'home-swiper',
@@ -27,15 +31,16 @@ const Home = () => {
     watchSlidesProgress: true,
     getSwiper: setSwiper,
     on: {
+      // swiper切换页面后，设置当前活动页index
       transitionEnd: function () {
-        setSwiperIndex(this.activeIndex)
+        setActiveIndex(this.activeIndex)
       }
     }
   }
 
   return (
     <div className="Home">
-      <HomeHeader changeSwiperIndex={handleSwiperIndex} swiperIndex={swiperIndex} />
+      <HomeHeader changeActiveIndex={handleActiveIndex} activeIndex={activeIndex} />
       <div className="scroll-wrap">
         <Swiper {...params}>
           <div>my</div>

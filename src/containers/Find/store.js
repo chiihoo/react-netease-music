@@ -17,6 +17,7 @@ export const actionTypes = {
 }
 
 export const actions = {
+  // 获取轮播图数据
   fetchBannerList() {
     return dispatch => {
       getBannerRequest().then(data => {
@@ -24,6 +25,7 @@ export const actions = {
       })
     }
   },
+  // 获取云村热评墙数据
   fetchHotwallList() {
     return dispatch => {
       getHotwallRequest().then(data => {
@@ -31,6 +33,7 @@ export const actions = {
       })
     }
   },
+  // 获取歌单推荐数据
   fetchRecommendPlaylists() {
     return dispatch => {
       getRecommendPlaylistsRequest(6, '全部').then(data => {
@@ -38,6 +41,7 @@ export const actions = {
       })
     }
   },
+  // 获取场景推荐数据
   fetchSceneRecommendPlaylists() {
     return dispatch => {
       getRecommendPlaylistsRequest(6, '官方').then(data => {
@@ -45,6 +49,7 @@ export const actions = {
       })
     }
   },
+  // 获取新歌数据
   fetchNewSongs() {
     return dispatch => {
       getNewSongsRequest().then(data => {
@@ -52,6 +57,7 @@ export const actions = {
       })
     }
   },
+  // 获取新碟数据
   fetchNewAlbums() {
     return dispatch => {
       getNewAlbumsRequest().then(data => {

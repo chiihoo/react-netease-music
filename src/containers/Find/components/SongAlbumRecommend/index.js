@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import SongAlbumShowSwiper from '../SongAlbumShowSwiper'
 import './index.scss'
 
+// 新歌新碟导航卡片
 const SongAlbumRecommend = props => {
   const [currentTab, setCurrentTab] = useState('newSong')
 

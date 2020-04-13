@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import BScroll from 'better-scroll'
 import './index.scss'
 
+// better-scroll封装的滚动组件
 const Scroll = props => {
   const { children } = props
   // eslint-disable-next-line
