@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import useInterval from '@/hooks/useInterval'
-
 import './index.scss'
 
+// 云村热评墙导航卡片
 const HotwallNav = props => {
-  const { hotwallNavList } = props
-  // 类text-marquee从上往下轮播，当前显示的item和index
-  const [currentItem, setCurrentItem] = useState()
+  // text-marquee类 从上往下轮播，当前显示项的index
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  useEffect(() => {
-    if (hotwallNavList) {
-      setCurrentItem(hotwallNavList[0])
-    }
-  }, [hotwallNavList])
+  const { hotwallNavList } = props
 
+  // 周期性currentIndex+1，到最后就又从0开始
   useInterval(() => {
     const nextIndex = (currentIndex + 1) % hotwallNavList.length
-    setCurrentItem(hotwallNavList[nextIndex])
     setCurrentIndex(nextIndex)
   }, 3000)
+
+  // 这里不需要用useMemo，因为只有当currentIndex变化时，或者数据源改变时，它才会计算
+  // 用了和没用的效果是一样的，用了反而还要多一次判断（检测依赖性是否改变）
+  const currentItem = hotwallNavList[currentIndex]
 
   const month = Date().slice(4, 7) + '.'
   const day = Date().slice(8, 10)
