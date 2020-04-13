@@ -17,16 +17,16 @@
             background-color: rgba(0, 0, 0, 0.2);
           }
           .item-cover-img {
-            display: inline-block;
             width: 55px;
             height: 55px;
             border-radius: 6px;
+            flex-shrink: 0;
           }
           .item-main {
             display: flex;
             justify-content: space-between;
-            width: 100%;
             align-items: center;
+            flex-grow: 1;
             padding: 0 10px;
             .item-desc {
               width: 220px;
