@@ -8,27 +8,25 @@ const HomeHeader = props => {
   const { activeIndex, changeActiveIndex } = props
 
   return (
-    <div>
-      <div className="HomeHeader">
-        <i className="iconfont icon-caidan"></i>
-        <div className="tabs">
-          <div
-            className={classNames('tab', { active: activeIndex === 0 })}
-            onClick={() => changeActiveIndex(0)}
-          >
-            我的
-          </div>
-          <div
-            className={classNames('tab', { active: activeIndex === 1 })}
-            onClick={() => changeActiveIndex(1)}
-          >
-            发现
-          </div>
+    <div className="HomeHeader">
+      <i className="iconfont icon-caidan"></i>
+      <div className="tabs">
+        <div
+          className={classNames('tab', { active: activeIndex === 0 })}
+          onClick={() => changeActiveIndex(0)}
+        >
+          我的
         </div>
-        <Link to="/search">
-          <i className="iconfont icon-sousuo"></i>
-        </Link>
+        <div
+          className={classNames('tab', { active: activeIndex === 1 })}
+          onClick={() => changeActiveIndex(1)}
+        >
+          发现
+        </div>
       </div>
+      <Link to="/search">
+        <i className="iconfont icon-sousuo"></i>
+      </Link>
     </div>
   )
 }
