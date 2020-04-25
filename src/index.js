@@ -1,16 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as serviceWorker from './serviceWorker'
-import { Provider } from 'react-redux'
-import store from './store'
+import { storesContext, store } from '@/store'
 import App from './App'
 import './index.css'
 import 'swiper/css/swiper.css'
 
 ReactDOM.render(
-  <Provider store={store}>
+  <storesContext.Provider value={store}>
     <App />
-  </Provider>,
+  </storesContext.Provider>,
   document.getElementById('root')
 )
 

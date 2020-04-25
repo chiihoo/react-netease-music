@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Swiper from 'react-id-swiper'
-import Scroll from '@/components/Scroll'
 import HomeHeader from './components/HomeHeader'
 import Find from '../Find'
 import './index.scss'
@@ -45,9 +44,7 @@ const Home = () => {
         <Swiper {...params}>
           <div>my</div>
           <div>
-            <Scroll>
-              <Find />
-            </Scroll>
+            <Find />
           </div>
         </Swiper>
       </div>

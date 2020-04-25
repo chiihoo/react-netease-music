@@ -1,9 +1,11 @@
-import { createStore, compose, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import reducers from './reducer'
+import React from 'react'
+import { configure } from 'mobx'
+import { FindStore } from './FindStore'
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+configure({ enforceActions: 'always' })
 
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)))
+export const store = { FindStore }
 
-export default store
+export const storesContext = React.createContext()
+
+export const useStores = () => React.useContext(storesContext)

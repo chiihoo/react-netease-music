@@ -1,4 +1,9 @@
-const { override, addPostcssPlugins, addWebpackAlias } = require('customize-cra')
+const {
+  override,
+  addPostcssPlugins,
+  addWebpackAlias,
+  addDecoratorsLegacy
+} = require('customize-cra')
 const path = require('path')
 
 module.exports = override(
@@ -21,5 +26,6 @@ module.exports = override(
       }
     })
   ]),
-  addWebpackAlias({ ['@']: path.resolve(__dirname, 'src') }) // 设置src文件的别名'@'
+  addWebpackAlias({ ['@']: path.resolve(__dirname, 'src') }), // 设置src文件的别名'@'
+  addDecoratorsLegacy() // 配置装饰器
 )
