@@ -1,5 +1,33 @@
 .Scroll {
   width: 100%;
   height: 100%;
-  overflow:hidden
+  overflow: hidden;
+  > .scroll-content {
+    .pulldown-refresh {
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      top: 0;
+      transform: translateY(-100%);
+      font-size: 14px;
+      color: #9e9d9d;
+    }
+    .pullup-load {
+      width: 100%;
+      text-align: center;
+      color: #9e9d9d;
+      padding: 10px 0;
+      box-sizing: border-box;
+    }
+    .icon-xialashuaxin {
+      display: inline-block;
+      transition: all 0.2s;
+      margin-right: 5px;
+      font-size: 18px;
+    }
+    .loading-svg {
+      width: 10px;
+      margin-right: 10px;
+    }
+  }
 }
