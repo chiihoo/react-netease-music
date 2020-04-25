@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
-import SongAlbumShowSwiper from '../SongAlbumShowSwiper'
+import SongShowSwiper from '../SongShowSwiper'
+import AlbumShowSwiper from '../AlbumShowSwiper'
 import './index.scss'
 
 // 新歌新碟导航卡片
@@ -44,10 +45,10 @@ const SongAlbumRecommend = props => {
         </Link>
       </div>
       <div style={{ display: currentTab === 'newSong' ? 'block' : 'none' }}>
-        <SongAlbumShowSwiper data={newSongs} />
+        <SongShowSwiper data={newSongs} />
       </div>
       <div style={{ display: currentTab === 'newAlbum' ? 'block' : 'none' }}>
-        <SongAlbumShowSwiper isSong={false} data={newAlbums} />
+        <AlbumShowSwiper data={newAlbums} />
       </div>
     </div>
   )
