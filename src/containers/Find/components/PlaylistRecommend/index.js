@@ -17,9 +17,8 @@ const PlaylistRecommend = props => {
     // spaceBetween: 8,  // 在这里设置无法自动转成vw，改写在.swiper-slide的padding中
     // slidesOffsetBefore: 15,  //在这里设置无法自动转成vw，改写在.swiper-container的padding中
     // slidesOffsetAfter: 15,
-    observer: true,
-    observeParents: true,
-    shouldSwiperUpdate: true // 可以解决设置slidesPerView:'auto'导致的初始显示最后一张slide的问题
+    shouldSwiperUpdate: true // 组件更新时更新swiper
+    // rebuildOnUpdate:true  // 组件更新时卸载并重新生成swiper
   }
 
   return (

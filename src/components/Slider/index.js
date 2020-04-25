@@ -13,12 +13,12 @@ const Slider = props => {
       disableOnInteraction: false
     },
     loop: true,
+    nested: true, // 用于嵌套相同方向的swiper时，当切换到子swiper时停止父swiper的切换
     pagination: {
       el: '.swiper-pagination',
       clickable: true
     },
-    observer: true,
-    observeParents: true
+    rebuildOnUpdate: true // 组件更新时卸载并重新生成swiper
   }
 
   return (
