@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useObserver } from 'mobx-react-lite'
-import { useStores } from '@/store'
+import { useStores } from '@/stores'
 import Slider from '@/components/Slider'
 import Scroll from '@/components/Scroll'
 import HotwallNav from './components/HotwallNav'

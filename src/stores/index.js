@@ -4,7 +4,7 @@ import { FindStore } from './FindStore'
 
 configure({ enforceActions: 'always' })
 
-export const store = { FindStore }
+export const stores = { FindStore }
 
 export const storesContext = React.createContext()
 
