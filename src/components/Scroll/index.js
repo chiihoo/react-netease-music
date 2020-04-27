@@ -142,7 +142,11 @@ const Scroll = props => {
               <div>
                 {isPullingDown ? (
                   <>
-                    <img src="svg/loading.svg" alt="loading" className="loading-svg"></img>
+                    <img
+                      src={require('@/assets/svgIcons/loading.svg')}
+                      alt="svg-loading"
+                      className="svg-loading"
+                    ></img>
                     <span>刷新中...</span>
                   </>
                 ) : (
@@ -156,7 +160,11 @@ const Scroll = props => {
           <div className="pullup-load">
             {isPullingUp ? (
               <>
-                <img src="svg/loading.svg" alt="loading" className="loading-svg"></img>
+                <img
+                  src={require('@/assets/svgIcons/loading.svg')}
+                  alt="svg-loading"
+                  className="svg-loading"
+                ></img>
                 <span>加载中...</span>
               </>
             ) : (

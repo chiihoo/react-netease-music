@@ -44,7 +44,11 @@ const SongShowSwiper = props => {
                         {currentPlayingId === item.id ? (
                           <i className="iconfont icon-laba"></i>
                         ) : (
-                          <img src="svg/play.svg" alt="play" className="play-svg"></img>
+                          <img
+                            src={require('@/assets/svgIcons/play.svg')}
+                            alt="svg-play"
+                            className="svg-play"
+                          ></img>
                         )}
                       </div>
                     </div>
