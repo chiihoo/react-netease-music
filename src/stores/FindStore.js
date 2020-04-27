@@ -1,11 +1,11 @@
 import { observable, flow } from 'mobx'
 import { chunk } from 'lodash'
 import {
-  getBannerRequest,
-  getHotwallRequest,
-  getRecommendPlaylistsRequest,
-  getNewSongsRequest,
-  getNewAlbumsRequest
+  fetchBanner,
+  fetchHotwall,
+  fetchRecommendPlaylists,
+  fetchNewSongs,
+  fetchNewAlbums
 } from '@/api'
 
 export const FindStore = observable({
@@ -34,45 +34,45 @@ export const FindStore = observable({
   },
 
   // 获取首页轮播图
-  fetchBannerList: flow(function* () {
-    const res = yield getBannerRequest()
+  getBannerList: flow(function* () {
+    const res = yield fetchBanner()
     this.bannerList = res.banners
   }),
   // 获取云村热评墙
-  fetchHotwallList: flow(function* () {
-    const res = yield getHotwallRequest()
+  getHotwallList: flow(function* () {
+    const res = yield fetchHotwall()
     this.hotwallList = res.data
   }),
   // 获取推荐歌单
-  fetchRecommendPlaylists: flow(function* () {
-    const res = yield getRecommendPlaylistsRequest(6, '全部')
+  getRecommendPlaylists: flow(function* () {
+    const res = yield fetchRecommendPlaylists(6, '全部')
     this.recommendPlaylists = res.playlists
   }),
   // 获取场景推荐歌单
-  fetchSceneRecommendPlaylists: flow(function* () {
-    const res = yield getRecommendPlaylistsRequest(6, '官方')
+  getSceneRecommendPlaylists: flow(function* () {
+    const res = yield fetchRecommendPlaylists(6, '官方')
     this.sceneRecommendPlaylists = res.playlists
   }),
   // 获取新歌
-  fetchNewSongs: flow(function* () {
-    const res = yield getNewSongsRequest()
+  getNewSongs: flow(function* () {
+    const res = yield fetchNewSongs()
     this.newSongs = res.result
   }),
   // 获取新碟
-  fetchNewAlbums: flow(function* () {
-    const res = yield getNewAlbumsRequest()
+  getNewAlbums: flow(function* () {
+    const res = yield fetchNewAlbums()
     this.newAlbums = res.albums
   }),
   // 统一获取Find页面数据
-  fetchFindData: flow(function* () {
+  getFindData: flow(function* () {
     // Promise.allSettled不会像Promise.all那样，只有有任何一个promise失败，所有的promise就全都挂掉了
     yield Promise.allSettled([
-      this.fetchBannerList(),
-      this.fetchHotwallList(),
-      this.fetchRecommendPlaylists(),
-      this.fetchSceneRecommendPlaylists(),
-      this.fetchNewSongs(),
-      this.fetchNewAlbums()
+      this.getBannerList(),
+      this.getHotwallList(),
+      this.getRecommendPlaylists(),
+      this.getSceneRecommendPlaylists(),
+      this.getNewSongs(),
+      this.getNewAlbums()
     ])
   })
 })

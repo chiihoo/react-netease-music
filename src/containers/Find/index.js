@@ -14,12 +14,12 @@ const Find = () => {
   const { FindStore } = useStores()
 
   useEffect(() => {
-    FindStore.fetchFindData()
+    FindStore.getFindData()
   }, [FindStore])
 
   // 需要返回一个Promise用来在Scroll组件中判断下拉刷新的请求是否已经完成
   const handlePullDown = useCallback(() => {
-    return FindStore.fetchFindData()
+    return FindStore.getFindData()
   }, [FindStore])
 
   return useObserver(() => (
