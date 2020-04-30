@@ -16,6 +16,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
@@ -27,10 +31,6 @@ a {
   color: #3b3a3a;
 }
 
-.icon-svg {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
+p {
+  margin: 0;
 }

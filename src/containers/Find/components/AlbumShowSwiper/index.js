@@ -23,17 +23,17 @@ const AlbumShowSwiper = props => {
                     <img src={item.picUrl} alt={item.name} className="item-cover-img" />
                     <div className="item-main">
                       <div className="item-desc">
-                        <div className="title">
+                        <p className="title">
                           {item.name}
                           {item.alias.length > 0 && `（${item.alias[0]}）`}
-                        </div>
-                        <div className="artists">
+                        </p>
+                        <p className="artists">
                           {item.artists.reduce((total, currentValue, currentIndex, arr) => {
                             return currentIndex === arr.length - 1
                               ? total + currentValue.name
                               : total + currentValue.name + '/'
                           }, '- ')}
-                        </div>
+                        </p>
                       </div>
                     </div>
                   </div>

@@ -3,7 +3,7 @@
   border-radius: 8px;
   position: relative;
   overflow: hidden;
-  &::before {
+  > .hotwall-bg-img {
     // 模糊处理
     content: '';
     position: absolute;
@@ -11,32 +11,30 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: inherit; // 要继承父元素的背景图
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     filter: blur(5px);
     transform: scale(1.2); // 与父元素overflow: hidden结合起来，避免边缘没有模糊效果
     transition: background-image 1s;
+    z-index: -1;
+    &::after {
+      // 深色蒙版
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
   }
-  &::after {
-    // 深色蒙版
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  a {
+  > a {
     display: flex;
     justify-content: space-around;
     height: 85px;
     border-radius: 8px;
     color: #fff;
-    position: relative;
-    z-index: 10; // z-index只有在定位的情况下有效
     .left-side {
       width: 80%;
       display: flex;
@@ -44,7 +42,6 @@
       justify-content: center;
       padding-left: 10px;
       .title {
-        margin: 0;
         padding-bottom: 10px;
         font-weight: bold;
         .icon-gengduo {
@@ -62,13 +59,14 @@
           width: 100%;
           height: 100%;
           position: absolute; //必须绝对定位
-          img.avatar {
+          > img.avatar {
             width: 15px;
             height: 15px;
             border-radius: 50%;
             flex-shrink: 0;
           }
-          .content {
+          > p.content {
+            margin: 0;
             padding-left: 5px;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -98,10 +96,10 @@
       justify-content: center;
       align-items: center;
       padding-right: 15px;
-      .month {
+      > span.month {
         font-weight: 500;
       }
-      .day {
+      > span.day {
         font-weight: 500;
         font-size: 27px;
       }

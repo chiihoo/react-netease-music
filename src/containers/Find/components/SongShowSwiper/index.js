@@ -28,17 +28,17 @@ const SongShowSwiper = props => {
                     <img src={item.picUrl} alt={item.name} className="item-cover-img" />
                     <div className="item-main">
                       <div className="item-desc">
-                        <div className="title">
+                        <p className="title">
                           {item.song.name}
                           {item.song.alias[0] && `（${item.song.alias[0]}）`}
-                        </div>
-                        <div className="artists">
+                        </p>
+                        <p className="artists">
                           {item.song.artists.reduce((total, currentValue, currentIndex, arr) => {
                             return currentIndex === arr.length - 1
                               ? total + currentValue.name
                               : total + currentValue.name + '/'
                           }, '- ')}
-                        </div>
+                        </p>
                       </div>
                       <div className="item-play-status">
                         {currentPlayingId === item.id ? (

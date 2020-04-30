@@ -6,6 +6,7 @@
       width: 105px;
       height: 105px;
       border-radius: 7px;
+      vertical-align: bottom;
     }
     .play-count {
       color: #fff;
@@ -18,13 +19,14 @@
         position: relative;
         bottom: 1px;
       }
-      span {
+      > span {
         padding-left: 2px;
       }
     }
   }
   .desc {
     font-size: 12px;
+    padding-top: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;

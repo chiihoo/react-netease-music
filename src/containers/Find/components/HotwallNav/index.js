@@ -25,12 +25,13 @@ const HotwallNav = props => {
   const day = Date().slice(8, 10)
 
   return (
-    <div
-      className="HotwallNav"
-      style={{
-        backgroundImage: `url(${currentItem && currentItem.songCoverUrl})`
-      }}
-    >
+    <div className="HotwallNav">
+      <div
+        className="hotwall-bg-img"
+        style={{
+          backgroundImage: `url(${currentItem.songCoverUrl})`
+        }}
+      ></div>
       <Link to="/hotwall">
         <div className="left-side">
           <div className="title">
@@ -39,20 +40,18 @@ const HotwallNav = props => {
           </div>
           <div className="text-marquee">
             <TransitionGroup>
-              {currentItem && (
-                <CSSTransition timeout={500} classNames="marquee-wrapper" key={currentItem.id}>
-                  <div className="content-wrapper">
-                    <img className="avatar" src={currentItem.avatar} alt="avatar" />
-                    <span className="content">{currentItem.content}</span>
-                  </div>
-                </CSSTransition>
-              )}
+              <CSSTransition timeout={500} classNames="marquee-wrapper" key={currentItem.id}>
+                <div className="content-wrapper">
+                  <img className="avatar" src={currentItem.avatar} alt="avatar" />
+                  <p className="content">{currentItem.content}</p>
+                </div>
+              </CSSTransition>
             </TransitionGroup>
           </div>
         </div>
         <div className="right-side">
-          <div className="month">{month}</div>
-          <div className="day">{day}</div>
+          <span className="month">{month}</span>
+          <span className="day">{day}</span>
         </div>
       </Link>
     </div>

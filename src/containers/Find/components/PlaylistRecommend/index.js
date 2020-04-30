@@ -25,8 +25,8 @@ const PlaylistRecommend = props => {
     <div className="PlaylistRecommend">
       <div className="header">
         <div className="header-left">
-          <div className="title">{title}</div>
-          <div className="intro">{intro}</div>
+          <p className="title">{title}</p>
+          <p className="intro">{intro}</p>
         </div>
         <Link to={linkTo} className="header-right">
           查看更多

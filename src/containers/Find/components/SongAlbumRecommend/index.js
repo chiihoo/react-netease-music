@@ -17,9 +17,9 @@ const SongAlbumRecommend = props => {
     <div className="SongAlbumRecommend">
       <div className="header">
         <div className="header-left">
-          <div className="date">
+          <span className="date">
             {new Date().getMonth() + 1}月{new Date().getDate()}日
-          </div>
+          </span>
           <div className="tabs">
             <span
               className={classNames({ active: currentTab === 'newSong' })}

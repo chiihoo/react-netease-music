@@ -17,7 +17,7 @@ const PlaylistItem = props => {
             </span>
           </div>
         </div>
-        <div className="desc">{data.name}</div>
+        <p className="desc">{data.name}</p>
       </Link>
     </div>
   )
