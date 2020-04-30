@@ -5,6 +5,7 @@ import './index.scss'
 // 新歌新碟卡片中 —— 新歌滑动展示区域
 const SongShowSwiper = props => {
   const [currentPlayingId, setCurrentPlayingId] = useState()
+
   const { data } = props
 
   const params = {
@@ -30,7 +31,7 @@ const SongShowSwiper = props => {
                       <div className="item-desc">
                         <p className="title">
                           {item.song.name}
-                          {item.song.alias[0] && `（${item.song.alias[0]}）`}
+                          {item.song.alias.length > 0 && `（${item.song.alias[0]}）`}
                         </p>
                         <p className="artists">
                           {item.song.artists.reduce((total, currentValue, currentIndex, arr) => {

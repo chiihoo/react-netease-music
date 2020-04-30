@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import 'mobx-react-lite/batchingForReactDom' // mobx配置批处理
 import * as serviceWorker from './serviceWorker'
 import { storesContext, stores } from '@/stores'
 import App from './App'
 import './index.css'
 import 'swiper/css/swiper.css'
-
 ReactDOM.render(
   <storesContext.Provider value={stores}>
     <App />
