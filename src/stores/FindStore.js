@@ -1,5 +1,5 @@
 import { observable, flow } from 'mobx'
-import { chunk } from 'lodash'
+import { chunk } from 'lodash-es'
 import {
   fetchBanner,
   fetchHotwall,
@@ -9,6 +9,7 @@ import {
 } from '@/api'
 
 export const FindStore = observable({
+  loadingStatus: 0, // 0：未发起请求； 1：正在请求； 2：请求完毕
   bannerList: [],
   hotwallList: [],
   recommendPlaylists: [],
@@ -65,8 +66,10 @@ export const FindStore = observable({
   }),
   // 统一获取Find页面数据
   getFindData: flow(function* () {
+    this.loadingStatus = 1
     // Promise.allSettled不会像Promise.all那样，只有有任何一个promise失败，所有的promise就全都挂掉了
-    yield Promise.allSettled([
+    // 手机华为浏览器不兼容Promise.allSettled
+    yield Promise.all([
       this.getBannerList(),
       this.getHotwallList(),
       this.getRecommendPlaylists(),
@@ -74,5 +77,7 @@ export const FindStore = observable({
       this.getNewSongs(),
       this.getNewAlbums()
     ])
+    this.loadingStatus = yield 2
+    this.loadingStatus = yield 0
   })
 })

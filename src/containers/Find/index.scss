@@ -1,8 +1,11 @@
 .find {
-  padding-top: 10px;
+  width: 100%;
+  height: 100%;
+  .find-slider {
+    padding-top: 10px;
+  }
   .find-nav {
-    width: 345px;
-    margin: 13px auto 0;
+    padding: 13px 15px 0;
     display: flex;
     justify-content: space-between;
     text-align: center;
@@ -30,18 +33,17 @@
       }
     }
   }
-  .hotwall-nav {
-    width: 345px;
-    margin: 13px auto 0;
+  .hotwall-nav-wrapper {
+    padding: 13px 15px 0;
   }
   .recommend-nav {
-    .playlist-recommend {
+    .playlist-recommend-wrapper {
       margin-top: 20px;
     }
-    .scene-recommend {
+    .scene-recommend-wrapper {
       margin-top: 13px;
     }
-    .new-song-album-recommend {
+    .new-song-album-recommend-wrapper {
       margin-top: 13px;
     }
   }

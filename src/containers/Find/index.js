@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
@@ -17,15 +17,25 @@ const Find = () => {
     FindStore.getFindData()
   }, [FindStore])
 
-  // 需要返回一个Promise用来在Scroll组件中判断下拉刷新的请求是否已经完成
-  const handlePullDown = useCallback(() => {
-    return FindStore.getFindData()
-  }, [FindStore])
+  // 需要用useObserver来监听FindStore.loadingStatus
+  // 实际上可以把useObserver替换成 const Find = observer(function Find() {})
+  // 但是使用observer，无法在react开发者工具中看到这个组件的状态
+  const scrollParams = useObserver(() => ({
+    loadingStatus: FindStore.loadingStatus,
+    pullDown: {
+      callback() {
+        FindStore.getFindData()
+      },
+      loadingStatus: FindStore.loadingStatus
+    }
+  }))
 
   return useObserver(() => (
-    <Scroll pullDown={handlePullDown}>
-      <div className="find">
-        <Slider bannerList={FindStore.bannerList}></Slider>
+    <div className="find">
+      <Scroll {...scrollParams}>
+        <div className="find-slider">
+          <Slider bannerList={FindStore.bannerList}></Slider>
+        </div>
         <div className="find-nav">
           <Link to="/recommend/taste">
             <i className="iconfont icon-rili"></i>
@@ -44,13 +54,13 @@ const Find = () => {
             <span>电台</span>
           </Link>
         </div>
-        <div className="hotwall-nav">
+        <div className="hotwall-nav-wrapper">
           {FindStore.hotwallNavList.length > 0 && (
             <HotwallNav hotwallNavList={FindStore.hotwallNavList} />
           )}
         </div>
         <div className="recommend-nav">
-          <div className="playlist-recommend">
+          <div className="playlist-recommend-wrapper">
             <PlaylistRecommend
               playlists={FindStore.recommendPlaylists}
               title={'歌单推荐'}
@@ -58,7 +68,7 @@ const Find = () => {
               linkTo={'/playlist/recommend'}
             />
           </div>
-          <div className="scene-recommend">
+          <div className="scene-recommend-wrapper">
             <PlaylistRecommend
               playlists={FindStore.sceneRecommendPlaylists}
               title={'场景推荐'}
@@ -66,12 +76,12 @@ const Find = () => {
               linkTo={'/playlist/recommend/official'}
             />
           </div>
-          <div className="new-song-album-recommend">
+          <div className="new-song-album-recommend-wrapper">
             <SongAlbumRecommend newSongAlbum={FindStore.newSongAlbum} />
           </div>
         </div>
-      </div>
-    </Scroll>
+      </Scroll>
+    </div>
   ))
 }
 

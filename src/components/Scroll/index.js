@@ -1,178 +1,255 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
-import BScroll from 'better-scroll'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useEventListener } from '@/hooks'
 import './index.scss'
 
-// better-scroll封装的滚动组件
 const Scroll = props => {
-  const [bScroll, setBScroll] = useState()
-  const [beforePullDown, setBeforePullDown] = useState(true) //是否下拉释放之前
-  const [releaseRefresh, setReleaseRefresh] = useState(false) //是否已经下拉了可以下拉释放刷新的距离
-  const [isPullingDown, setIsPullingDown] = useState(false) //是否下拉释放，已触发刷新
-  const [isPullingUp, setIsPullingUp] = useState(false) //是否上拉已触发加载
+  const [touchStart, setTouchStart] = useState(0) // 触摸起始位置，当isTop从false变为true，需重新赋值
+  const [slideDistance, setSlideDistance] = useState(0) // 滑块实际需要滑动的距离，需要乘以适当系数
+  const [isTop, setIsTop] = useState(true) // 是否触顶
+  const [isBottom, setIsBottom] = useState(false) // 是否触底
+  const [isTouchEnd, setIsTouchEnd] = useState(true) //是否释放触摸
+  const [isStartPull, setIsStartPull] = useState(false) // isTop为true后，设为ture，同时设置一次touchStart初始位置
+  const [isRefreshReady, setIsRefreshReady] = useState(false) // 是否达到刷新界限（释放触摸+拉动距离达标）
+  const [isRefreshing, setIsRefreshing] = useState(false) // 是否正在刷新
+  const [showLoadingIcon, setShowLoadingIcon] = useState(true) // 是否展示loading图标，停止展示-复位-重新展示，这是为了避免刷新结束时，loading图标复位出现渐变轨迹
+  const [showRefreshTips, setShowRefreshTips] = useState(false) // 刷新完毕，展示Tips
+  const [reqTime, setReqTime] = useState(Date.now()) // 记录请求发出的时间
+  const [isLoading, setIsLoading] = useState(false) // 是否正在进行下拉加载的请求
 
-  const scrollContainerRef = useRef()
+  const scrollRef = useRef()
 
-  // const THRESHOLD = 90
-  // const STOP = 40
-  // 写在配置中的数字默认是px单位，无法自适应，所以通过下述方式模拟vw
-  const THRESHOLD = useMemo(() => window.innerWidth * 0.24, [])
-  const STOP = useMemo(() => window.innerWidth * 0.107, [])
+  // 保存定时器id，并在组件卸载时统一clearTimeout
+  const timerIdRef1 = useRef()
+  const timerIdRef2 = useRef()
+  const timerIdRef3 = useRef()
+  const timerIdRef4 = useRef()
 
+  // loadingStatus传递页面初始加载时的加载状态，可以控制初始加载时tips的显示消失，跟pullDown和pullUp无关
+  // 约定loadingStatus： 0：未发起请求； 1：正在请求； 2：请求完毕
+  // tips为请求完成时，显示的文字
+  // pullDown和pullUp各有callback，同时也有loadingStatus
+  // callback是进行刷新或加载的网络请求的函数
+  // pullDown.loadingStatue传递下拉刷新请求的加载状态，也可以控制tips的显示消失
+  // pullUp.loadingStatue传递上拉加载请求的加载状态
   const {
     children,
-    pullDown, // 下拉刷新函数
-    pullUp, // 上拉加载函数
-    pullDownConfig = {
-      threshold: THRESHOLD, // 配置顶部下拉的距离来决定刷新时机
-      stop: STOP // 回弹停留的距离
-    },
-    pullUpConfig = {
-      threshold: 0 // 触发上拉事件的阈值
-    }
+    loadingStatus,
+    tips = '已为您推荐个性化内容',
+    pullDown = {},
+    pullUp = {}
   } = props
 
-  // 初始化
-  useEffect(() => {
-    const scrollInstance = new BScroll(scrollContainerRef.current, {
-      scrollY: true,
-      click: true, // 允许点击事件
-      mouseWheel: true, // 允许鼠标滚轮控制滚动
-      probeType: 2, // 派发scroll事件  1：非实时；2：实时；3：实时，在滚动动画时也会派发
-      bounce: {
-        top: pullDown ? true : false, // 只有在需要下拉刷新时才开启顶部回弹
-        bottom: pullUp ? true : false // 只有在需要下拉加载时才开启底部回弹
-      },
-      pullDownRefresh: pullDown ? pullDownConfig : false,
-      pullUpLoad: pullUp ? pullUpConfig : false
-    })
-    setBScroll(scrollInstance)
-    return () => {
-      bScroll && bScroll.destroy()
-      setBScroll(null)
-    }
-    // eslint-disable-next-line
+  // 越宽的屏幕，下拉刷新的距离就要越大
+  const REFRESH_THRESHOLD = useMemo(() => window.innerWidth * 0.187, []) // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
+  const TOUCH_THRESHOLD = useMemo(() => window.innerWidth * 0.352, []) // 滑块最多滑动到的距离 132
+  const LOADING_STOP = useMemo(() => window.innerWidth * 0.187, []) // 下拉刷新 loading时，滑块停留的位置 70
+  const TIPS_STOP = useMemo(() => window.innerWidth * 0.133, []) // tips停留的位置 50
+  // 375的屏幕是2.67，1024的屏幕是0.98，这个系数是要乘以下拉的距离，来得到旋转的角度。屏幕越大，下拉距离也越大
+  const RATIO = useMemo(() => 1000 / window.innerWidth, [])
+
+  // 触摸开始
+  useEventListener(
+    'touchstart',
+    e => {
+      setTouchStart(e.touches[0].clientY)
+      // 下拉刷新
+      if (!isRefreshing) {
+        setIsTouchEnd(false)
+      }
+    },
+    scrollRef.current
+  )
+
+  // 触摸进行中
+  useEventListener(
+    'touchmove',
+    e => {
+      // 是否触顶
+      setIsTop(scrollRef.current.scrollTop === 0)
+      // 是否触底
+      setIsBottom(
+        scrollRef.current.scrollTop + scrollRef.current.offsetHeight + 5 >=
+          scrollRef.current.scrollHeight
+      )
+
+      // 取消浏览器的默认下拉行为，比如手机QQ浏览器，会显示"已启用QQ浏览器X5内核"字样，且与自定义下拉刷新操作冲突
+      // 而要取消浏览器自身的下拉刷新操作，如手机chrome浏览器，只需要给body标签增加overflow: hidden;
+      // 触顶，且有下拉动作，取消默认行为
+      if (isTop && e.touches[0].clientY > touchStart) {
+        // e.cancelable===false的时候无法取消touchmove事件，会报错
+        e.cancelable && e.preventDefault()
+      }
+
+      // 下拉刷新
+      if (pullDown.callback && isTop && !isRefreshing) {
+        // 在isTop每次由false变为true的时候，都要设置一次touchStart，因为触摸的距离是大于滑块实际滑动的距离的
+        // 用isStatePull这个状态来保证每次isTop切换成true的时候，只会设置一次touchStart
+        if (!isStartPull) {
+          setTouchStart(e.touches[0].clientY)
+          setIsStartPull(true)
+        } else {
+          const diff = e.touches[0].clientY - touchStart
+          if (0 <= diff && diff < REFRESH_THRESHOLD) {
+            // 没有拉到刷新的界限
+            setSlideDistance(diff) // 滑块实际滑动距离
+            setIsRefreshReady(false) // isRefreshReady为false时，滑块opacity为0.5，释放后归位
+          } else if (REFRESH_THRESHOLD <= diff && diff < TOUCH_THRESHOLD) {
+            // 拉到可以刷新的界限，并且最多拉到TOUCH_THRESHOLD
+            setSlideDistance(diff) // 滑块实际滑动距离
+            setIsRefreshReady(true) // isRefreshReady为true时，滑块opacity为1，释放后停留loading
+          }
+        }
+      }
+
+      // 上拉加载
+      if (pullUp.callback && isBottom && !isLoading) {
+        // 触底，没有正在进行加载请求，并且有上拉的动作，就进行上拉加载请求
+        if (e.touches[0].clientY - touchStart < -10) {
+          setIsLoading(true)
+          pullUp.callback()
+        }
+      }
+    },
+    scrollRef.current
+  )
+
+  // 触摸结束
+  useEventListener(
+    'touchend',
+    e => {
+      // 下拉刷新
+      if (pullDown.callback && !isRefreshing) {
+        // 触摸结束时，isTouchEnd设置为true，也就是释放的时候才给滑块设置transition: transform 0.2s
+        setIsTouchEnd(true)
+        setIsStartPull(false)
+        if (!isRefreshReady) {
+          // 没下拉到可以刷新的位置，触摸结束时，就把滑块归位，否则触发刷新流程
+          setSlideDistance(0)
+        } else {
+          // 下拉到已经可以刷新的位置，触摸结束时，就把滑块停留到LOADING_STOP的位置，并且setIsRefreshing(true)
+          setSlideDistance(LOADING_STOP)
+          // isRefreshing:true -> 换成动态loading图标
+          setIsRefreshing(true)
+          // 设置网络请求发出的时间，因为如果请求返回的速度很快的话，loading图标一闪就没了，需要适当延长时间
+          setReqTime(Date.now())
+          // 回调函数 进行刷新所需要的网络请求
+          pullDown.callback()
+        }
+      }
+    },
+    scrollRef.current
+  )
+
+  // 下拉刷新
+  // 网络请求完成后，需要进行的收尾工作
+  const finishPullDown = useCallback(() => {
+    // 加载完成后，loading图标复位。需要先把loading图标消除，再把slideDistance置为0，否则会有归位的动画
+    setShowLoadingIcon(false)
+    setSlideDistance(0)
+    setShowLoadingIcon(true)
+    // isRefreshReady:false -> opacity:0.5
+    setIsRefreshReady(false)
+    // isRefreshing:true -> 换成动态loading图标
+    setIsRefreshing(false)
+    // 适当调整tips出现的时机
+    timerIdRef1.current = setTimeout(() => {
+      setShowRefreshTips(true)
+    }, 700)
+    timerIdRef2.current = setTimeout(() => {
+      setShowRefreshTips(false)
+    }, 2000)
   }, [])
 
-  // 下拉超过一定距离，显示：松开刷新
+  // 下拉刷新
+  // 监听loadingStatus，当网络请求进行完毕时，调用finishPullDown()
+  // 同时，如果网络请求很快就完成了，loading图标就会一闪而过，这就需要适当延长loading图标显示的时间
+  // 初次加载 和 下拉加载 都要finishPullDown()，以此来触发显示 "已为您推荐个性化内容" 的tips
+  // 初次加载loadingStatus，下拉加载pullDown.loadingStatus
   useEffect(() => {
-    if (bScroll && pullDown) {
-      bScroll.on('scroll', pos => {
-        if (pos.y > THRESHOLD) {
-          setReleaseRefresh(true)
-        } else {
-          setReleaseRefresh(false)
-        }
-      })
-      return () => {
-        bScroll.off('scroll')
+    // loadingStatus 约定：  0：未发起请求； 1：正在请求； 2：请求完毕
+    if (loadingStatus === 2 || (pullDown.callback && pullDown.loadingStatus === 2)) {
+      const timeDiff = Date.now() - reqTime
+      if (timeDiff < 1500) {
+        timerIdRef3.current = setTimeout(() => {
+          finishPullDown()
+        }, 1500 - timeDiff)
+      } else {
+        finishPullDown()
       }
     }
-  }, [bScroll, pullDown, THRESHOLD])
+  }, [loadingStatus, pullDown.callback, pullDown.loadingStatus, finishPullDown, reqTime])
 
-  // 下拉达到可以刷新的距离，松手触发
-  const pullingDownHandler = useCallback(async () => {
-    setBeforePullDown(false)
-    setIsPullingDown(true)
-    //下拉刷新数据
-    await pullDown()
-    // 下拉过程结束，进入回弹状态，显示：刷新中
-    // 刷新好了，显示：刷新完毕
-    // 之后展示700毫秒后，才开始回弹
-    setIsPullingDown(false)
-    await new Promise(resolve => {
-      setTimeout(() => {
-        bScroll.finishPullDown()
-        bScroll.refresh()
-        resolve()
-      }, 700)
-    })
-    // 要等回弹完毕，才把提示文字从刷新完毕替换为下拉刷新，这里的时间要大于回弹的时间
-    setTimeout(() => {
-      setBeforePullDown(true)
-    }, 500)
-  }, [bScroll, pullDown])
-
-  // 上拉加载过程
-  const pullingUpHandler = useCallback(async () => {
-    setIsPullingUp(true)
-    // 上拉加载数据
-    await pullUp()
-    bScroll.finishPullUp()
-    bScroll.refresh()
-    setIsPullingUp(false)
-  }, [bScroll, pullUp])
-
-  // 监听下拉加载
+  // 上拉加载
   useEffect(() => {
-    if (bScroll && pullDown) {
-      bScroll.on('pullingDown', pullingDownHandler)
-      return () => {
-        bScroll.off('pullingDown', pullingDownHandler)
-      }
+    if (isLoading && pullUp.loadingStatus === 2) {
+      // 减少上拉加载的请求频率，避免在touchmove上拉动作的时候，短时间内连续触发pullUp.callback，需要稍微放大点间隔时间
+      timerIdRef4.current = setTimeout(() => {
+        setIsLoading(false)
+      }, 1000)
     }
-  }, [bScroll, pullDown, pullingDownHandler])
+  }, [isLoading, pullUp.loadingStatus])
 
-  // 监听上拉刷新
+  // 组件卸载时，删除定时器
   useEffect(() => {
-    if (bScroll && pullUp) {
-      bScroll.on('pullingUp', pullingUpHandler)
-      return () => {
-        bScroll.off('pullingUp', pullingUpHandler)
-      }
+    return () => {
+      clearTimeout(timerIdRef1.current)
+      clearTimeout(timerIdRef2.current)
+      clearTimeout(timerIdRef3.current)
+      clearTimeout(timerIdRef4.current)
     }
-  }, [bScroll, pullUp, pullingUpHandler])
+  }, [])
 
   return (
-    <div className="scroll" ref={scrollContainerRef}>
-      <div className="scroll-content">
-        {children}
-        {pullDown && (
-          <div className="pulldown-refresh">
-            {beforePullDown ? (
-              <>
-                <i
-                  className="iconfont icon-xialashuaxin"
-                  style={{
-                    transform: releaseRefresh && 'rotate(180deg)'
-                  }}
-                ></i>
-                {releaseRefresh ? <span>松开刷新</span> : <span>下拉刷新</span>}
-              </>
-            ) : (
-              <div>
-                {isPullingDown ? (
-                  <>
-                    <img
-                      src={require('@/assets/svgIcons/loading.svg')}
-                      alt="svg-loading"
-                      className="svg-loading"
-                    ></img>
-                    <span>刷新中...</span>
-                  </>
-                ) : (
-                  <span>刷新完毕</span>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-        {pullUp && (
-          <div className="pullup-load">
-            {isPullingUp ? (
-              <>
-                <img
-                  src={require('@/assets/svgIcons/loading.svg')}
-                  alt="svg-loading"
-                  className="svg-loading"
-                ></img>
-                <span>加载中...</span>
-              </>
-            ) : (
-              <span>上拉加载</span>
-            )}
-          </div>
-        )}
+    <div className="scroll" ref={scrollRef}>
+      {pullDown.callback && (
+        <div className="pulldown-refresh">
+          {showLoadingIcon && (
+            <div
+              className="icon-wrapper"
+              style={{
+                transform: `translateY(${slideDistance}px)`,
+                // 没有达到刷新距离，以及达到刷新距离，松手时isTouchEnd都为true
+                transition: isTouchEnd && 'transform 0.2s'
+              }}
+            >
+              {!isRefreshing ? (
+                <>
+                  <img
+                    className="loading-in"
+                    src={require('@/assets/svgIcons/refresh-loading-in.svg')}
+                    style={{
+                      transform: `rotate(${-slideDistance * RATIO}deg)`,
+                      opacity: isRefreshReady ? 1 : 0.5
+                    }}
+                    alt=""
+                  />
+                  <img
+                    className="loading-out"
+                    src={require('@/assets/svgIcons/refresh-loading-out.svg')}
+                    style={{
+                      transform: `rotate(${slideDistance * RATIO}deg)`,
+                      opacity: isRefreshReady ? 1 : 0.5
+                    }}
+                    alt=""
+                  />
+                </>
+              ) : (
+                <img src={require('@/assets/svgIcons/refresh-loading.svg')} alt="" />
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      <div className="refresh-tips">
+        <span
+          style={{
+            transform: showRefreshTips && `translateY(${TIPS_STOP}px)`
+          }}
+        >
+          {tips}
+        </span>
       </div>
+      {children}
     </div>
   )
 }
