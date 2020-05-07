@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useInterval } from '@/hooks'
+import { imgBlurToBase64 } from '@/utils/tools'
 import './index.scss'
 
 // 云村热评墙导航卡片
 const HotwallNav = props => {
   // text-marquee类 从上往下轮播，当前显示项的index
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [songCoverUrl, setSongCoverUrl] = useState()
+  const [songCoverUrlCache, setSongCoverUrlCache] = useState([])
 
   const { hotwallNavList } = props
 
@@ -21,6 +24,28 @@ const HotwallNav = props => {
   // 用了和没用的效果是一样的，用了反而还要多一次判断（检测依赖性是否改变）
   const currentItem = hotwallNavList[currentIndex]
 
+  // 图片高斯模糊
+  useEffect(() => {
+    ;(async function () {
+      // 图片大概30张左右，给模糊后的图片做个缓存，避免imgBlurToBase64()的性能消耗
+      for (let item of songCoverUrlCache) {
+        if (item.initialUrl === currentItem.songCoverUrl) {
+          setSongCoverUrl(item.blurUrl)
+          return
+        }
+      }
+      const blurUrl = await imgBlurToBase64(
+        currentItem.songCoverUrl + '?imageView=1&thumbnail=225x0',
+        20
+      )
+      setSongCoverUrl(blurUrl)
+      setSongCoverUrlCache([
+        ...songCoverUrlCache,
+        { initialUrl: currentItem.songCoverUrl, blurUrl }
+      ])
+    })()
+  }, [currentItem.songCoverUrl, songCoverUrlCache])
+
   const month = Date().slice(4, 7) + '.'
   const day = Date().slice(8, 10)
 
@@ -29,7 +54,7 @@ const HotwallNav = props => {
       <div
         className="hotwall-bg-img"
         style={{
-          backgroundImage: `url(${currentItem.songCoverUrl})`
+          backgroundImage: `url(${songCoverUrl})`
         }}
       ></div>
       <Link to="/hotwall">

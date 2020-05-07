@@ -4,7 +4,6 @@
   position: relative;
   overflow: hidden;
   > .hotwall-bg-img {
-    // 模糊处理
     content: '';
     position: absolute;
     top: 0;
@@ -14,8 +13,6 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    filter: blur(5px);
-    transform: scale(1.2); // 与父元素overflow: hidden结合起来，避免边缘没有模糊效果
     transition: background-image 1s;
     z-index: -1;
     &::after {
