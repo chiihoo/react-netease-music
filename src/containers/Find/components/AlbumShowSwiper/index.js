@@ -12,7 +12,7 @@ const AlbumShowSwiper = props => {
   }
 
   return (
-    <div className="AlbumShowSwiper">
+    <div className="album-show-swiper">
       <Swiper {...params}>
         {data.map(itemArr => {
           return (

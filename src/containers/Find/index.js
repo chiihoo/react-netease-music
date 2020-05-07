@@ -24,7 +24,7 @@ const Find = () => {
 
   return useObserver(() => (
     <Scroll pullDown={handlePullDown}>
-      <div className="Find">
+      <div className="find">
         <Slider bannerList={FindStore.bannerList}></Slider>
         <div className="find-nav">
           <Link to="/recommend/taste">

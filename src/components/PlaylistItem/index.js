@@ -1,26 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PlaylistCoverImg from '@/components/PlaylistCoverImg'
 import './index.scss'
 
 // 单个歌单 方块形展示组件
 const PlaylistItem = props => {
   const { data } = props
+  
   return (
-    <div className="PlaylistItem">
+    <div className="playlist-item">
       <Link to={`/playlist/${data.id}`}>
-        <div className="img-wrapper">
-          <img src={data.coverImgUrl} title={data.name} alt="" className="cover-img" />
-          <div className="play-count">
-            <i className="iconfont icon-bofang5"></i>
-            <span>
-              {data.playCount >= 100000 ? parseInt(data.playCount / 10000) + '万' : data.playCount}
-            </span>
-          </div>
-        </div>
-        <p className="desc">{data.name}</p>
+        <PlaylistCoverImg data={data} />
+        <p className="desc two-lines-ellipsis">{data.name}</p>
       </Link>
     </div>
   )
 }
 
-export default PlaylistItem
+export default React.memo(PlaylistItem)

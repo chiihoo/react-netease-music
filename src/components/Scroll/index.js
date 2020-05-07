@@ -123,7 +123,7 @@ const Scroll = props => {
   }, [bScroll, pullUp, pullingUpHandler])
 
   return (
-    <div className="Scroll" ref={scrollContainerRef}>
+    <div className="scroll" ref={scrollContainerRef}>
       <div className="scroll-content">
         {children}
         {pullDown && (

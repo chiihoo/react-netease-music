@@ -1,9 +1,8 @@
-.Slider {
+.slider {
   .swiper-slide {
     text-align: center;
     .slider-img-wrapper {
       width: 345px;
-      margin: 0 auto;
       position: relative;
       display: inline-block;
       height: 100%;
@@ -14,7 +13,7 @@
         vertical-align: bottom; // 消除图片下方的空隙
         // display: block;
       }
-      .slider-img-typeTitle {
+      .slider-img-type-title {
         color: #fff;
         position: absolute;
         right: 0px;

@@ -22,7 +22,7 @@ const PlaylistRecommend = props => {
   }
 
   return (
-    <div className="PlaylistRecommend">
+    <div className="playlist-recommend">
       <div className="header">
         <div className="header-left">
           <p className="title">{title}</p>

@@ -38,9 +38,9 @@ const Home = () => {
   }
 
   return (
-    <div className="Home">
+    <div className="home">
       <HomeHeader changeActiveIndex={handleActiveIndex} activeIndex={activeIndex} />
-      <div className="scroll-wrap">
+      <div className="scroll-wrapper">
         <Swiper {...params}>
           <div>my</div>
           <div>

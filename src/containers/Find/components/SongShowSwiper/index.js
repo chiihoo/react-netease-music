@@ -14,7 +14,7 @@ const SongShowSwiper = props => {
   }
 
   return (
-    <div className="SongShowSwiper">
+    <div className="song-show-swiper">
       <Swiper {...params}>
         {data.map(itemArr => {
           return (

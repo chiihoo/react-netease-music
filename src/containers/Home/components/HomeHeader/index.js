@@ -8,7 +8,7 @@ const HomeHeader = props => {
   const { activeIndex, changeActiveIndex } = props
 
   return (
-    <div className="HomeHeader">
+    <div className="home-header">
       <i className="iconfont icon-caidan"></i>
       <div className="tabs">
         <div

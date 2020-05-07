@@ -22,7 +22,7 @@ const Slider = props => {
   }
 
   return (
-    <div className="Slider">
+    <div className="slider">
       <Swiper {...params}>
         {bannerList.map(item => {
           return (
@@ -31,7 +31,7 @@ const Slider = props => {
                 <div className="slider-img-wrapper">
                   <img src={item.pic} alt="" className="slider-img" />
                   <span
-                    className={classNames('slider-img-typeTitle', {
+                    className={classNames('slider-img-type-title', {
                       'typeTitle-red': item.titleColor === 'red',
                       'typeTitle-blue': item.titleColor === 'blue'
                     })}

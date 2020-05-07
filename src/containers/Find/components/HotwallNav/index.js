@@ -25,7 +25,7 @@ const HotwallNav = props => {
   const day = Date().slice(8, 10)
 
   return (
-    <div className="HotwallNav">
+    <div className="hotwall-nav">
       <div
         className="hotwall-bg-img"
         style={{

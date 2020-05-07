@@ -14,7 +14,7 @@ const SongAlbumRecommend = props => {
   } = props
 
   return (
-    <div className="SongAlbumRecommend">
+    <div className="song-album-recommend">
       <div className="header">
         <div className="header-left">
           <span className="date">
