@@ -1,0 +1,141 @@
+.playlist-detail {
+  .playlist-detail-nav {
+    height: 53px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px 0 10px;
+    border-radius: 20px 20px 0 0 / 15px 15px 0 0;
+    background-color: #fff;
+    z-index: 999;
+    margin-top: -20px;
+    position: sticky;
+    top: 55px;
+    > .playlist-play-all {
+      display: flex;
+      align-items: center;
+      > .icon-bofang6 {
+        font-size: 20px;
+      }
+      > span {
+        &:nth-of-type(1) {
+          padding-left: 10px;
+          font-size: 14px;
+        }
+        &:nth-of-type(2) {
+          color: #777676;
+        }
+      }
+    }
+    > .subscribe-btn {
+      flex-shrink: 0;
+      padding: 10px 13px;
+      border-radius: 30px;
+      background-color: #fe3a3b;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+
+      > .icon-jiahao {
+        font-size: 10px;
+        transform: translateY(1px);
+      }
+      > span {
+        padding-left: 5px;
+      }
+    }
+  }
+  .playlist-detail-songs {
+    .song-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 53px;
+      > .left {
+        width: 45px;
+        line-height: 53px;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.5);
+        flex-shrink: 0;
+      }
+      > .main {
+        // 以下两行可以自适应宽度，ellipsis可以正常工作
+        min-width: 0;
+        flex-grow: 1;
+        padding-right: 5px;
+        // 下架
+        .off-the-shelf {
+          color: rgba(0, 0, 0, 0.2) !important;
+        }
+        > .title {
+          font-size: 14px;
+        }
+        > .info {
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          > .iconfont {
+            color: #fd393a;
+            font-size: 20px;
+            padding-right: 3px;
+          }
+          > .icon-VIP {
+            font-size: 19px;
+          }
+          > .icon-SQ {
+            font-size: 18px;
+          }
+          > .artist-album-name {
+            color: rgba(0, 0, 0, 0.5);
+          }
+        }
+      }
+      > .right {
+        display: flex;
+        > .icon-mv1 {
+          font-size: 23px;
+          width: 35px;
+          line-height: 53px;
+          text-align: center;
+          color: rgba(0, 0, 0, 0.4);
+        }
+        > .icon-more {
+          font-size: 16px;
+          width: 35px;
+          line-height: 53px;
+          text-align: center;
+          padding-right: 15px;
+          box-sizing: border-box;
+          color: rgba(0, 0, 0, 0.4);
+        }
+      }
+    }
+  }
+  .playlist-detail-subscribers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    height: 53px;
+    .avatar-list {
+      display: flex;
+      width: 220px;
+      padding-right: 10px;
+      justify-content: space-between;
+      .avatar {
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        vertical-align: bottom;
+        z-index: 999;
+      }
+    }
+    .subscribed-count {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+  }
+}

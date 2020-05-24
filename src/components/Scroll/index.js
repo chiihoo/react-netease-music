@@ -36,7 +36,9 @@ const Scroll = props => {
     loadingStatus,
     tips = '已为您推荐个性化内容',
     pullDown = {},
-    pullUp = {}
+    pullUp = {},
+    getScrollElement,
+    onScrollFn
   } = props
 
   // 越宽的屏幕，下拉刷新的距离就要越大
@@ -47,9 +49,23 @@ const Scroll = props => {
   // 375的屏幕是2.67，1024的屏幕是0.98，这个系数是要乘以下拉的距离，来得到旋转的角度。屏幕越大，下拉距离也越大
   const RATIO = useMemo(() => 1000 / window.innerWidth, [])
 
-  // 触摸开始
-  useEventListener(
-    'touchstart',
+  // 获取scroll的container dom
+  useEffect(() => {
+    getScrollElement && getScrollElement(scrollRef.current)
+  }, [getScrollElement])
+
+  // 如果传入了onScrollFn，则监听scroll事件
+  useEffect(() => {
+    const element = scrollRef.current
+    if (onScrollFn) {
+      element.addEventListener('scroll', onScrollFn)
+      return () => {
+        element.removeEventListener('scroll', onScrollFn)
+      }
+    }
+  }, [onScrollFn])
+
+  const touchStartHandler = useCallback(
     e => {
       setTouchStart(e.touches[0].clientY)
       // 下拉刷新
@@ -57,12 +73,10 @@ const Scroll = props => {
         setIsTouchEnd(false)
       }
     },
-    scrollRef.current
+    [isRefreshing]
   )
 
-  // 触摸进行中
-  useEventListener(
-    'touchmove',
+  const touchMoveHandler = useCallback(
     e => {
       // 是否触顶
       setIsTop(scrollRef.current.scrollTop === 0)
@@ -110,12 +124,21 @@ const Scroll = props => {
         }
       }
     },
-    scrollRef.current
+    [
+      REFRESH_THRESHOLD,
+      TOUCH_THRESHOLD,
+      isBottom,
+      isLoading,
+      isRefreshing,
+      isStartPull,
+      isTop,
+      pullDown.callback,
+      pullUp,
+      touchStart
+    ]
   )
 
-  // 触摸结束
-  useEventListener(
-    'touchend',
+  const touchEndHandler = useCallback(
     e => {
       // 下拉刷新
       if (pullDown.callback && !isRefreshing) {
@@ -137,8 +160,17 @@ const Scroll = props => {
         }
       }
     },
-    scrollRef.current
+    [LOADING_STOP, isRefreshReady, isRefreshing, pullDown]
   )
+
+  // 触摸开始
+  useEventListener('touchstart', touchStartHandler, scrollRef.current)
+
+  // 触摸进行中
+  useEventListener('touchmove', touchMoveHandler, scrollRef.current)
+
+  // 触摸结束
+  useEventListener('touchend', touchEndHandler, scrollRef.current)
 
   // 下拉刷新
   // 网络请求完成后，需要进行的收尾工作

@@ -1,11 +1,11 @@
 import { useRef, useEffect } from 'react'
 
-function useEventListener(eventName, handle, element = window, options) {
+function useEventListener(eventName, handler, element = window, options) {
   const savedHandler = useRef()
 
   useEffect(() => {
-    savedHandler.current = handle
-  }, [handle])
+    savedHandler.current = handler
+  })
 
   useEffect(() => {
     const isSupported = element && element.addEventListener

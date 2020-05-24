@@ -26,3 +26,13 @@ export function imgBlurToBase64(url, blur) {
 export function handleNumber(number) {
   return number >= 100000 ? parseInt(number / 10000) + '万' : number
 }
+
+/**
+ * 生成随机全局唯一标识码
+ */
+export function guidGenerator() {
+  var S4 = function () {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+  }
+  return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4()
+}

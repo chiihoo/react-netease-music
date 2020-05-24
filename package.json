@@ -20,6 +20,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "react-transition-group": "^4.3.0",
+    "react-virtualized": "^9.21.2",
     "swiper": "^5.3.6"
   },
   "scripts": {

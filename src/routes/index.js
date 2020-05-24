@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import Home from '../containers/Home'
+import Playlist from '../containers/Playlist'
 
 const routes = [
   { path: '/', exact: true, render: () => <Redirect to="/home" /> },
@@ -21,12 +22,21 @@ const routes = [
     component: () => <>日推</>
   },
   {
-    path: '/playlist',
+    path: '/playlist/subscribers',
+    component: () => <>歌单订阅者</>
+  },
+  {
+    path: '/playlist/recommend',
     component: () => <>歌单广场</>
   },
   {
+    // 歌单详情页
     path: '/playlist/:id',
-    component: () => <>歌单详情页</>
+    component: Playlist
+  },
+  {
+    path: '/user/:uid',
+    component: () => <>用户信息</>
   },
   {
     path: '/toplist',
@@ -40,6 +50,7 @@ const routes = [
     path: '/hotwall',
     component: () => <>云村热评墙</>
   }
+
   // {
   //   path: '*',
   //   render: () => <Redirect to="/home/find" />
