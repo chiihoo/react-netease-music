@@ -4,7 +4,7 @@ import './index.scss'
 
 // 新歌新碟卡片中 —— 新碟滑动展示区域
 const AlbumShowSwiper = props => {
-  const { data } = props
+  const { newAlbums } = props
 
   const params = {
     resistanceRatio: 0,
@@ -14,7 +14,7 @@ const AlbumShowSwiper = props => {
   return (
     <div className="album-show-swiper">
       <Swiper {...params}>
-        {data.map(itemArr => {
+        {newAlbums.map(itemArr => {
           return (
             <div key={itemArr[0].id}>
               {itemArr.map(item => {
@@ -23,15 +23,15 @@ const AlbumShowSwiper = props => {
                     <img src={item.picUrl} alt={item.name} className="item-cover-img" />
                     <div className="item-main">
                       <div className="item-desc">
-                        <p className="title">
+                        <p className="title one-line-ellipsis">
                           {item.name}
                           {item.alias.length > 0 && `（${item.alias[0]}）`}
                         </p>
-                        <p className="artists">
+                        <p className="artists one-line-ellipsis">
                           {item.artists.reduce((total, currentValue, currentIndex, arr) => {
-                            return currentIndex === arr.length - 1
-                              ? total + currentValue.name
-                              : total + currentValue.name + '/'
+                            return currentIndex !== arr.length - 1
+                              ? total + currentValue.name + '/'
+                              : total + currentValue.name
                           }, '- ')}
                         </p>
                       </div>

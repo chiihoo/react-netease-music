@@ -7,8 +7,9 @@ import './index.scss'
 
 // 云村热评墙导航卡片
 const HotwallNav = props => {
-  // text-marquee类 从上往下轮播，当前显示项的index
+  // 从上往下轮播，当前显示项的index
   const [currentIndex, setCurrentIndex] = useState(0)
+
   const [songCoverUrl, setSongCoverUrl] = useState()
   const [songCoverUrlCache, setSongCoverUrlCache] = useState([])
 
@@ -52,7 +53,7 @@ const HotwallNav = props => {
   return (
     <div className="hotwall-nav">
       <div
-        className="hotwall-bg-img"
+        className="hotwall-nav-bg-img"
         style={{
           backgroundImage: `url(${songCoverUrl})`
         }}
@@ -63,12 +64,12 @@ const HotwallNav = props => {
             <span>云村热评墙</span>
             <i className="iconfont icon-gengduo"></i>
           </div>
-          <div className="text-marquee">
+          <div className="hotwall-nav-animate-wrapper">
             <TransitionGroup>
-              <CSSTransition timeout={500} classNames="marquee-wrapper" key={currentItem.id}>
+              <CSSTransition timeout={500} classNames="hotwall-nav-animate" key={currentItem.id}>
                 <div className="content-wrapper">
                   <img className="avatar" src={currentItem.avatar} alt="avatar" />
-                  <p className="content">{currentItem.content}</p>
+                  <p className="content one-line-ellipsis">{currentItem.content}</p>
                 </div>
               </CSSTransition>
             </TransitionGroup>

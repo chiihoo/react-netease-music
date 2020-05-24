@@ -37,6 +37,12 @@ p {
   margin: 0;
 }
 
+.one-line-ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .two-lines-ellipsis {
   display: -webkit-box;
   -webkit-line-clamp: 2;

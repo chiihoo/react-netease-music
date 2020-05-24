@@ -45,10 +45,10 @@ const SongAlbumRecommend = props => {
         </Link>
       </div>
       <div style={{ display: currentTab === 'newSong' ? 'block' : 'none' }}>
-        <SongShowSwiper data={newSongs} />
+        <SongShowSwiper newSongs={newSongs} />
       </div>
       <div style={{ display: currentTab === 'newAlbum' ? 'block' : 'none' }}>
-        <AlbumShowSwiper data={newAlbums} />
+        <AlbumShowSwiper newAlbums={newAlbums} />
       </div>
     </div>
   )

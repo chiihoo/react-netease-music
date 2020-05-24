@@ -6,7 +6,7 @@ import './index.scss'
 const SongShowSwiper = props => {
   const [currentPlayingId, setCurrentPlayingId] = useState()
 
-  const { data } = props
+  const { newSongs } = props
 
   const params = {
     resistanceRatio: 0,
@@ -16,7 +16,7 @@ const SongShowSwiper = props => {
   return (
     <div className="song-show-swiper">
       <Swiper {...params}>
-        {data.map(itemArr => {
+        {newSongs.map(itemArr => {
           return (
             <div key={itemArr[0].id}>
               {itemArr.map(item => {
@@ -29,15 +29,15 @@ const SongShowSwiper = props => {
                     <img src={item.picUrl} alt={item.name} className="item-cover-img" />
                     <div className="item-main">
                       <div className="item-desc">
-                        <p className="title">
+                        <p className="title one-line-ellipsis">
                           {item.song.name}
                           {item.song.alias.length > 0 && `（${item.song.alias[0]}）`}
                         </p>
-                        <p className="artists">
+                        <p className="artists one-line-ellipsis">
                           {item.song.artists.reduce((total, currentValue, currentIndex, arr) => {
-                            return currentIndex === arr.length - 1
-                              ? total + currentValue.name
-                              : total + currentValue.name + '/'
+                            return currentIndex !== arr.length - 1
+                              ? total + currentValue.name + '/'
+                              : total + currentValue.name
                           }, '- ')}
                         </p>
                       </div>

@@ -4,13 +4,13 @@ import './index.scss'
 
 // better-scroll封装的滚动组件
 const BScroll = props => {
-  const [bScroll, setBScroll] = useState()
   const [beforePullDown, setBeforePullDown] = useState(true) //是否下拉释放之前
   const [releaseRefresh, setReleaseRefresh] = useState(false) //是否已经下拉了可以下拉释放刷新的距离
   const [isPullingDown, setIsPullingDown] = useState(false) //是否下拉释放，已触发刷新
   const [isPullingUp, setIsPullingUp] = useState(false) //是否上拉已触发加载
 
-  const scrollContainerRef = useRef()
+  const scrollElementRef = useRef()
+  const scrollInstanceRef = useRef()
 
   // const THRESHOLD = 90
   // const STOP = 40
@@ -33,7 +33,7 @@ const BScroll = props => {
 
   // 初始化
   useEffect(() => {
-    const scrollInstance = new BetterScroll(scrollContainerRef.current, {
+    const scrollInstance = new BetterScroll(scrollElementRef.current, {
       scrollY: true,
       click: true, // 允许点击事件
       mouseWheel: true, // 允许鼠标滚轮控制滚动
@@ -45,25 +45,25 @@ const BScroll = props => {
       pullDownRefresh: pullDown ? pullDownConfig : false,
       pullUpLoad: pullUp ? pullUpConfig : false
     })
-    setBScroll(scrollInstance)
+    scrollInstanceRef.current = scrollInstance
     return () => {
-      bScroll && bScroll.destroy()
-      setBScroll(null)
+      scrollInstanceRef.current && scrollInstanceRef.current.destroy()
+      scrollInstanceRef.current = null
     }
     // eslint-disable-next-line
   }, [])
 
   // 下拉超过一定距离，显示：松开刷新
   useEffect(() => {
-    if (bScroll && pullDown) {
-      bScroll.on('scroll', pos => {
+    if (scrollInstanceRef.current && pullDown) {
+      scrollInstanceRef.current.on('scroll', pos => {
         setReleaseRefresh(pos.y > THRESHOLD)
       })
       return () => {
-        bScroll.off('scroll')
+        scrollInstanceRef.current.off('scroll')
       }
     }
-  }, [bScroll, pullDown, THRESHOLD])
+  }, [pullDown, THRESHOLD])
 
   // 下拉达到可以刷新的距离，松手触发
   const pullingDownHandler = useCallback(async () => {
@@ -77,8 +77,8 @@ const BScroll = props => {
     setIsPullingDown(false)
     await new Promise(resolve => {
       setTimeout(() => {
-        bScroll.finishPullDown()
-        bScroll.refresh()
+        scrollInstanceRef.current.finishPullDown()
+        scrollInstanceRef.current.refresh()
         resolve()
       }, 700)
     })
@@ -86,40 +86,40 @@ const BScroll = props => {
     setTimeout(() => {
       setBeforePullDown(true)
     }, 500)
-  }, [bScroll, pullDown])
+  }, [pullDown])
 
   // 上拉加载过程
   const pullingUpHandler = useCallback(async () => {
     setIsPullingUp(true)
     // 上拉加载数据
     await pullUp()
-    bScroll.finishPullUp()
-    bScroll.refresh()
+    scrollInstanceRef.current.finishPullUp()
+    scrollInstanceRef.current.refresh()
     setIsPullingUp(false)
-  }, [bScroll, pullUp])
+  }, [pullUp])
 
   // 监听下拉加载
   useEffect(() => {
-    if (bScroll && pullDown) {
-      bScroll.on('pullingDown', pullingDownHandler)
+    if (scrollInstanceRef.current && pullDown) {
+      scrollInstanceRef.current.on('pullingDown', pullingDownHandler)
       return () => {
-        bScroll.off('pullingDown', pullingDownHandler)
+        scrollInstanceRef.current.off('pullingDown', pullingDownHandler)
       }
     }
-  }, [bScroll, pullDown, pullingDownHandler])
+  }, [pullDown, pullingDownHandler])
 
   // 监听上拉刷新
   useEffect(() => {
-    if (bScroll && pullUp) {
-      bScroll.on('pullingUp', pullingUpHandler)
+    if (scrollInstanceRef.current && pullUp) {
+      scrollInstanceRef.current.on('pullingUp', pullingUpHandler)
       return () => {
-        bScroll.off('pullingUp', pullingUpHandler)
+        scrollInstanceRef.current.off('pullingUp', pullingUpHandler)
       }
     }
-  }, [bScroll, pullUp, pullingUpHandler])
+  }, [pullUp, pullingUpHandler])
 
   return (
-    <div className="bscroll" ref={scrollContainerRef}>
+    <div className="bscroll" ref={scrollElementRef}>
       <div className="bscroll-content">
         {children}
         {pullDown && (
