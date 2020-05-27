@@ -44,12 +44,11 @@ const SongAlbumRecommend = props => {
           {currentTab === 'newSong' ? '更多新歌' : '更多新碟'}
         </Link>
       </div>
-      <div style={{ display: currentTab === 'newSong' ? 'block' : 'none' }}>
+      {currentTab === 'newSong' ? (
         <SongShowSwiper newSongs={newSongs} />
-      </div>
-      <div style={{ display: currentTab === 'newAlbum' ? 'block' : 'none' }}>
+      ) : (
         <AlbumShowSwiper newAlbums={newAlbums} />
-      </div>
+      )}
     </div>
   )
 }

@@ -18,7 +18,7 @@ const PlaylistDetail = props => {
 
       const song = songs[index]
       const privilege = privileges[index]
-      // console.log(songsData.songs.length)
+
       return (
         <div className="song-item" key={key} style={style}>
           <div className="left">{index + 1}</div>

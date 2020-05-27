@@ -8,7 +8,7 @@ const AlbumShowSwiper = props => {
 
   const params = {
     resistanceRatio: 0,
-    shouldSwiperUpdate: true
+    rebuildOnUpdate: true
   }
 
   return (

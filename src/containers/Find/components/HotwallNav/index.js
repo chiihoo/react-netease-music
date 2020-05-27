@@ -21,8 +21,6 @@ const HotwallNav = props => {
     setCurrentIndex(nextIndex)
   }, 3000)
 
-  // 这里不需要用useMemo，因为只有当currentIndex变化时，或者数据源改变时，它才会计算
-  // 用了和没用的效果是一样的，用了反而还要多一次判断（检测依赖性是否改变）
   const currentItem = hotwallNavList[currentIndex]
 
   // 图片高斯模糊
@@ -55,7 +53,8 @@ const HotwallNav = props => {
       <div
         className="hotwall-nav-bg-img"
         style={{
-          backgroundImage: `url(${songCoverUrl})`
+          backgroundImage: `url(${songCoverUrl})`,
+          transition: songCoverUrlCache.length > 1 && 'background-image 1s'
         }}
       ></div>
       <Link to="/hotwall">

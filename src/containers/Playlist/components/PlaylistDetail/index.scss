@@ -24,6 +24,7 @@
         }
         &:nth-of-type(2) {
           color: #777676;
+          font-size: 13px;
         }
       }
     }
@@ -117,15 +118,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 12px;
     height: 53px;
     .avatar-list {
       display: flex;
       width: 220px;
-      padding-right: 10px;
-      justify-content: space-between;
       .avatar {
         flex-shrink: 0;
+        margin-right: 15px;
         width: 30px;
         height: 30px;
         border-radius: 50%;

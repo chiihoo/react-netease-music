@@ -4,7 +4,6 @@
   position: relative;
   overflow: hidden;
   > .hotwall-nav-bg-img {
-    content: '';
     position: absolute;
     top: 0;
     right: 0;
@@ -13,7 +12,6 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    transition: background-image 1s;
     z-index: -1;
     &::after {
       // 深色蒙版
