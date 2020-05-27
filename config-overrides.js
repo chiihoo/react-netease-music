@@ -2,7 +2,8 @@ const {
   override,
   addPostcssPlugins,
   addWebpackAlias,
-  addDecoratorsLegacy
+  addDecoratorsLegacy,
+  addBabelPlugin
 } = require('customize-cra')
 const path = require('path')
 
@@ -27,5 +28,6 @@ module.exports = override(
     })
   ]),
   addWebpackAlias({ ['@']: path.resolve(__dirname, 'src') }), // 设置src文件的别名'@'
-  addDecoratorsLegacy() // 配置装饰器
+  addDecoratorsLegacy(), // 配置装饰器
+  addBabelPlugin('react-activation/babel') // react-activation库是用来实现路由keep-alive效果的
 )

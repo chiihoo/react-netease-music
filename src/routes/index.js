@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import KeepAlive from 'react-activation'
 import Home from '../containers/Home'
 import Playlist from '../containers/Playlist'
 
@@ -7,7 +8,11 @@ const routes = [
   { path: '/', exact: true, render: () => <Redirect to="/home" /> },
   {
     path: '/home',
-    component: Home
+    render: props => (
+      <KeepAlive>
+        <Home {...props} />
+      </KeepAlive>
+    )
   },
   {
     path: '/play',
