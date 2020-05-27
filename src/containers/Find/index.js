@@ -27,7 +27,13 @@ const Find = () => {
         FindStore.getFindData()
       },
       loadingStatus: FindStore.loadingStatus
-    }
+    },
+    // 越宽的屏幕，下拉刷新的距离就要越大
+    refreshThreshold: window.innerWidth * 0.187, // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
+    touchThreshold: window.innerWidth * 0.352, // 滑块最多滑动到的距离 132
+    loadingStop: window.innerWidth * 0.187, // 下拉刷新 loading时，滑块停留的位置 70
+    tipsStop: window.innerWidth * 0.133, // tips停留的位置 50
+    ratio: 1000 / window.innerWidth //系数是要乘以下拉的距离，来得到旋转的角度
   }))
 
   return useObserver(() => (

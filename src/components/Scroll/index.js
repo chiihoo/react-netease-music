@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useEventListener } from '@/hooks'
 import './index.scss'
 
@@ -33,21 +33,27 @@ const Scroll = props => {
   // pullUp.loadingStatue传递上拉加载请求的加载状态
   const {
     children,
+    initialScrollTop,
     loadingStatus,
     tips = '已为您推荐个性化内容',
     pullDown = {},
     pullUp = {},
     getScrollElement,
-    onScrollFn
+    onScrollFn,
+    refreshThreshold = 70, // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
+    touchThreshold = 132, // 滑块最多滑动到的距离 132
+    loadingStop = 70, // 下拉刷新 loading时，滑块停留的位置 70
+    tipsStop = 50, // tips停留的位置 50
+    ratio = 2.67 // 375的屏幕是2.67，1024的屏幕是0.98，这个系数是要乘以下拉的距离，来得到旋转的角度。屏幕越大，下拉距离也越大
   } = props
 
-  // 越宽的屏幕，下拉刷新的距离就要越大
-  const REFRESH_THRESHOLD = useMemo(() => window.innerWidth * 0.187, []) // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
-  const TOUCH_THRESHOLD = useMemo(() => window.innerWidth * 0.352, []) // 滑块最多滑动到的距离 132
-  const LOADING_STOP = useMemo(() => window.innerWidth * 0.187, []) // 下拉刷新 loading时，滑块停留的位置 70
-  const TIPS_STOP = useMemo(() => window.innerWidth * 0.133, []) // tips停留的位置 50
-  // 375的屏幕是2.67，1024的屏幕是0.98，这个系数是要乘以下拉的距离，来得到旋转的角度。屏幕越大，下拉距离也越大
-  const RATIO = useMemo(() => 1000 / window.innerWidth, [])
+  // 切换路由时页面可能需要缓存，此处可以还原滚动位置
+  useEffect(() => {
+    if (initialScrollTop) {
+      scrollRef.current.scrollTo(0, initialScrollTop)
+    }
+    // eslint-disable-next-line
+  }, [])
 
   // 获取scroll的container dom
   useEffect(() => {
@@ -103,11 +109,11 @@ const Scroll = props => {
           setIsStartPull(true)
         } else {
           const diff = e.touches[0].clientY - touchStart
-          if (0 <= diff && diff < REFRESH_THRESHOLD) {
+          if (0 <= diff && diff < refreshThreshold) {
             // 没有拉到刷新的界限
             setSlideDistance(diff) // 滑块实际滑动距离
             setIsRefreshReady(false) // isRefreshReady为false时，滑块opacity为0.5，释放后归位
-          } else if (REFRESH_THRESHOLD <= diff && diff < TOUCH_THRESHOLD) {
+          } else if (refreshThreshold <= diff && diff < touchThreshold) {
             // 拉到可以刷新的界限，并且最多拉到TOUCH_THRESHOLD
             setSlideDistance(diff) // 滑块实际滑动距离
             setIsRefreshReady(true) // isRefreshReady为true时，滑块opacity为1，释放后停留loading
@@ -125,8 +131,8 @@ const Scroll = props => {
       }
     },
     [
-      REFRESH_THRESHOLD,
-      TOUCH_THRESHOLD,
+      refreshThreshold,
+      touchThreshold,
       isBottom,
       isLoading,
       isRefreshing,
@@ -149,8 +155,8 @@ const Scroll = props => {
           // 没下拉到可以刷新的位置，触摸结束时，就把滑块归位，否则触发刷新流程
           setSlideDistance(0)
         } else {
-          // 下拉到已经可以刷新的位置，触摸结束时，就把滑块停留到LOADING_STOP的位置，并且setIsRefreshing(true)
-          setSlideDistance(LOADING_STOP)
+          // 下拉到已经可以刷新的位置，触摸结束时，就把滑块停留到loadingStop的位置，并且setIsRefreshing(true)
+          setSlideDistance(loadingStop)
           // isRefreshing:true -> 换成动态loading图标
           setIsRefreshing(true)
           // 设置网络请求发出的时间，因为如果请求返回的速度很快的话，loading图标一闪就没了，需要适当延长时间
@@ -160,7 +166,7 @@ const Scroll = props => {
         }
       }
     },
-    [LOADING_STOP, isRefreshReady, isRefreshing, pullDown]
+    [loadingStop, isRefreshReady, isRefreshing, pullDown]
   )
 
   // 触摸开始
@@ -250,7 +256,7 @@ const Scroll = props => {
                     className="loading-in"
                     src={require('@/assets/svgIcons/refresh-loading-in.svg')}
                     style={{
-                      transform: `rotate(${-slideDistance * RATIO}deg)`,
+                      transform: `rotate(${-slideDistance * ratio}deg)`,
                       opacity: isRefreshReady ? 1 : 0.5
                     }}
                     alt=""
@@ -259,7 +265,7 @@ const Scroll = props => {
                     className="loading-out"
                     src={require('@/assets/svgIcons/refresh-loading-out.svg')}
                     style={{
-                      transform: `rotate(${slideDistance * RATIO}deg)`,
+                      transform: `rotate(${slideDistance * ratio}deg)`,
                       opacity: isRefreshReady ? 1 : 0.5
                     }}
                     alt=""
@@ -275,7 +281,7 @@ const Scroll = props => {
       <div className="refresh-tips">
         <span
           style={{
-            transform: showRefreshTips && `translateY(${TIPS_STOP}px)`
+            transform: showRefreshTips && `translateY(${tipsStop}px)`
           }}
         >
           {tips}

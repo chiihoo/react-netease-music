@@ -2,6 +2,12 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import BetterScroll from 'better-scroll'
 import './index.scss'
 
+// const THRESHOLD = 90
+// const STOP = 40
+// 写在配置中的数字默认是px单位，无法自适应，所以通过下述方式模拟vw
+const THRESHOLD = window.innerWidth * 0.24
+const STOP = window.innerWidth * 0.107
+
 // better-scroll封装的滚动组件
 const BScroll = props => {
   const [beforePullDown, setBeforePullDown] = useState(true) //是否下拉释放之前
@@ -11,12 +17,6 @@ const BScroll = props => {
 
   const scrollElementRef = useRef()
   const scrollInstanceRef = useRef()
-
-  // const THRESHOLD = 90
-  // const STOP = 40
-  // 写在配置中的数字默认是px单位，无法自适应，所以通过下述方式模拟vw
-  const THRESHOLD = useMemo(() => window.innerWidth * 0.24, [])
-  const STOP = useMemo(() => window.innerWidth * 0.107, [])
 
   const {
     children,
@@ -63,7 +63,7 @@ const BScroll = props => {
         scrollInstanceRef.current.off('scroll')
       }
     }
-  }, [pullDown, THRESHOLD])
+  }, [pullDown])
 
   // 下拉达到可以刷新的距离，松手触发
   const pullingDownHandler = useCallback(async () => {
