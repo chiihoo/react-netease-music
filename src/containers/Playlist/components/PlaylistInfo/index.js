@@ -1,29 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PlaylistCoverImg from '@/components/PlaylistCoverImg'
-import { imgBlurToBase64 } from '@/utils/tools'
 
 import './index.scss'
 // 歌单页面中部 歌单信息
 const PlaylistInfo = props => {
-  const [coverImgUrl, setCoverImgUrl] = useState()
-
-  const { playlistData, opactiy } = props
-
-  useEffect(() => {
-    ;(async function () {
-      // 先把图片缩略，再进行高斯模糊
-      const imgUrl = await imgBlurToBase64(
-        playlistData.coverImgUrl + '?imageView=1&thumbnail=225x0',
-        50
-      )
-      setCoverImgUrl(imgUrl)
-    })()
-  }, [playlistData.coverImgUrl])
+  const { playlistData, coverImgUrl, opacity } = props
 
   return (
     <div className="playlist-info">
-      <div className="playlist-bg-img" style={{ backgroundImage: `url(${coverImgUrl})` }}></div>
-      <div className="playlist-info-main" style={{ opacity: opactiy }}>
+      <div
+        className="playlist-info-bg-img"
+        style={{ backgroundImage: `url(${coverImgUrl})` }}
+      ></div>
+      <div className="playlist-info-main" style={{ opacity }}>
         <div className="playlist-cover-img-wrapper">
           <PlaylistCoverImg data={playlistData} />
         </div>
@@ -40,7 +29,7 @@ const PlaylistInfo = props => {
           </div>
         </div>
       </div>
-      <div className="playlist-options" style={{ opacity: opactiy }}>
+      <div className="playlist-options" style={{ opacity }}>
         <div className="playlist-comment">
           <i className="iconfont icon-pinglun"></i>
           <span>{playlistData.commentCount || '评论'}</span>

@@ -6,7 +6,7 @@ import './index.scss'
 
 // 歌单页面顶部header
 const PlaylistHeader = props => {
-  const { playlistData, isTicker } = props
+  const { playlistData, isTicker, coverImgUrl, opacity } = props
 
   const history = useHistory()
 
@@ -16,6 +16,14 @@ const PlaylistHeader = props => {
 
   return (
     <div className="playlist-header">
+      <div
+        className="playlist-header-bg-img"
+        style={{
+          backgroundImage: `url(${coverImgUrl})`,
+          opacity,
+          height: opacity === 1 && '18.667vw',
+        }}
+      ></div>
       <i className="iconfont icon-fanhui" onClick={goBack}></i>
       <div className="title">
         {!isTicker ? (

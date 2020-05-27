@@ -1,6 +1,6 @@
 .playlist-header {
   height: 55px;
-  background-color: rgba(0, 0, 0, 0.2); //这里应该是歌曲的background-image
+  // background-color: rgba(0, 0, 0, 0.2); //这里应该是歌曲的background-image
   color: #fff;
   display: flex;
   justify-content: space-between;
@@ -11,6 +11,27 @@
   left: 0;
   right: 0;
   z-index: 11;
+  > .playlist-header-bg-img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
+
   .title {
     width: 230px;
   }
