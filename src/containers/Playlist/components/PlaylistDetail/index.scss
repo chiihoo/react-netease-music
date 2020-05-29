@@ -7,7 +7,7 @@
     padding: 0 5px 0 10px;
     border-radius: 20px 20px 0 0 / 15px 15px 0 0;
     background-color: #fff;
-    z-index: 999;
+    z-index: 20;
     margin-top: -20px;
     position: sticky;
     top: 55px;
@@ -48,72 +48,6 @@
       }
     }
   }
-  .playlist-detail-songs {
-    .song-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 53px;
-      > .left {
-        width: 45px;
-        line-height: 53px;
-        text-align: center;
-        color: rgba(0, 0, 0, 0.5);
-        flex-shrink: 0;
-      }
-      > .main {
-        // 以下两行可以自适应宽度，ellipsis可以正常工作
-        min-width: 0;
-        flex-grow: 1;
-        padding-right: 5px;
-        // 下架
-        .off-the-shelf {
-          color: rgba(0, 0, 0, 0.2) !important;
-        }
-        > .title {
-          font-size: 14px;
-        }
-        > .info {
-          font-size: 12px;
-          display: flex;
-          align-items: center;
-          > .iconfont {
-            color: #fd393a;
-            font-size: 20px;
-            padding-right: 3px;
-          }
-          > .icon-VIP {
-            font-size: 19px;
-          }
-          > .icon-SQ {
-            font-size: 18px;
-          }
-          > .artist-album-name {
-            color: rgba(0, 0, 0, 0.5);
-          }
-        }
-      }
-      > .right {
-        display: flex;
-        > .icon-mv1 {
-          font-size: 23px;
-          width: 35px;
-          line-height: 53px;
-          text-align: center;
-          color: rgba(0, 0, 0, 0.4);
-        }
-        > .icon-more {
-          font-size: 16px;
-          width: 35px;
-          line-height: 53px;
-          text-align: center;
-          padding-right: 15px;
-          box-sizing: border-box;
-          color: rgba(0, 0, 0, 0.4);
-        }
-      }
-    }
-  }
   .playlist-detail-subscribers {
     display: flex;
     justify-content: space-between;
@@ -130,7 +64,6 @@
         height: 30px;
         border-radius: 50%;
         vertical-align: bottom;
-        z-index: 999;
       }
     }
     .subscribed-count {

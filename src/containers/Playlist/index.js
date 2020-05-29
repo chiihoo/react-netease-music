@@ -6,12 +6,13 @@ import { useStores } from '@/stores'
 import { imgBlurToBase64 } from '@/utils/tools'
 import Scroll from '@/components/Scroll'
 import PlaylistHeader from './components/PlaylistHeader'
+import PlaylistSongSearchResult from './components/PlaylistSongSearchResult'
 import PlaylistInfo from './components/PlaylistInfo'
 import PlaylistDetail from './components/PlaylistDetail'
 import './index.scss'
 
 const HEADER_HEIGHT = window.innerWidth * 0.14667
-const TARGET_HEIGHT = window.innerWidth * 0.516
+const TARGET_HEIGHT = window.innerWidth * 0.529
 
 const Playlist = () => {
   // 获取scroll的那个dom元素，传给react-virtualized的WindowScroller组件
@@ -22,6 +23,12 @@ const Playlist = () => {
   const [opacity, setOpacity] = useState(1)
   // 高斯模糊后的背景图片
   const [coverImgUrl, setCoverImgUrl] = useState()
+  // 是否点击了头部的搜索按钮
+  const [isSearch, setIsSearch] = useState(false)
+  // 搜索框输入的文字
+  const [searchValue, setSearchValue] = useState('')
+  // 防抖操作，连续输入后，一段时间不输入，置为true，再还原false
+  const [startSearch, setStartSearch] = useState(false)
 
   const params = useParams()
   const { PlaylistStore } = useStores()
@@ -65,7 +72,20 @@ const Playlist = () => {
             isTicker={isTicker}
             coverImgUrl={coverImgUrl}
             opacity={1 - opacity}
+            scrollElement={scrollElement}
+            isSearch={isSearch}
+            setIsSearch={setIsSearch}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            setStartSearch={setStartSearch}
           />
+          {isSearch && (
+            <PlaylistSongSearchResult
+              songsData={PlaylistStore.songsData}
+              searchValue={searchValue}
+              startSearch={startSearch}
+            />
+          )}
           {!isEmpty(PlaylistStore.playlistData) && (
             <PlaylistInfo
               playlistData={PlaylistStore.playlistData}

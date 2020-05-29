@@ -1,6 +1,5 @@
 .playlist-header {
   height: 55px;
-  // background-color: rgba(0, 0, 0, 0.2); //这里应该是歌曲的background-image
   color: #fff;
   display: flex;
   justify-content: space-between;
@@ -10,7 +9,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 11;
+  z-index: 5;
   > .playlist-header-bg-img {
     position: absolute;
     top: 0;
@@ -34,6 +33,7 @@
 
   .title {
     width: 230px;
+    line-height: 55px;
   }
   > i.iconfont {
     text-align: center;
@@ -50,5 +50,42 @@
   }
   .icon-more {
     font-size: 20px;
+  }
+
+  .search-box {
+    width: 305px;
+    .search-box-main {
+      display: flex;
+      align-items: center;
+      input.search-box-input {
+        padding: 0;
+        width: 100%;
+        line-height: 30px;
+        font-size: 15px;
+        outline: none;
+        border: 0;
+        color: rgba(255, 255, 255, 0.9);
+        background-color: transparent;
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.6);
+        }
+        &:focus + .bottom-line {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+        }
+      }
+      .icon-quxiao {
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    }
+    .bottom-line {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+      transform: scaleY(0.5);
+      transform-origin: 0 0;
+    }
   }
 }

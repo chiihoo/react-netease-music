@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react'
-import classNames from 'classnames'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { List, WindowScroller } from 'react-virtualized'
 import { handleNumber } from '@/utils/tools'
+import SongItem from '@/components/SongItem'
 import 'react-virtualized/styles.css'
 import './index.scss'
 
@@ -12,59 +12,18 @@ const PlaylistDetail = props => {
 
   const history = useHistory()
 
-  const rowRenderer = useCallback(
-    ({ key, index, style }) => {
-      const { songs, privileges } = songsData
-
-      const song = songs[index]
-      const privilege = privileges[index]
-
-      return (
-        <div className="song-item" key={key} style={style}>
-          <div className="left">{index + 1}</div>
-          <div className="main">
-            {/* off-the-shelf 下架 */}
-            <p
-              className={classNames('title', 'one-line-ellipsis', {
-                'off-the-shelf': privilege < 0
-              })}
-            >
-              {song.name}
-            </p>
-            <p className="info">
-              {/* VIP */}
-              {privilege.fee === 1 && <i className="iconfont icon-VIP"></i>}
-              {/* 试听 */}
-              {/1152|1028|1088|1092/.test(privilege.flag) && (
-                <i className="iconfont icon-shiting"></i>
-              )}
-              {/* 独家 */}
-              {/64|68|1088|1092/.test(privilege.flag) && <i className="iconfont icon-dujia"></i>}
-              {/* SQ */}
-              {privilege.maxbr === 999000 && <i className="iconfont icon-SQ"></i>}
-              <span
-                className={classNames('artist-album-name', 'one-line-ellipsis', {
-                  'off-the-shelf': privilege < 0
-                })}
-              >
-                {song?.ar.reduce((total, artist, index, arr) => {
-                  return index !== arr.length - 1
-                    ? total + artist.name + '/'
-                    : total + artist.name + ' - '
-                }, '')}
-                {song.al.name}
-              </span>
-            </p>
-          </div>
-          <div className="right">
-            <i className="iconfont icon-mv1"></i>
-            <i className="iconfont icon-more"></i>
-          </div>
-        </div>
-      )
-    },
-    [songsData]
-  )
+  const rowRenderer = ({ key, index, style }) => {
+    return (
+      <SongItem
+        itemKey={key}
+        style={style}
+        song={songsData.songs[index]}
+        privilege={songsData.privileges[index]}
+      >
+        {index + 1}
+      </SongItem>
+    )
+  }
 
   return (
     <div className="playlist-detail">
