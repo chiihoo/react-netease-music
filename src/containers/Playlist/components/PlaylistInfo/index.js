@@ -14,7 +14,11 @@ const PlaylistInfo = props => {
       ></div>
       <div className="playlist-info-main" style={{ opacity }}>
         <div className="playlist-cover-img-wrapper">
-          <PlaylistCoverImg data={playlistData} />
+          <PlaylistCoverImg
+            coverImgUrl={playlistData.coverImgUrl + '?param=200y200'}
+            name={playlistData.name}
+            playCount={playlistData.playCount}
+          />
         </div>
         <div className="playlist-info-main-right">
           <p className="playlist-title two-lines-ellipsis">{playlistData.name}</p>

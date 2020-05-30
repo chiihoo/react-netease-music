@@ -1,5 +1,6 @@
 .playlist-recommend {
   width: 100%;
+  height: 100%;
   .header {
     display: flex;
     justify-content: space-between;
@@ -41,6 +42,17 @@
         &:not(:last-of-type) {
           padding-right: 8px;
         }
+      }
+    }
+  }
+  .playlist-item {
+    > a {
+      .playlist-cover-img-wrapper {
+        height: 105px;
+      }
+      .desc {
+        font-size: 12px;
+        padding-top: 4px;
       }
     }
   }

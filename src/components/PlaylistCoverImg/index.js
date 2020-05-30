@@ -4,15 +4,15 @@ import './index.scss'
 
 // 歌单封面组件
 const PlaylistCoverImg = props => {
-  const { data } = props
+  const { coverImgUrl, name, playCount } = props
 
   return (
     <div className="playlist-cover-img">
       <div className="img-wrapper">
-        <img src={data.coverImgUrl} title={data.name} alt="" className="cover-img" />
+        <img src={coverImgUrl} title={name} alt="" className="cover-img" />
         <div className="play-count">
           <i className="iconfont icon-yousanjiao"></i>
-          <span>{handleNumber(data.playCount)}</span>
+          <span>{handleNumber(playCount)}</span>
         </div>
       </div>
     </div>

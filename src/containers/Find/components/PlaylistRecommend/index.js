@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Swiper from 'react-id-swiper'
-import PlaylistItem from '@/components/PlaylistItem'
+import PlaylistCoverImg from '@/components/PlaylistCoverImg'
+
 import './index.scss'
 
 // 歌单推荐导航卡片
@@ -35,8 +36,17 @@ const PlaylistRecommend = props => {
       <Swiper {...params}>
         {playlists.map(item => {
           return (
-            <div key={item.id}>
-              <PlaylistItem data={item} />
+            <div key={item.id} className="playlist-item">
+              <Link to={`/playlist/${item.id}`}>
+                <div className="playlist-cover-img-wrapper">
+                  <PlaylistCoverImg
+                    coverImgUrl={item.coverImgUrl + '?param=200y200'}
+                    name={item.name}
+                    playCount={item.playCount}
+                  />
+                </div>
+                <p className="desc two-lines-ellipsis">{item.name}</p>
+              </Link>
             </div>
           )
         })}
