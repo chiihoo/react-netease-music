@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import SongItem from '@/components/SongItem'
 import './index.scss'
+import loadingSvg from '@/assets/svgIcons/loading.svg'
 
 // 由于"播放全部"这行需要将header背景图片的下端盖住，以保证填充圆弧部分，
 // 故header的z-index要比"播放全部"低
@@ -8,6 +9,7 @@ import './index.scss'
 
 // PlaylistHeader搜索的结果
 const PlaylistSongSearchResult = props => {
+  // startSearch为输入框防抖操作，一段时间不操作为true，一直输入为false
   const { songsData, searchValue, startSearch } = props
   // 存储的是结果的索引，而不是id
   const [searchResult, setSearchResult] = useState([])
@@ -23,10 +25,8 @@ const PlaylistSongSearchResult = props => {
 
   // 搜索歌单内歌曲
   useEffect(() => {
-    if (searchValueProcessed === '') {
-      setSearchResult([])
-      return
-    }
+    setSearchResult([])
+    if (searchValueProcessed === '') return
     setSearchFinished(false)
     if (!startSearch) return
     let result = []
@@ -56,10 +56,16 @@ const PlaylistSongSearchResult = props => {
             <SongItem key={item.id} song={item} privilege={songsData.songs[index]} />
           ))}
 
-        {searchResult.length === 0 && searchValueProcessed !== '' && searchFinished && (
+        {searchValueProcessed !== '' && searchFinished && searchResult.length === 0 && (
           <div className="not-find-notice">
             <p>未找到与"{searchValue}"相关的内容</p>
             <p>试试搜索云音乐曲库</p>
+          </div>
+        )}
+        {searchValueProcessed !== '' && !searchFinished && (
+          <div className="loading-notice">
+            <img src={loadingSvg} alt="" className="loading" />
+            <span>努力加载中...</span>
           </div>
         )}
       </div>

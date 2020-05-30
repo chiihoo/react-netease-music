@@ -10,6 +10,20 @@
     font-size: 15px;
     color: rgba(0, 0, 0, 0.6);
     text-align: center;
-    padding: 50px 0;
+    padding-top: 70px;
+  }
+  .loading-notice {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    > img {
+      width: 13px;
+    }
+    > span {
+      padding-left: 7px;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.6);
+    }
   }
 }
