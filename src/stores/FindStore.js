@@ -1,31 +1,15 @@
 import { observable, flow } from 'mobx'
 import { chunk } from 'lodash-es'
-import {
-  fetchBanner,
-  fetchHotwall,
-  fetchRecommendPlaylists,
-  fetchNewSongs,
-  fetchNewAlbums
-} from '@/api'
+import { fetchBanner, fetchRecommendPlaylists, fetchNewSongs, fetchNewAlbums } from '@/api'
 
 export const FindStore = observable({
-  loadingStatus: 0, // 0：未发起请求； 1：正在请求； 2：请求完毕
+  loadingStatus: 0, // 0：请求未完成； 1：请求完成；
   bannerList: [],
-  hotwallList: [],
   recommendPlaylists: [],
   sceneRecommendPlaylists: [],
   newSongs: [],
   newAlbums: [],
 
-  // 云村热评墙数据
-  get hotwallNavList() {
-    return this.hotwallList.map(item => ({
-      id: item.id,
-      content: item.content,
-      avatar: item.simpleUserInfo.avatar,
-      songCoverUrl: item.simpleResourceInfo.songCoverUrl
-    }))
-  },
   // 新歌新碟数据
   get newSongAlbum() {
     return {
@@ -38,11 +22,6 @@ export const FindStore = observable({
   getBannerList: flow(function* () {
     const res = yield fetchBanner()
     this.bannerList = res.banners
-  }),
-  // 获取云村热评墙
-  getHotwallList: flow(function* () {
-    const res = yield fetchHotwall()
-    this.hotwallList = res.data
   }),
   // 获取推荐歌单
   getRecommendPlaylists: flow(function* () {
@@ -66,18 +45,16 @@ export const FindStore = observable({
   }),
   // 统一获取Find页面数据
   getFindData: flow(function* () {
-    this.loadingStatus = 1
+    this.loadingStatus = 0
     // Promise.allSettled不会像Promise.all那样，只有有任何一个promise失败，所有的promise就全都挂掉了
     // 手机华为浏览器不兼容Promise.allSettled
     yield Promise.all([
       this.getBannerList(),
-      this.getHotwallList(),
       this.getRecommendPlaylists(),
       this.getSceneRecommendPlaylists(),
       this.getNewSongs(),
       this.getNewAlbums()
     ])
-    this.loadingStatus = yield 2
-    this.loadingStatus = yield 0
+    this.loadingStatus = yield 1
   })
 })

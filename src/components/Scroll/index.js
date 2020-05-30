@@ -13,10 +13,15 @@ const Scroll = props => {
   const [isRefreshing, setIsRefreshing] = useState(false) // 是否正在刷新
   const [showLoadingIcon, setShowLoadingIcon] = useState(true) // 是否展示loading图标，停止展示-复位-重新展示，这是为了避免刷新结束时，loading图标复位出现渐变轨迹
   const [showRefreshTips, setShowRefreshTips] = useState(false) // 刷新完毕，展示Tips
-  const [reqTime, setReqTime] = useState(Date.now()) // 记录请求发出的时间
+  const [isFirstLoad, setIsFirstLoad] = useState(true) // 记录是否为第一次的初始加载，只展示一次Tips
   const [isLoading, setIsLoading] = useState(false) // 是否正在进行下拉加载的请求
 
-  const scrollRef = useRef()
+  const scrollRef = useRef() // 存储scroll的dom
+
+  const reqTime = useRef(Date.now()) // 记录请求发出的时间
+
+  const prevPullDownLoadingStatus = useRef(null) // 存储pullDown的前一次loading状态
+  const prevPullUpLoadingStatus = useRef(null) // 存储pullUp的前一次loading状态
 
   // 保存定时器id，并在组件卸载时统一clearTimeout
   const timerIdRef1 = useRef()
@@ -25,7 +30,7 @@ const Scroll = props => {
   const timerIdRef4 = useRef()
 
   // loadingStatus传递页面初始加载时的加载状态，可以控制初始加载时tips的显示消失，跟pullDown和pullUp无关
-  // 约定loadingStatus： 0：未发起请求； 1：正在请求； 2：请求完毕
+  // 约定loadingStatus： 0：请求未完成； 1：请求完成；
   // tips为请求完成时，显示的文字
   // pullDown和pullUp各有callback，同时也有loadingStatus
   // callback是进行刷新或加载的网络请求的函数
@@ -160,7 +165,7 @@ const Scroll = props => {
           // isRefreshing:true -> 换成动态loading图标
           setIsRefreshing(true)
           // 设置网络请求发出的时间，因为如果请求返回的速度很快的话，loading图标一闪就没了，需要适当延长时间
-          setReqTime(Date.now())
+          reqTime.current = Date.now()
           // 回调函数 进行刷新所需要的网络请求
           pullDown.callback()
         }
@@ -198,33 +203,52 @@ const Scroll = props => {
     }, 2000)
   }, [])
 
-  // 下拉刷新
-  // 监听loadingStatus，当网络请求进行完毕时，调用finishPullDown()
-  // 同时，如果网络请求很快就完成了，loading图标就会一闪而过，这就需要适当延长loading图标显示的时间
-  // 初次加载 和 下拉加载 都要finishPullDown()，以此来触发显示 "已为您推荐个性化内容" 的tips
-  // 初次加载loadingStatus，下拉加载pullDown.loadingStatus
-  useEffect(() => {
-    // loadingStatus 约定：  0：未发起请求； 1：正在请求； 2：请求完毕
-    if (loadingStatus === 2 || (pullDown.callback && pullDown.loadingStatus === 2)) {
-      const timeDiff = Date.now() - reqTime
-      if (timeDiff < 1500) {
-        timerIdRef3.current = setTimeout(() => {
-          finishPullDown()
-        }, 1500 - timeDiff)
-      } else {
+  // 需要监听loadingStatus，当网络请求进行完毕时，调用finishPullDown()
+  // 但是，如果网络请求很快就完成了，loading图标就会一闪而过，这就需要适当延长loading图标显示的时间
+  const delayFinishPullDown = useCallback(() => {
+    const timeDiff = Date.now() - reqTime.current
+    if (timeDiff < 1500) {
+      timerIdRef3.current = setTimeout(() => {
         finishPullDown()
-      }
+      }, 1500 - timeDiff)
+    } else {
+      finishPullDown()
     }
-  }, [loadingStatus, pullDown.callback, pullDown.loadingStatus, finishPullDown, reqTime])
+    // eslint-disable-next-line
+  }, [])
+
+  // 初次加载，需要delayFinishPullDown()，以此来触发显示 "已为您推荐个性化内容" 的tips
+  useEffect(() => {
+    // loadingStatus 约定：  0：请求未完成； 1：请求完成；
+    if (isFirstLoad && loadingStatus === 1) {
+      setIsFirstLoad(false)
+      delayFinishPullDown()
+    }
+  }, [isFirstLoad, loadingStatus, delayFinishPullDown])
+
+  // 下拉刷新，请求加载完成后，delayFinishPullDown()，触发显示 "已为您推荐个性化内容" 的tips
+  useEffect(() => {
+    // loadingStatus 约定：  0：请求未完成； 1：请求完成；
+    if (
+      pullDown.callback &&
+      !isFirstLoad &&
+      prevPullDownLoadingStatus.current === 0 &&
+      pullDown.loadingStatus === 1
+    ) {
+      delayFinishPullDown()
+    }
+    prevPullDownLoadingStatus.current = pullDown.loadingStatus
+  }, [pullDown.callback, isFirstLoad, pullDown.loadingStatus, delayFinishPullDown])
 
   // 上拉加载
   useEffect(() => {
-    if (isLoading && pullUp.loadingStatus === 2) {
+    if (isLoading && prevPullUpLoadingStatus.current === 0 && pullUp.loadingStatus === 1) {
       // 减少上拉加载的请求频率，避免在touchmove上拉动作的时候，短时间内连续触发pullUp.callback，需要稍微放大点间隔时间
       timerIdRef4.current = setTimeout(() => {
         setIsLoading(false)
       }, 1000)
     }
+    prevPullUpLoadingStatus.current = pullUp.loadingStatus
   }, [isLoading, pullUp.loadingStatus])
 
   // 组件卸载时，删除定时器

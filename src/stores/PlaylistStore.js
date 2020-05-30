@@ -1,10 +1,12 @@
 import { observable, flow } from 'mobx'
 import { fetchPlaylistDetail, fetchSongDetail } from '@/api'
 export const PlaylistStore = observable({
+  loadingStatus: 0,
   playlistData: {},
   songsData: {},
 
   getPlaylistData: flow(function* (id) {
+    this.loadingStatus = 0
     // 最多只能拿到1000首，但是trackIds是完整的，可以用这个请求所有的歌曲
     const res = yield fetchPlaylistDetail(id)
     this.playlistData = res.playlist
@@ -17,5 +19,6 @@ export const PlaylistStore = observable({
     }, '')
     // 用trackIds拼凑的ids字符串，请求全部的歌曲
     this.songsData = yield fetchSongDetail(trackIdsString)
+    this.loadingStatus = 1
   })
 })

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Swiper from 'react-id-swiper'
 import HomeHeader from './components/HomeHeader'
 import Find from '../Find'
+import Yuncun from '../Yuncun'
 import './index.scss'
 
 // 首页
@@ -10,6 +11,14 @@ const Home = () => {
   const [swiper, setSwiper] = useState()
   // swiper当前活动页的index
   const [activeIndex, setActiveIndex] = useState(1)
+  // 没切换到Yuncun页面，切换过去也只加载一次
+  const [hasGoToYuncun, sethasGoToToYuncun] = useState(false)
+
+  useEffect(() => {
+    if (activeIndex === 2 && !hasGoToYuncun) {
+      sethasGoToToYuncun(true)
+    }
+  }, [activeIndex, hasGoToYuncun])
 
   // 当HomeHeader组件的导航按钮点击导致activeIndex改变时，swiper要跳转到指定页面
   useEffect(() => {
@@ -46,6 +55,7 @@ const Home = () => {
           <div>
             <Find />
           </div>
+          <div>{hasGoToYuncun && <Yuncun />}</div>
         </Swiper>
       </div>
 

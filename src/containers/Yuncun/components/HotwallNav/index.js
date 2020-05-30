@@ -33,10 +33,7 @@ const HotwallNav = props => {
           return
         }
       }
-      const blurUrl = await imgBlurToBase64(
-        currentItem.songCoverUrl + '?imageView=1&thumbnail=225x0',
-        20
-      )
+      const blurUrl = await imgBlurToBase64(currentItem.songCoverUrl + '?param=200y200', 20)
       setSongCoverUrl(blurUrl)
       setSongCoverUrlCache([
         ...songCoverUrlCache,

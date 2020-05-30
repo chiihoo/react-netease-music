@@ -23,6 +23,12 @@ const HomeHeader = props => {
         >
           发现
         </div>
+        <div
+          className={classNames('tab', { active: activeIndex === 2 })}
+          onClick={() => changeActiveIndex(2)}
+        >
+          云村
+        </div>
       </div>
       <Link to="/search">
         <i className="iconfont icon-sousuo"></i>

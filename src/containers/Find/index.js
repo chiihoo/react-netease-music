@@ -4,7 +4,6 @@ import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
 import Slider from '@/components/Slider'
 import Scroll from '@/components/Scroll'
-import HotwallNav from './components/HotwallNav'
 import PlaylistRecommend from './components/PlaylistRecommend'
 import SongAlbumRecommend from './components/SongAlbumRecommend'
 import './index.scss'
@@ -59,11 +58,6 @@ const Find = () => {
             <i className="iconfont icon-diantai"></i>
             <span>电台</span>
           </Link>
-        </div>
-        <div className="hotwall-nav-wrapper">
-          {FindStore.hotwallNavList.length > 0 && (
-            <HotwallNav hotwallNavList={FindStore.hotwallNavList} />
-          )}
         </div>
         <div className="recommend-nav">
           <div className="playlist-recommend-wrapper">
