@@ -9,7 +9,8 @@ const Yuncun = () => {
 
   useEffect(() => {
     YuncunStore.getYuncunData()
-  }, [YuncunStore])
+    // eslint-disable-next-line
+  }, [])
 
   return useObserver(() => (
     <div className="yun-cun">

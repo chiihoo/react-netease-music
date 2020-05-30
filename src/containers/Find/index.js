@@ -14,7 +14,8 @@ const Find = () => {
 
   useEffect(() => {
     FindStore.getFindData()
-  }, [FindStore])
+    // eslint-disable-next-line
+  }, [])
 
   // 需要用useObserver来监听FindStore.loadingStatus
   // 实际上可以把useObserver替换成 const Find = observer(function Find() {})

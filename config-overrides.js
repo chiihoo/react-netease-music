@@ -28,6 +28,5 @@ module.exports = override(
     })
   ]),
   addWebpackAlias({ ['@']: path.resolve(__dirname, 'src') }), // 设置src文件的别名'@'
-  addDecoratorsLegacy(), // 配置装饰器
-  addBabelPlugin('react-activation/babel') // react-activation库是用来实现路由keep-alive效果的
+  addDecoratorsLegacy() // 配置装饰器
 )

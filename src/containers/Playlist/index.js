@@ -15,7 +15,7 @@ import './index.scss'
 const HEADER_HEIGHT = window.innerWidth * 0.14667
 const TARGET_HEIGHT = window.innerWidth * 0.529
 
-const Playlist = () => {
+const Playlist = props => {
   // 获取scroll的那个dom元素，传给react-virtualized的WindowScroller组件
   const [scrollElement, setScrollElement] = useState()
   // 下拉HEADER_HEIGHT距离后，header文字有"歌单"变为滚动歌单名
@@ -36,7 +36,8 @@ const Playlist = () => {
 
   useEffect(() => {
     PlaylistStore.getPlaylistData(params.id)
-  }, [PlaylistStore, params.id])
+    // eslint-disable-next-line
+  }, [])
 
   // 给背景图片高斯模糊
   useEffect(() => {
@@ -63,7 +64,7 @@ const Playlist = () => {
       }
     }
   }
-  
+
   return useObserver(() => (
     <div className="playlist">
       {PlaylistStore.loadingStatus === 0 ? (
