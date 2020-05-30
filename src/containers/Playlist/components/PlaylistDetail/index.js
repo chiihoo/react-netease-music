@@ -15,7 +15,7 @@ const PlaylistDetail = props => {
   const rowRenderer = ({ key, index, style }) => {
     return (
       <SongItem
-        itemKey={key}
+        key={key}
         style={style}
         song={songsData.songs[index]}
         privilege={songsData.privileges[index]}

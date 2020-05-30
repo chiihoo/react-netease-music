@@ -3,12 +3,12 @@ import classNames from 'classnames'
 import './index.scss'
 
 // 单行歌曲展示组件
-// 因为要放到React-virtualized中，所以要 key,style
+// 因为要放到React-virtualized中，所以要 key（直接挂在组件上），style（挂在组件内的外层标签上）
 const SongItem = props => {
-  const { children, itemKey, style, song, privilege } = props
+  const { children, style, song, privilege } = props
 
   return (
-    <div className="song-item" key={itemKey} style={style}>
+    <div className="song-item" style={style}>
       <div className="main">
         {children !== undefined && <div className="main-left">{children}</div>}
         <div className="main-right" style={{ paddingLeft: children === undefined && '4.533vw' }}>
