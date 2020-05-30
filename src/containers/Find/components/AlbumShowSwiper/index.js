@@ -20,7 +20,11 @@ const AlbumShowSwiper = props => {
               {itemArr.map(item => {
                 return (
                   <div className="item-info" key={item.id}>
-                    <img src={item.picUrl} alt={item.name} className="item-cover-img" />
+                    <img
+                      src={item.picUrl + '?param=200y200'}
+                      alt={item.name}
+                      className="item-cover-img"
+                    />
                     <div className="item-main">
                       <div className="item-desc">
                         <p className="title one-line-ellipsis">

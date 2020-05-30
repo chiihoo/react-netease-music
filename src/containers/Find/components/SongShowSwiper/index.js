@@ -26,7 +26,11 @@ const SongShowSwiper = props => {
                     key={item.id}
                     onClick={() => setCurrentPlayingId(item.id)}
                   >
-                    <img src={item.picUrl} alt={item.name} className="item-cover-img" />
+                    <img
+                      src={item.picUrl + '?param=200y200'}
+                      alt={item.name}
+                      className="item-cover-img"
+                    />
                     <div className="item-main">
                       <div className="item-desc">
                         <p className="title one-line-ellipsis">
