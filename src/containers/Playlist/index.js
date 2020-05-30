@@ -9,6 +9,7 @@ import PlaylistHeader from './components/PlaylistHeader'
 import PlaylistSongSearchResult from './components/PlaylistSongSearchResult'
 import PlaylistInfo from './components/PlaylistInfo'
 import PlaylistDetail from './components/PlaylistDetail'
+import PlaylistSkeleton from '@/skeletons/PlaylistSkeleton'
 import './index.scss'
 
 const HEADER_HEIGHT = window.innerWidth * 0.14667
@@ -43,7 +44,7 @@ const Playlist = () => {
       // 先把图片缩略，再进行高斯模糊
       if (PlaylistStore.playlistData.coverImgUrl) {
         const imgUrl = await imgBlurToBase64(
-          PlaylistStore.playlistData.coverImgUrl + '?imageView=1&thumbnail=225x0',
+          PlaylistStore.playlistData.coverImgUrl + '?param=200y200',
           50
         )
         setCoverImgUrl(imgUrl)
@@ -62,44 +63,48 @@ const Playlist = () => {
       }
     }
   }
-
+  
   return useObserver(() => (
     <div className="playlist">
-      <div className="scroll-wrapper">
-        <Scroll {...scrollProps}>
-          <PlaylistHeader
-            playlistData={PlaylistStore.playlistData}
-            isTicker={isTicker}
-            coverImgUrl={coverImgUrl}
-            opacity={1 - opacity}
-            scrollElement={scrollElement}
-            isSearch={isSearch}
-            setIsSearch={setIsSearch}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            setStartSearch={setStartSearch}
-          />
-          {isSearch && (
-            <PlaylistSongSearchResult
-              songsData={PlaylistStore.songsData}
-              searchValue={searchValue}
-              startSearch={startSearch}
-            />
-          )}
-          {!isEmpty(PlaylistStore.playlistData) && (
-            <PlaylistInfo
+      {PlaylistStore.loadingStatus === 0 ? (
+        <PlaylistSkeleton />
+      ) : (
+        <div className="scroll-wrapper">
+          <Scroll {...scrollProps}>
+            <PlaylistHeader
               playlistData={PlaylistStore.playlistData}
+              isTicker={isTicker}
               coverImgUrl={coverImgUrl}
-              opacity={opacity}
+              opacity={1 - opacity}
+              scrollElement={scrollElement}
+              isSearch={isSearch}
+              setIsSearch={setIsSearch}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              setStartSearch={setStartSearch}
             />
-          )}
-          <PlaylistDetail
-            playlistData={PlaylistStore.playlistData}
-            songsData={PlaylistStore.songsData}
-            scrollElement={scrollElement}
-          />
-        </Scroll>
-      </div>
+            {isSearch && (
+              <PlaylistSongSearchResult
+                songsData={PlaylistStore.songsData}
+                searchValue={searchValue}
+                startSearch={startSearch}
+              />
+            )}
+            {!isEmpty(PlaylistStore.playlistData) && (
+              <PlaylistInfo
+                playlistData={PlaylistStore.playlistData}
+                coverImgUrl={coverImgUrl}
+                opacity={opacity}
+              />
+            )}
+            <PlaylistDetail
+              playlistData={PlaylistStore.playlistData}
+              songsData={PlaylistStore.songsData}
+              scrollElement={scrollElement}
+            />
+          </Scroll>
+        </div>
+      )}
     </div>
   ))
 }
