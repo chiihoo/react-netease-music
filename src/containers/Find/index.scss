@@ -3,6 +3,7 @@
   height: 100%;
   .find-slider {
     padding-top: 10px;
+    height: 134px;
   }
   .find-nav {
     padding: 13px 15px 0;
@@ -34,17 +35,17 @@
     }
   }
   .hotwall-nav-wrapper {
+    width: 345;
+    height: 85px;
     padding: 13px 15px 0;
   }
   .recommend-nav {
     .playlist-recommend-wrapper {
-      margin-top: 20px;
+      margin-top: 10px;
+      height: 200px;
     }
     .scene-recommend-wrapper {
-      margin-top: 13px;
-    }
-    .new-song-album-recommend-wrapper {
-      margin-top: 13px;
+      height: 200px;
     }
   }
 }
