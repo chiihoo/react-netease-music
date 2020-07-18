@@ -8,11 +8,7 @@ import axios from '../utils/axios'
 export const fetchBanner = () => {
   return axios.get('/banner?type=1')
 }
-// 获取云村热评墙数据
-export const fetchHotwall = () => {
-  return axios.get('/comment/hotwall/list')
-}
-// 获取歌单数据，limit:取出条数，cat:分类
+// 获取推荐歌单数据，limit:取出条数，cat:分类
 export const fetchRecommendPlaylists = (limit, category) => {
   return axios.get(`/top/playlist?limit=${limit}&cat=${category}`)
 }
@@ -23,6 +19,14 @@ export const fetchNewSongs = () => {
 // 获取新碟，会取10个左右
 export const fetchNewAlbums = () => {
   return axios.get('/album/newest')
+}
+
+/**
+ *  YunCun页面
+ */
+// 获取云村热评墙数据
+export const fetchHotwall = () => {
+  return axios.get('/comment/hotwall/list')
 }
 
 /**
@@ -37,4 +41,18 @@ export const fetchPlaylistDetail = id => {
 // 根据歌曲id，获取歌曲的详细数据，/song/detail?ids=347230,347231
 export const fetchSongDetail = ids => {
   return axios.get(`/song/detail/?ids=${ids}`)
+}
+
+/**
+ * Player、Mini-Player页面，在Audio组件中请求
+ */
+
+//  根据歌曲id，获取url
+export const fetchUrl = id => {
+  return axios.get(`/song/url?id=${id}`)
+}
+
+//  根据歌曲id，获取歌词
+export const fetchLyrics = id => {
+  return axios.get(`/lyric?id=${id}`)
 }

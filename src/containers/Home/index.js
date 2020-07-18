@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Swiper from 'react-id-swiper'
-import HomeHeader from './components/HomeHeader'
-import Find from '../Find'
-import Yuncun from '../Yuncun'
+import HomeHeader from './components/home-header'
+import Find from '../find'
+import Yuncun from '../yun-cun'
 import './index.scss'
 
 // 首页
 const Home = () => {
   // swiper实例
-  const [swiper, setSwiper] = useState()
+  const swiperRef = useRef()
   // swiper当前活动页的index
   const [activeIndex, setActiveIndex] = useState(1)
   // 没切换到Yuncun页面，切换过去也只加载一次
@@ -22,10 +22,10 @@ const Home = () => {
 
   // 当HomeHeader组件的导航按钮点击导致activeIndex改变时，swiper要跳转到指定页面
   useEffect(() => {
-    if (swiper) {
-      swiper.slideTo(activeIndex)
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideTo(activeIndex)
     }
-  }, [swiper, activeIndex])
+  }, [activeIndex])
 
   const handleActiveIndex = useCallback(index => setActiveIndex(index), [])
 
@@ -34,10 +34,6 @@ const Home = () => {
     initialSlide: 1,
     resistanceRatio: 0,
     speed: 200,
-    observer: true,
-    observeParents: true,
-    watchSlidesProgress: true,
-    getSwiper: setSwiper,
     on: {
       // swiper切换页面后，设置当前活动页index
       transitionEnd: function () {
@@ -50,7 +46,7 @@ const Home = () => {
     <div className="home">
       <HomeHeader changeActiveIndex={handleActiveIndex} activeIndex={activeIndex} />
       <div className="home-main">
-        <Swiper {...params}>
+        <Swiper {...params} ref={swiperRef}>
           <div>my</div>
           <div>
             <Find />

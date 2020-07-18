@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 
-function useWindowSize() {
+/**
+ * 监听浏览器resize时间，并实时获取浏览器窗口宽高
+ */
+const useWindowSize = () => {
   const isClient = typeof window === 'object'
   const [windowSize, setWindowSize] = useState({
     width: isClient ? window.innerWidth : undefined,

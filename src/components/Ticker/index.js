@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { debounce } from 'lodash-es'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { guidGenerator } from '@/utils/tools'
-import { useEventListener } from '@/hooks'
-import TickerElement from './TickerElement'
+import { useEventListener, useDebouncedCallback } from '@/hooks'
+import TickerElement from './ticker-element'
 
 /**
  * 歌单页面顶部header与mini播放栏歌名的横向无限循环滚动效果，类似marquee，但又不同
  * 参考了react-ticker库的实现，但是它没有提供文字当前滚动的位置，无法实现文字到达边缘后，停顿一会，又接着滚动
- * 并且前一个元素与后一个元素的间隔只能用空格来实现，不优雅
+ * 并且前一个元素与后一个元素的间隔只能用空格来实现
  * 本组件对上述问题做了改进
- * @param {String} direction  'toRight'||'toLeft', default:'toLeft'
+ * @param {String} direction  'toRight' || 'toLeft', default: 'toLeft'
  * @param {Number} speed
  * @param {Number} childMargin 元素的间隔
  * @param {Boolean} move  控制ticker是否移动
  * @param {Number} stopDuration  元素到达左边界时停顿的时间
+ * 需要给组件传递一个独特的key，保证点击不同数据时会重新初始化
  */
+
 const Ticker = props => {
   const {
     children,
@@ -55,25 +56,27 @@ const Ticker = props => {
     setElements(prevElements => prevElements.filter(item => item.id !== id))
   }, [])
 
-  // 组件初始化时时，添加一个元素
+  // 组件初始化时，添加一个元素
   useEffect(() => {
     createTickerElement()
-  }, [createTickerElement])
+    // eslint-disable-next-line
+  }, [])
 
   // 当改变窗口大小时，重置
-  const resizeHandler = useMemo(
-    () =>
-      debounce(() => {
-        setElements([])
-        createTickerElement()
-      }, 100),
-    [createTickerElement]
-  )
+  const resizeHandler = useDebouncedCallback(() => {
+    const { width } = tickerRef.current.getBoundingClientRect()
+    setTickerWidth(width)
+    setElements([])
+    createTickerElement()
+    setIsMoving(move)
+  }, 100)
+
   useEventListener('resize', resizeHandler)
 
   // 设置tickerWidth
   useEffect(() => {
-    setTickerWidth(tickerRef.current.offsetWidth)
+    const { width } = tickerRef.current.getBoundingClientRect()
+    setTickerWidth(width)
   }, [])
 
   // 设置trickerHeight，由于.ticker是相对定位的，高度无法被撑起来，tickerRef.current.offsetHeight的值为0
@@ -98,7 +101,6 @@ const Ticker = props => {
         <TickerElement
           key={item.id}
           id={item.id}
-          index={item.index}
           isFirst={item.isFirst}
           setElements={setElements}
           tickerWidth={tickerWidth}

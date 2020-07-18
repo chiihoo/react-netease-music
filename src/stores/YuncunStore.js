@@ -1,10 +1,11 @@
-import { observable, flow } from 'mobx'
+import { observable, computed, flow } from 'mobx'
 import { fetchHotwall } from '@/api'
 
-export const YuncunStore = observable({
-  hotwallList: [],
+export class yuncunStore {
+  @observable hotwallList = []
 
   // 云村热评墙数据
+  @computed
   get hotwallNavList() {
     return this.hotwallList.map(item => ({
       id: item.id,
@@ -12,10 +13,10 @@ export const YuncunStore = observable({
       avatar: item.simpleUserInfo.avatar,
       songCoverUrl: item.simpleResourceInfo.songCoverUrl
     }))
-  },
+  }
 
-  getYuncunData: flow(function* () {
+  getYuncunData = flow(function* () {
     const res = yield fetchHotwall()
     this.hotwallList = res.data
   })
-})
+}

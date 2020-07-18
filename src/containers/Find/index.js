@@ -1,32 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { useObserver } from 'mobx-react-lite'
+import { observer } from 'mobx-react-lite'
+import { chunk } from 'lodash-es'
 import { useStores } from '@/stores'
-import Slider from '@/components/Slider'
-import Scroll from '@/components/Scroll'
-import PlaylistRecommend from './components/PlaylistRecommend'
-import SongAlbumRecommend from './components/SongAlbumRecommend'
+import Carousel from '@/components/carousel'
+import Scroll from '@/components/scroll'
+import PlaylistRecommend from './components/playlist-recommend'
+import NewSongsAlbumsRecommend from './components/new-songs-albums-recommend'
 import './index.scss'
+import { useCallback } from 'react'
 
 // 首页发现页面
-const Find = () => {
-  const { FindStore } = useStores()
+const Find = observer(function Find() {
+  const { findStore, playerStore } = useStores()
 
   useEffect(() => {
-    FindStore.getFindData()
+    findStore.getFindData()
     // eslint-disable-next-line
   }, [])
 
-  // 需要用useObserver来监听FindStore.loadingStatus
-  // 实际上可以把useObserver替换成 const Find = observer(function Find() {})
-  // 但是使用observer，无法在react开发者工具中看到这个组件的状态
-  const scrollParams = useObserver(() => ({
-    loadingStatus: FindStore.loadingStatus,
+  const scrollParams = {
+    loadingStatus: findStore.loadingStatus,
     pullDown: {
       callback() {
-        FindStore.getFindData()
+        findStore.getFindData()
       },
-      loadingStatus: FindStore.loadingStatus
+      loadingStatus: findStore.loadingStatus
     },
     // 越宽的屏幕，下拉刷新的距离就要越大
     refreshThreshold: window.innerWidth * 0.187, // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
@@ -34,13 +33,25 @@ const Find = () => {
     loadingStop: window.innerWidth * 0.187, // 下拉刷新 loading时，滑块停留的位置 70
     tipsStop: window.innerWidth * 0.133, // tips停留的位置 50
     ratio: 1000 / window.innerWidth //系数是要乘以下拉的距离，来得到旋转的角度
-  }))
+  }
 
-  return useObserver(() => (
+  // 点击单行歌曲项，进行播放
+  const handleSongItemClick = useCallback(
+    songId => {
+      playerStore.addSongToPlay(songId, findStore.newSongs, [])
+    },
+    // eslint-disable-next-line
+    [findStore.newSongs]
+  )
+
+  const newSongs = useMemo(() => chunk(findStore.newSongs.slice(0, 6), 3), [findStore.newSongs])
+  const newAlbums = useMemo(() => chunk(findStore.newAlbums.slice(0, 6), 3), [findStore.newAlbums])
+
+  return (
     <div className="find">
       <Scroll {...scrollParams}>
-        <div className="find-slider">
-          <Slider bannerList={FindStore.bannerList}></Slider>
+        <div className="find-carousel">
+          <Carousel bannerList={findStore.bannerList}></Carousel>
         </div>
         <div className="find-nav">
           <Link to="/recommend/taste">
@@ -63,7 +74,7 @@ const Find = () => {
         <div className="recommend-nav">
           <div className="playlist-recommend-wrapper">
             <PlaylistRecommend
-              playlists={FindStore.recommendPlaylists}
+              playlists={findStore.recommendPlaylists}
               title={'歌单推荐'}
               intro={'为你精挑细选'}
               linkTo={'/playlist/recommend'}
@@ -71,19 +82,24 @@ const Find = () => {
           </div>
           <div className="scene-recommend-wrapper">
             <PlaylistRecommend
-              playlists={FindStore.sceneRecommendPlaylists}
+              playlists={findStore.sceneRecommendPlaylists}
               title={'场景推荐'}
               intro={'音乐 照亮你心坎'}
               linkTo={'/playlist/recommend/official'}
             />
           </div>
-          <div className="new-song-album-recommend-wrapper">
-            <SongAlbumRecommend newSongAlbum={FindStore.newSongAlbum} />
+          <div className="new-songs-albums-recommend-wrapper">
+            <NewSongsAlbumsRecommend
+              newSongs={newSongs}
+              newAlbums={newAlbums}
+              currentSongId={playerStore.currentSongId}
+              handleSongItemClick={handleSongItemClick}
+            />
           </div>
         </div>
       </Scroll>
     </div>
-  ))
-}
+  )
+})
 
 export default React.memo(Find)

@@ -4,6 +4,8 @@ import useEventListener from './useEventListener'
 import useWindowSize from './useWindowSize'
 import useRafLoop from './useRafLoop'
 import useDeviceChangeReload from './useDeviceChangeReload'
+import usePageVisibility from './usePageVisibility'
+import useDebouncedCallback from './useDebouncedCallback'
 
 export {
   useInterval,
@@ -11,5 +13,7 @@ export {
   useEventListener,
   useWindowSize,
   useRafLoop,
-  useDeviceChangeReload
+  useDeviceChangeReload,
+  usePageVisibility,
+  useDebouncedCallback
 }

@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { useObserver } from 'mobx-react-lite'
 import { isEmpty } from 'lodash-es'
 import { useStores } from '@/stores'
 import { imgBlurToBase64 } from '@/utils/tools'
-import Scroll from '@/components/Scroll'
-import PlaylistHeader from './components/PlaylistHeader'
-import PlaylistSongSearchResult from './components/PlaylistSongSearchResult'
-import PlaylistInfo from './components/PlaylistInfo'
-import PlaylistDetail from './components/PlaylistDetail'
-import PlaylistSkeleton from '@/skeletons/PlaylistSkeleton'
+import Scroll from '@/components/scroll'
+import PlaylistHeader from './components/playlist-header'
+import PlaylistSearchResult from './components/playlist-search-result'
+import PlaylistInfo from './components/playlist-info'
+import PlaylistDetail from './components/playlist-detail'
+import PlaylistSkeleton from '@/skeletons/playlist-skeleton'
 import './index.scss'
 
 const HEADER_HEIGHT = window.innerWidth * 0.14667
 const TARGET_HEIGHT = window.innerWidth * 0.529
 
-const Playlist = props => {
+// 歌单详情页面
+const Playlist = () => {
   // 获取scroll的那个dom元素，传给react-virtualized的WindowScroller组件
   const [scrollElement, setScrollElement] = useState()
   // 下拉HEADER_HEIGHT距离后，header文字有"歌单"变为滚动歌单名
@@ -23,7 +24,7 @@ const Playlist = props => {
   // 下拉TARGET_HEIGHT距离后，opacity由1线性变为0
   const [opacity, setOpacity] = useState(1)
   // 高斯模糊后的背景图片
-  const [coverImgUrl, setCoverImgUrl] = useState()
+  const [blurCoverImgUrl, setBlurCoverImgUrl] = useState()
   // 是否点击了头部的搜索按钮
   const [isSearch, setIsSearch] = useState(false)
   // 搜索框输入的文字
@@ -32,10 +33,11 @@ const Playlist = props => {
   const [startSearch, setStartSearch] = useState(false)
 
   const params = useParams()
-  const { PlaylistStore } = useStores()
+
+  const { playlistStore, playerStore } = useStores()
 
   useEffect(() => {
-    PlaylistStore.getPlaylistData(params.id)
+    playlistStore.getPlaylistData(params.id)
     // eslint-disable-next-line
   }, [])
 
@@ -43,15 +45,15 @@ const Playlist = props => {
   useEffect(() => {
     ;(async function () {
       // 先把图片缩略，再进行高斯模糊
-      if (PlaylistStore.playlistData.coverImgUrl) {
+      if (playlistStore.playlistData.coverImgUrl) {
         const imgUrl = await imgBlurToBase64(
-          PlaylistStore.playlistData.coverImgUrl + '?param=200y200',
+          playlistStore.playlistData.coverImgUrl + '?param=200y200',
           50
         )
-        setCoverImgUrl(imgUrl)
+        setBlurCoverImgUrl(imgUrl)
       }
     })()
-  }, [PlaylistStore.playlistData.coverImgUrl])
+  }, [playlistStore.playlistData.coverImgUrl])
 
   const scrollProps = {
     getScrollElement: setScrollElement,
@@ -65,46 +67,72 @@ const Playlist = props => {
     }
   }
 
+  // 点击单行歌曲项，进行播放
+  const handleSongItemClick = useCallback((songId, isVIPSong) => {
+    // if (未登录 && isVipSong) {
+    //   需要登陆
+    // } else
+    playerStore.addSongToPlay(songId, playlistStore.songs, playlistStore.privileges)
+    // eslint-disable-next-line
+  }, [])
+
   return useObserver(() => (
     <div className="playlist">
-      {PlaylistStore.loadingStatus === 0 ? (
+      {playlistStore.loadingStatus === 0 ? (
         <PlaylistSkeleton />
       ) : (
-        <div className="scroll-wrapper">
-          <Scroll {...scrollProps}>
-            <PlaylistHeader
-              playlistData={PlaylistStore.playlistData}
-              isTicker={isTicker}
-              coverImgUrl={coverImgUrl}
-              opacity={1 - opacity}
-              scrollElement={scrollElement}
-              isSearch={isSearch}
-              setIsSearch={setIsSearch}
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              setStartSearch={setStartSearch}
-            />
-            {isSearch && (
-              <PlaylistSongSearchResult
-                songsData={PlaylistStore.songsData}
-                searchValue={searchValue}
-                startSearch={startSearch}
+        <>
+          <PlaylistHeader
+            playlistName={playlistStore.playlistData.name}
+            playlistId={playlistStore.playlistData.id}
+            isTicker={isTicker}
+            blurCoverImgUrl={blurCoverImgUrl}
+            opacity={1 - opacity}
+            scrollElement={scrollElement}
+            isSearch={isSearch}
+            setIsSearch={setIsSearch}
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            setStartSearch={setStartSearch}
+          />
+          <div className="scroll-wrapper">
+            <Scroll {...scrollProps}>
+              {isSearch && (
+                <PlaylistSearchResult
+                  songs={playlistStore.songs}
+                  privileges={playlistStore.privileges}
+                  searchValue={searchValue}
+                  startSearch={startSearch}
+                  handleSongItemClick={handleSongItemClick}
+                />
+              )}
+              {!isEmpty(playlistStore.playlistData) && (
+                <PlaylistInfo
+                  playCount={playlistStore.playlistData.playCount}
+                  coverImgUrl={playlistStore.playlistData.coverImgUrl}
+                  playlistName={playlistStore.playlistData.name}
+                  description={playlistStore.playlistData.description}
+                  commentCount={playlistStore.playlistData.commentCount}
+                  shareCount={playlistStore.playlistData.shareCount}
+                  avatarUrl={playlistStore.playlistData.creator.avatarUrl}
+                  nickname={playlistStore.playlistData.creator.nickname}
+                  blurCoverImgUrl={blurCoverImgUrl}
+                  opacity={opacity}
+                />
+              )}
+              <PlaylistDetail
+                trackCount={playlistStore.playlistData.trackCount}
+                subscribers={playlistStore.playlistData.subscribers}
+                subscribedCount={playlistStore.playlistData.subscribedCount}
+                songs={playlistStore.songs}
+                privileges={playlistStore.privileges}
+                scrollElement={scrollElement}
+                handleSongItemClick={handleSongItemClick}
+                currentSongId={playerStore.currentSongId}
               />
-            )}
-            {!isEmpty(PlaylistStore.playlistData) && (
-              <PlaylistInfo
-                playlistData={PlaylistStore.playlistData}
-                coverImgUrl={coverImgUrl}
-                opacity={opacity}
-              />
-            )}
-            <PlaylistDetail
-              playlistData={PlaylistStore.playlistData}
-              songsData={PlaylistStore.songsData}
-              scrollElement={scrollElement}
-            />
-          </Scroll>
-        </div>
+            </Scroll>
+          </div>
+        </>
       )}
     </div>
   ))
