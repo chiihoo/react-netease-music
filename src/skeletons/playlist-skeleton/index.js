@@ -1,5 +1,5 @@
 import React from 'react'
-import loadingSvg from '@/assets/svgIcons/loading.svg'
+import loadingSvg from '@/assets/svg-icons/loading.svg'
 import './index.scss'
 
 // 歌单页面 骨架屏

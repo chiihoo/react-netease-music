@@ -1,0 +1,35 @@
+.slider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  // 缓冲进度条
+  .bufferd-line {
+    width: 100%;
+    height: 2px;
+    margin: 0 8px;
+    border-radius: 5px;
+    // 播放进度条
+    .line {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+    }
+  }
+  .circle-wrapper {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    .circle {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #fff;
+      transform-origin: 50% 50%;
+      transition: transform 0.5s;
+    }
+  }
+}
