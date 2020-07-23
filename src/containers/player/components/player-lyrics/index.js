@@ -8,7 +8,6 @@ import './index.scss'
 // 播放页面歌词
 const PlayerLyrics = props => {
   const {
-    currentTime,
     lyrics,
     lyricUser,
     transUser,

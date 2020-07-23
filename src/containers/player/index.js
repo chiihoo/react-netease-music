@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
 import PlayerHeader from './components/player-header'
-import PlayerCircleCover from './components/player-circle-cover'
 import PlayerController from './components/player-controller'
 import PlayerLyrics from './components/player-lyrics'
 import PlayerVolume from './components/player-volume'
+import AudioAnimation from './components/audio-animation'
 import { imgBlurToBase64 } from '@/utils/tools'
 import './index.scss'
 
@@ -57,6 +57,10 @@ const Player = () => {
     playerStore.setVolume(volume)
     // eslint-disable-next-line
   }, [])
+  const updateDataArray = useCallback(() => {
+    playerStore.updateDataArray()
+    // eslint-disable-next-line
+  }, [])
 
   return useObserver(() => (
     <div className="player">
@@ -64,20 +68,24 @@ const Player = () => {
       <div className="player-masking-layer"></div>
       <PlayerHeader song={playerStore.currentSong} />
       <div className="player-cover-lyrics-wrapper" onClick={() => setShowLyrics(value => !value)}>
-        <div className="player-circle-cover-wrapper" style={{ visibility: showLyrics && 'hidden' }}>
-          <PlayerCircleCover
-            coverImgUrl={playerStore.currentSong.al.picUrl}
+        <div
+          className="player-cover-animation-wrapper"
+          style={{ visibility: showLyrics ? 'hidden' : 'visible' }}
+        >
+          <AudioAnimation
+            updateDataArray={updateDataArray}
+            dataArray={playerStore.dataArray}
+            picUrl={playerStore.currentSong.al.picUrl}
             isPlaying={playerStore.isPlaying}
           />
         </div>
         <div
           className="player-lyrics-scroll-wrapper"
-          style={{ visibility: !showLyrics && 'hidden' }}
+          style={{ visibility: showLyrics ? 'visible' : 'hidden' }}
         >
           <PlayerVolume volume={playerStore.volume} changeVolume={changeVolume} />
           <div className="player-lyrics-wrapper">
             <PlayerLyrics
-              currentTime={playerStore.currentTime}
               isPureMusic={playerStore.isPureMusic}
               hasLyric={playerStore.hasLyric}
               lyrics={playerStore.lyrics}

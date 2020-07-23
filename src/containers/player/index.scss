@@ -30,15 +30,12 @@
     left: 0;
     right: 0;
     bottom: 150px;
-    .player-circle-cover-wrapper {
+    .player-cover-animation-wrapper {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-self: center;
     }
     .player-lyrics-scroll-wrapper {
       position: absolute;

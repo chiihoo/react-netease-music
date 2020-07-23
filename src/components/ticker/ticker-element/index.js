@@ -32,7 +32,7 @@ const TickerElement = props => {
   } = props
 
   // 获取元素位移前的起始位置
-  const getStartPosX = useCallback(() => {
+  useEffect(() => {
     // startPosX为元素左侧位置，第一个元素都是贴着左边界
     // toRight 其余元素的右侧贴着父盒子的左边界
     // toLeft 其余元素的左侧贴着父盒子的右边界
@@ -57,23 +57,14 @@ const TickerElement = props => {
     ])
   }, [setElements])
 
-  // 获取元素位移前的起始位置
-  useEffect(() => {
-    getStartPosX()
-  }, [getStartPosX])
-
   //  useRafLoop，通过设置x的位置，进行位移
-  const rafLoopHandle = useCallback(
-    timeDiff => {
-      if (direction === 'toRight') {
-        setX(prevX => prevX + (timeDiff * speed) / 100)
-      } else {
-        setX(prevX => prevX - (timeDiff * speed) / 100)
-      }
-    },
-    [direction, speed]
-  )
-  const [stopRaf, startRaf] = useRafLoop(rafLoopHandle, true)
+  const [stopRaf, startRaf] = useRafLoop(timeDiff => {
+    if (direction === 'toRight') {
+      setX(prevX => prevX + (timeDiff * speed) / 100)
+    } else {
+      setX(prevX => prevX - (timeDiff * speed) / 100)
+    }
+  }, true)
 
   // 通过isMoving控制元素位移的停止与启动
   useEffect(() => {

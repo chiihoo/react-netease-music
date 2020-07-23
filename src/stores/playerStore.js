@@ -33,7 +33,7 @@ export class playerStore {
 
   // Audio组件中对audio的解析，获取频率数组，由于音频可视化动画是放在Player中的，所以需要存一下
   @observable analyser = null // AnalyserNode
-  @observable dataArray = null // 频率数组
+  @observable dataArray = new Array(256).fill(0) // 频率数组
 
   @computed
   get currentSong() {
@@ -123,7 +123,7 @@ export class playerStore {
   }
   @action
   updateDataArray() {
-    if (this.analyser && this.dataArray) {
+    if (this.analyser) {
       this.analyser.getByteFrequencyData(this.dataArray)
     }
   }

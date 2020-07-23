@@ -1,8 +1,7 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import Slider from '@/components/slider'
 import { formatTime } from '@/utils/tools'
 import './index.scss'
-import { useEffect } from 'react'
 
 // 播放页面底部控制器
 const PlayerController = props => {
@@ -76,13 +75,13 @@ const PlayerController = props => {
         <div className="slider-wrapper">
           <Slider
             scale={2}
-            max={Math.floor(totalTime)}
+            max={totalTime > 0 ? Math.floor(totalTime) : 100}
             value={Math.floor(time)}
             onMoveStart={onMoveStart}
             onMoving={onMoving}
             onMoveEnd={onMoveEnd}
             onAfterChange={onAfterChange}
-            buffered={bufferedTime / totalTime}
+            buffered={totalTime !== 0 ? bufferedTime / totalTime : 0}
           />
         </div>
         <div className="total-time">{formatTotalTime}</div>

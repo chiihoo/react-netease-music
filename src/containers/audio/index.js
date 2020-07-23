@@ -134,7 +134,7 @@ const Audio = observer(function Audio() {
     // 获取频率数组
     // frequencyBinCount为fftSize值的一半. 该属性通常用于可视化的数据值的数量.
     dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount)
-    // getByteFrequencyData 是对已有的数组元素进行赋值，而不是创建后返回新的数组
+    // getByteFrequencyData 更新操作，是对已有的数组元素进行赋值，而不是创建后返回新的数组
     analyserRef.current.getByteFrequencyData(dataArrayRef.current)
 
     playerStore.setAnalyser(analyserRef.current)
@@ -159,8 +159,8 @@ const Audio = observer(function Audio() {
     // analyserRef.current.getByteFrequencyData(dataArrayRef.current)
     // console.log(dataArrayRef.current)
 
-    playerStore.updateDataArray()
-    console.log(playerStore.dataArray)
+    // playerStore.updateDataArray()
+    // console.log(playerStore.dataArray)
 
     // eslint-disable-next-line
   }, [playerStore.isPlaying])
@@ -180,7 +180,6 @@ const Audio = observer(function Audio() {
       if (res.data[0].url) {
         playerStore.setBufferedTime(0)
         audioRef.current.src = res.data[0].url
-
         // 这里的播放命令放到canplaythrough，防止快速的切换歌曲导致的报错：The play() request was interrupted by a new load request
         // isPlaying.current && audioRef.current.play()
       } else {
@@ -193,8 +192,12 @@ const Audio = observer(function Audio() {
   }, [playerStore.currentSongId])
 
   useEffect(() => {
-    audioRef.current.currentTime = playerStore.timeToPlay
-    isPlaying.current && audioRef.current.play()
+    if (playerStore.timeToPlay !== null) {
+      audioRef.current.currentTime = playerStore.timeToPlay
+      isPlaying.current && audioRef.current.play()
+      playerStore.setTimeToPlay(null)
+    }
+    // eslint-disable-next-line
   }, [playerStore.timeToPlay])
 
   useEffect(() => {

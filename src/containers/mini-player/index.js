@@ -55,7 +55,7 @@ const MiniPlayer = () => {
               }}
             >
               <div className="album-img-wrapper">
-                <img className="album-img" src={song.al.picUrl + '?param=100y100'} alt="" />
+                <img className="album-img" src={song.al.picUrl + '?param=200y200'} alt="" />
               </div>
               <div className="info">
                 <div className="title">
@@ -94,7 +94,7 @@ const MiniPlayer = () => {
           }}
         >
           <svg xmlns="http://www.w3.org/2000/svg">
-            {/* 外圈轮廓 */}
+            {/* 外圈内外两层 */}
             <circle
               className="c1"
               cx="50%"
@@ -104,6 +104,7 @@ const MiniPlayer = () => {
               strokeDashoffset="0%"
               style={{ stroke: playerStore.isPlaying ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.6)' }}
             ></circle>
+            {/* 外圈里面夹着的红色进度 */}
             <circle
               className="c2"
               cx="50%"
