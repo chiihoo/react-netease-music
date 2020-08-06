@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouteMatch, useHistory, useLocation } from 'react-router-dom'
-import { useObserver } from 'mobx-react-lite'
+import { observer } from 'mobx-react-lite'
 import Swiper from 'react-id-swiper'
 import { useStores } from '@/stores'
 import Ticker from '@/components/ticker'
@@ -8,7 +8,7 @@ import { usePageVisibility } from '@/hooks'
 import './index.scss'
 
 // 页面下方的mini播放器
-const MiniPlayer = () => {
+const MiniPlayer = observer(function MiniPlayer() {
   const [activeIndex, setActiveIndex] = useState(1)
 
   const { playerStore } = useStores()
@@ -33,14 +33,16 @@ const MiniPlayer = () => {
     resistanceRatio: 0,
     on: {
       transitionEnd: function () {
-        setActiveIndex(this.activeIndex)
-        this.slideTo(1, 0, false)
+        if (playerStore.swiperLoadSongs.length > 0) {
+          setActiveIndex(this.activeIndex)
+          this.slideTo(1, 0, false)
+        }
       }
     },
     shouldSwiperUpdate: true
   }
 
-  return useObserver(() => (
+  return (
     <div
       className="mini-player"
       style={{ visibility: (playerStore.playList.length === 0 || playerMatch) && 'hidden' }}
@@ -126,7 +128,7 @@ const MiniPlayer = () => {
       </div>
       <audio></audio>
     </div>
-  ))
-}
+  )
+})
 
 export default React.memo(MiniPlayer)
