@@ -26,7 +26,7 @@ const Carousel = props => {
         {bannerList.map(item => {
           return (
             <div key={item.bannerId}>
-              <a href={item.url} target="_blank" rel="noopener noreferrer">
+              <a href={item.url}>
                 <div className="carousel-img-wrapper">
                   <img src={item.pic} alt="" className="carousel-img" />
                   <span

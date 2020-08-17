@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { chunk } from 'lodash-es'
@@ -8,7 +8,6 @@ import Scroll from '@/components/scroll'
 import PlaylistRecommend from './components/playlist-recommend'
 import NewSongsAlbumsRecommend from './components/new-songs-albums-recommend'
 import './index.scss'
-import { useCallback } from 'react'
 
 // 首页发现页面
 const Find = observer(function Find() {

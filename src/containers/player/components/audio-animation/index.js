@@ -44,6 +44,7 @@ const AudioAnimation = props => {
     ctx.rotate(-Math.PI / 2)
     const angle = (Math.PI * 2) / 50
     const pos = []
+    // ctx.globalAlpha = 0.3
     for (let i = 0; i < 180; i++) {
       let len
       // 第1个值较大，第50个值较小，如果圆上首尾相连，容易搭不上，所以把前几个值按比例缩小
@@ -54,12 +55,13 @@ const AudioAnimation = props => {
       }
       pos.push({ x: len * Math.cos(angle * i), y: len * Math.sin(angle * i) })
     }
+
     for (let j = 0; j <= 100; j += 50) {
       ctx.beginPath()
       if (j === 0) {
-        ctx.fillStyle = 'rgba(99, 197, 0, 0.3)'
+        ctx.fillStyle = 'rgba(219, 90, 108, 0.3)'
       } else if (j === 50) {
-        ctx.fillStyle = 'rgba(255, 221, 0, 0.3)'
+        ctx.fillStyle = 'rgba(255, 230, 0, 0.3)'
       } else if (j === 100) {
         ctx.fillStyle = 'rgba(0, 153, 255, 0.3)'
       }

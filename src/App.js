@@ -9,6 +9,8 @@ import Playlist from './containers/playlist'
 import Player from './containers/player'
 import MiniPlayer from './containers/mini-player'
 import Audio from './containers/audio'
+import { PlayListDrawer } from './containers/drawers'
+import { DeleteAllDialog } from './containers/dialogs'
 import './App.css'
 
 function App() {
@@ -44,6 +46,12 @@ function App() {
       </div>
       <Audio />
       <MiniPlayer />
+      <div className="drawer-wrapper">
+        <PlayListDrawer />
+      </div>
+      <div className="dialog-wrapper">
+        <DeleteAllDialog />
+      </div>
     </div>
   ))
 }

@@ -14,7 +14,8 @@ const PlayerLyrics = props => {
     changeTimeToPlay,
     hasLyric,
     isPureMusic,
-    activeLyricIndex
+    activeLyricIndex,
+    showLyrics
   } = props
 
   const bScrollRef = useRef()
@@ -73,6 +74,14 @@ const PlayerLyrics = props => {
       timerId.current && clearTimeout(timerId.current)
     }
   }, [])
+
+  // 将歌词界面切换到封面时，需要还原设置，设置为false
+  useEffect(() => {
+    if (!showLyrics) {
+      isScrolling.current = false
+      setShowReadyLine(false)
+    }
+  }, [showLyrics])
 
   useEffect(() => {
     bScrollRef.current.on('beforeScrollStart', beforeScrollStartHandler)

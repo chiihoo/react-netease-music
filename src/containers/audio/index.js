@@ -7,7 +7,6 @@ import { fetchUrl } from '@/api'
 // Audio组件，常驻页面，控制音乐的播放
 const Audio = observer(function Audio() {
   const audioRef = useRef()
-  const isPlaying = useRef() // playerStore的isPlaying状态
 
   const { playerStore } = useStores()
 
@@ -46,7 +45,6 @@ const Audio = observer(function Audio() {
     'progress',
     () => {
       console.log('缓冲下载中，可用于缓存效果')
-
       if (audioRef.current.buffered.length > 0) {
         const bufferedTime = audioRef.current.buffered.end(0) // 已缓存区域的时间
         playerStore.setBufferedTime(bufferedTime)
@@ -68,7 +66,8 @@ const Audio = observer(function Audio() {
     'canplaythrough',
     () => {
       console.log('canplaythrough')
-      isPlaying.current && audioRef.current.play()
+      // 每次改变当前的播放时间，都会触发这个事件，并重新检测播放状态
+      playerStore.isPlaying ? audioRef.current.play() : audioRef.current.pause()
     },
     audioRef
   )
@@ -143,45 +142,46 @@ const Audio = observer(function Audio() {
   }, [])
 
   useEffect(() => {
-    console.log('playerStore.isPlaying', playerStore.isPlaying)
-
-    isPlaying.current = playerStore.isPlaying
-    isPlaying.current === true ? audioRef.current.play() : audioRef.current.pause()
-
     // The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page.
     // 由于Chrome的策略，AudioContext无法在用户手势之前开始
     // 所以我把它放在了ctxRef.current为undefined以及isPlaying为true时，才初始化
     // 因为页面刚加载时isPlaying === false，只要它为true，那么肯定是经过了手势操作
-    if (!ctxRef.current && isPlaying.current) {
+    if (!ctxRef.current && playerStore.isPlaying) {
       initAudio()
     }
-
     // analyserRef.current.getByteFrequencyData(dataArrayRef.current)
-    // console.log(dataArrayRef.current)
-
     // playerStore.updateDataArray()
-    // console.log(playerStore.dataArray)
+
+    // 控制播放
+    if (!playerStore.currentSongId) return
+    playerStore.isPlaying ? audioRef.current.play() : audioRef.current.pause()
 
     // eslint-disable-next-line
   }, [playerStore.isPlaying])
 
   useEffect(() => {
     const requsetMusic = async () => {
-      if (!playerStore.currentSongId) return
+      if (!playerStore.currentSongId) {
+        // 当清空播放列表后，src仍是上一首的曲子，点击别的歌曲播放时，会播放零点几秒的上一首歌，才会切换
+        // 所以需要将src置为空，但这会触发onError事件
+        audioRef.current.src = ''
+        return
+      }
       // 不写crossOrigin="anonymous"，会有MediaElementAudioSource outputs zeroes due to CORS access restrictions
       // 写crossOrigin="anonymous"，如果直接用下面这个地址请求，但服务器端禁止了跨域，响应头没有access-control-allow-origin
       // audioRef.current.src = `https://music.163.com/song/media/outer/url?id=${playerStore.currentSongId}.mp3`
       // audioRef.current.play()
 
       // 从接口获取url，再播放，可以跨域
-      console.log('请求开始', 'id', playerStore.currentSongId, isPlaying.current)
+      console.log('请求开始', 'id', playerStore.currentSongId)
       const res = await fetchUrl(playerStore.currentSongId)
 
       if (res.data[0].url) {
         playerStore.setBufferedTime(0)
         audioRef.current.src = res.data[0].url
-        // 这里的播放命令放到canplaythrough，防止快速的切换歌曲导致的报错：The play() request was interrupted by a new load request
-        // isPlaying.current && audioRef.current.play()
+        // 底下的播放命令不要写在这里，放到canplaythrough事件里面
+        // 可以防止快速的切换歌曲导致的报错：The play() request was interrupted by a new load request
+        // playerStore.isPlaying ? audioRef.current.play() : audioRef.current.pause()
       } else {
         // 这里有潜在的bug，如果歌单全部是VIP歌曲，那么就死循环了
         playerStore.currentDirection === 'prev' ? playerStore.prevSong() : playerStore.nextSong()
@@ -192,15 +192,16 @@ const Audio = observer(function Audio() {
   }, [playerStore.currentSongId])
 
   useEffect(() => {
+    // 根据timeToPlay来设置当前播放时间
     if (playerStore.timeToPlay !== null) {
       audioRef.current.currentTime = playerStore.timeToPlay
-      isPlaying.current && audioRef.current.play()
       playerStore.setTimeToPlay(null)
     }
     // eslint-disable-next-line
   }, [playerStore.timeToPlay])
 
   useEffect(() => {
+    if (!playerStore.currentSongId) return
     playerStore.getLyrics()
     // eslint-disable-next-line
   }, [playerStore.currentSongId])

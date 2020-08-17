@@ -6,16 +6,16 @@ import { parseLrc } from '@/utils/tools'
 // 播放有关的存储
 export class playerStore {
   @observable isPlaying = false // 是否在播放
+  @observable playMode = JSON.parse(localStorage.getItem('playMode')) ?? 'list' // 播放的模式： 列表播放list，随机播放random，单曲循环single
   // 这个用作当前播放列表
-  @observable playList = JSON.parse(localStorage.getItem('playList')) || [] // 播放列表
-  @observable playListIndex = JSON.parse(localStorage.getItem('playListIndex')) // 播放列表的索引
-  @observable privileges = JSON.parse(localStorage.getItem('privileges')) || [] // 包括一些权限信息
+  @observable playList = JSON.parse(localStorage.getItem('playList')) ?? [] // 播放列表
+  @observable playListIndex = JSON.parse(localStorage.getItem('playListIndex')) ?? 0 // 播放列表的索引
   // 这个用作实际播放顺序
-  @observable playQueue = JSON.parse(localStorage.getItem('playQueue')) || [] // 实际的播放顺序，比如说随机播放下的播放顺序
-  @observable playQueueIndex = JSON.parse(localStorage.getItem('playQueueIndex')) // 播放顺序的索引
+  @observable playQueue = JSON.parse(localStorage.getItem('playQueue')) ?? [] // 实际的播放顺序，比如说随机播放下的播放顺序
+  @observable playQueueIndex = JSON.parse(localStorage.getItem('playQueueIndex')) ?? 0 // 播放顺序的索引
   // privilege.fee === 1 会员
   // /1152|1028|1088|1092|1284/.test(privilege.flag) 试听
-  @observable playMode = JSON.parse(localStorage.getItem('playMode')) || 'list' // 播放的模式： 列表播放list，随机播放random，单曲循环single
+  @observable privileges = JSON.parse(localStorage.getItem('privileges')) ?? [] // 包括一些权限信息
   // 歌词不用缓存在localStorage中，因为每次播放都会自动请求歌词
   @observable isPureMusic = null // true为纯音乐
   @observable hasLyric = false // 有歌词或者有歌词翻译
@@ -44,8 +44,7 @@ export class playerStore {
 
   @computed
   get currentSongId() {
-    if (this.currentSong) return this.currentSong.id
-    return null
+    return this.currentSong?.id
   }
 
   // 歌曲作者
@@ -240,6 +239,20 @@ export class playerStore {
     this.currentDirection = 'next'
   }
 
+  // 根据id切换歌曲，在当前播放列表中直接切换
+  @action
+  changeCurrentPlaySong(songId) {
+    for (let i = 0; i < this.playQueue.length; i++) {
+      if (this.playQueue[i].id === songId) {
+        this.setPlayQueueIndex(i)
+        break
+      }
+    }
+    this.setIsPlaying(true)
+    this.changePlayListIndexWithPlayQueueIndex()
+    this.currentDirection = 'next'
+  }
+
   // 点击添加歌曲到播放队列
   @action
   addSongToPlay(songId, songs, privileges) {
@@ -271,14 +284,34 @@ export class playerStore {
         break
       }
     }
+    let index
     for (let i = 0; i < this.playList.length; i++) {
       if (this.playList[i].id === songId) {
+        index = i
         this.playList.splice(i, 1)
         localStorage.setItem('playList', JSON.stringify(this.playList))
         break
       }
     }
+    this.privileges.splice(index, 1)
+    localStorage.setItem('privileges', JSON.stringify(this.privileges))
+
     this.changePlayListIndexWithPlayQueueIndex()
+
+    if (this.playQueue.length === 0) {
+      this.isPlaying = false
+    }
+  }
+
+  // 删除播放列表的全部歌曲
+  @action
+  deleteAll() {
+    this.setIsPlaying(false)
+    this.setPrivileges([])
+    this.setPlayList([])
+    this.setPlayQueue([])
+    this.setPlayListIndex(0)
+    this.setPlayQueueIndex(0)
   }
 
   // 播放全部

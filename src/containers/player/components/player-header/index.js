@@ -38,7 +38,7 @@ const PlayerHeader = props => {
         </div>
         <div className="artists-wrapper">
           <div className="artists one-line-ellipsis">
-            {song.ar.reduce((total, artist, index, arr) => {
+            {song.ar?.reduce((total, artist, index, arr) => {
               return index !== arr.length - 1 ? total + artist.name + '/' : total + artist.name
             }, '')}
           </div>

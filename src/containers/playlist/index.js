@@ -101,6 +101,7 @@ const Playlist = () => {
                 <PlaylistSearchResult
                   songs={playlistStore.songs}
                   privileges={playlistStore.privileges}
+                  currentSongId={playerStore.currentSongId}
                   searchValue={searchValue}
                   startSearch={startSearch}
                   handleSongItemClick={handleSongItemClick}
@@ -126,9 +127,9 @@ const Playlist = () => {
                 subscribedCount={playlistStore.playlistData.subscribedCount}
                 songs={playlistStore.songs}
                 privileges={playlistStore.privileges}
+                currentSongId={playerStore.currentSongId}
                 scrollElement={scrollElement}
                 handleSongItemClick={handleSongItemClick}
-                currentSongId={playerStore.currentSongId}
               />
             </Scroll>
           </div>

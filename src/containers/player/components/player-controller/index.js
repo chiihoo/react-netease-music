@@ -15,7 +15,8 @@ const PlayerController = props => {
     bufferedTime,
     totalTime,
     currentTime,
-    changeTimeToPlay
+    changeTimeToPlay,
+    showPlayListDrawer
   } = props
 
   const [time, setTime] = useState(currentTime) // 左侧显示的播放时间
@@ -91,7 +92,7 @@ const PlayerController = props => {
         <div className="play-mode">
           {playMode === 'list' && (
             <i className="iconfont icon-xunhuanbofang" onClick={() => changePlayMode('random')}></i>
-          )}{' '}
+          )}
           {playMode === 'random' && (
             <i className="iconfont icon-suijibofang" onClick={() => changePlayMode('single')}></i>
           )}
@@ -99,7 +100,7 @@ const PlayerController = props => {
             <i className="iconfont icon-danquxunhuan" onClick={() => changePlayMode('list')}></i>
           )}
         </div>
-        <i className="iconfont icon-shangyiqu" onClick={() => prevSong()}></i>
+        <i className="iconfont icon-shangyiqu" onClick={prevSong}></i>
         <div className="play-pause">
           {isPlaying === false ? (
             <i className="iconfont icon-bofang" onClick={() => changeIsPlaying(true)}></i>
@@ -107,8 +108,8 @@ const PlayerController = props => {
             <i className="iconfont icon-zanting" onClick={() => changeIsPlaying(false)}></i>
           )}
         </div>
-        <i className="iconfont icon-xiayiqu" onClick={() => nextSong()}></i>
-        <i className="iconfont icon-caidan2"></i>
+        <i className="iconfont icon-xiayiqu" onClick={nextSong}></i>
+        <i className="iconfont icon-caidan2" onClick={showPlayListDrawer}></i>
       </div>
     </div>
   )

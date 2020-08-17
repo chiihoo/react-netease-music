@@ -10,7 +10,7 @@ import loadingSvg from '@/assets/svg-icons/loading.svg'
 // PlaylistHeader搜索的结果
 const PlaylistSearchResult = props => {
   // startSearch为输入框防抖操作，一段时间不操作为true，一直输入为false
-  const { songs, privileges, searchValue, startSearch, handleSongItemClick } = props
+  const { songs, privileges, searchValue, startSearch, handleSongItemClick, currentSongId } = props
   // 存储的是结果的索引，而不是id
   const [searchIndexResult, setSearchIndexResult] = useState([])
   // 处理后的searchValue
@@ -56,7 +56,10 @@ const PlaylistSearchResult = props => {
             song={songs[indexItem]}
             privilege={privileges[indexItem]}
             handleSongItemClick={handleSongItemClick}
-          />
+            hasLeftSpace={currentSongId === songs[indexItem].id}
+          >
+            {currentSongId === songs[indexItem].id && <i className="iconfont icon-laba"></i>}
+          </SongItem>
         ))}
         {searchValueProcessed !== '' && searchFinished && searchIndexResult.length === 0 && (
           <div className="not-find-notice">

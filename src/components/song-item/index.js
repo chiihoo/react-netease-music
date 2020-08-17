@@ -1,18 +1,19 @@
 import React from 'react'
 import classNames from 'classnames'
-import { useObserver } from 'mobx-react-lite'
 import './index.scss'
 
 // 单行歌曲展示组件
 // 因为要放到React-virtualized中，所以要 key（直接挂在组件上），style（挂在组件内的外层标签上）
 const SongItem = props => {
-  const { children, style, song, privilege, handleSongItemClick } = props
+  const { children, style, song, privilege, handleSongItemClick, hasLeftSpace = true } = props
+  // hasLeftSpace 左侧是否留有空间，放置数字标号或者喇叭图标
+  // 当只需要正在播放项有这个图标时，比如歌单页面的搜索，可以设置hasLeftSpace={currentSongId === 当前歌曲id
 
-  return useObserver(() => (
+  return (
     <div className="song-item" style={style}>
       <div className="main" onClick={() => handleSongItemClick(song.id, privilege.fee === 1)}>
-        {children !== undefined && <div className="main-left">{children}</div>}
-        <div className="main-right" style={{ paddingLeft: children === undefined && '4.533vw' }}>
+        {hasLeftSpace && <div className="main-left">{children}</div>}
+        <div className="main-right" style={{ paddingLeft: !hasLeftSpace && '4.533vw' }}>
           <p
             className={classNames('title', 'one-line-ellipsis', {
               // 下架
@@ -53,7 +54,7 @@ const SongItem = props => {
         <i className="iconfont icon-more"></i>
       </div>
     </div>
-  ))
+  )
 }
 
 export default React.memo(SongItem)

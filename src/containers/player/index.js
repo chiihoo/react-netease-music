@@ -11,22 +11,22 @@ import './index.scss'
 
 // 播放页面
 const Player = () => {
-  const { playerStore } = useStores()
+  const { playerStore, triggerStore } = useStores()
 
   const [blurCoverImageUrl, setBlurCoverImageUrl] = useState()
   const [showLyrics, setShowLyrics] = useState(false)
 
   useEffect(() => {
     ;(async function () {
-      if (playerStore.currentSong.al.picUrl) {
+      if (playerStore.currentSong.al?.picUrl) {
         const imgUrl = await imgBlurToBase64(
-          playerStore.currentSong.al.picUrl + '?param=200y200',
+          playerStore.currentSong.al?.picUrl + '?param=200y200',
           50
         )
         setBlurCoverImageUrl(imgUrl)
       }
     })()
-  }, [playerStore.currentSong.al.picUrl])
+  }, [playerStore.currentSong.al])
 
   // 如果要向下层组件传递mobx的方法的话，直接传递会因为this的存在导致报错
   const prevSong = useCallback(() => {
@@ -61,6 +61,10 @@ const Player = () => {
     playerStore.updateDataArray()
     // eslint-disable-next-line
   }, [])
+  const showPlayListDrawer = useCallback(() => {
+    triggerStore.changeShowPlayListDrawer(true)
+    // eslint-disable-next-line
+  }, [])
 
   return useObserver(() => (
     <div className="player">
@@ -75,7 +79,7 @@ const Player = () => {
           <AudioAnimation
             updateDataArray={updateDataArray}
             dataArray={playerStore.dataArray}
-            picUrl={playerStore.currentSong.al.picUrl}
+            picUrl={playerStore.currentSong.al?.picUrl}
             isPlaying={playerStore.isPlaying}
           />
         </div>
@@ -93,6 +97,7 @@ const Player = () => {
               transUser={playerStore.transUser}
               activeLyricIndex={playerStore.activeLyricIndex}
               changeTimeToPlay={changeTimeToPlay}
+              showLyrics={showLyrics}
             />
           </div>
         </div>
@@ -111,6 +116,7 @@ const Player = () => {
           currentTime={playerStore.currentTime}
           changeCurrentTime={changeCurrentTime}
           changeTimeToPlay={changeTimeToPlay}
+          showPlayListDrawer={showPlayListDrawer}
         />
       </div>
     </div>
