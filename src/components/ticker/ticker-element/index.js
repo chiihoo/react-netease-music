@@ -47,13 +47,12 @@ const TickerElement = props => {
   useEffect(() => {
     const { width, height } = tickerElementRef.current.getBoundingClientRect()
     setElements(prevElements => [
-      ...prevElements.map(item => {
-        return {
-          ...item,
-          width,
-          height
-        }
-      })
+      ...prevElements.slice(0, prevElements.length - 1),
+      {
+        ...prevElements[prevElements.length - 1],
+        width,
+        height
+      }
     ])
   }, [setElements])
 
