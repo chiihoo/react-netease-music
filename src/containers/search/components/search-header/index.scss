@@ -1,0 +1,95 @@
+.search-header {
+  padding: 15px;
+  position: relative;
+  .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    .icon-fanhui {
+      font-size: 25px;
+    }
+    .search-box {
+      position: relative;
+      .input-wrapper {
+        width: 250px;
+        display: flex;
+        align-items: center;
+        input {
+          width: 100%;
+          border: 0;
+          outline: 0;
+          font-size: 16px;
+          line-height: 30px;
+          &::placeholder {
+            color: rgba(0, 0, 0, 0.45);
+          }
+        }
+        .icon-quxiao {
+          font-size: 20px;
+          width: 30px;
+          height: 30px;
+          text-align: center;
+          line-height: 30px;
+        }
+      }
+      .bottom-line {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        transform: scaleY(0.5);
+        transform-origin: 0 0;
+      }
+      .input-focus-line {
+        border-bottom: 1px solid rgba(0, 0, 0, 1);
+      }
+    }
+    .icon-singer {
+      font-size: 23px;
+    }
+  }
+  .search-suggest {
+    position: absolute;
+    width: 330px;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    li {
+      position: relative;
+      p.main {
+        width: 100%;
+        height: 50px;
+        box-sizing: border-box;
+        // padding: 5px;
+        overflow: hidden;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        color: rgba(0, 0, 0, 0.6);
+        padding: 0 15px;
+        i {
+          transform: translateY(1px);
+          padding-right: 10px;
+          color: rgba(0, 0, 0, 0.5);
+        }
+      }
+      &:first-child {
+        p {
+          color: #537fb0;
+          padding: 0 15px;
+        }
+      }
+      &:not(:last-child) {
+        &::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+          transform: scaleY(0.5);
+        }
+      }
+    }
+  }
+}

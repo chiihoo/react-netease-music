@@ -54,9 +54,6 @@ const Home = () => {
           <div>{hasGoToYuncun && <Yuncun />}</div>
         </Swiper>
       </div>
-
-      {/* 左侧滑动边栏 */}
-      {/* <div className="left-side-bar"></div> */}
     </div>
   )
 }

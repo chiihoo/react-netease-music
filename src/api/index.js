@@ -56,3 +56,24 @@ export const fetchUrl = id => {
 export const fetchLyrics = id => {
   return axios.get(`/lyric?id=${id}`)
 }
+
+/**
+ * 搜索页面
+ */
+
+//  默认搜索词，搜索页面搜索框默认显示
+export const fetchSearchDefault = () => {
+  return axios.get('/search/default')
+}
+//  热搜列表（详细），搜索框为空时的热搜榜区域
+export const fetchSearchHotDetail = () => {
+  return axios.get('/search/hot/detail')
+}
+//  搜索建议，搜索框有字时的推荐搜索建议
+export const fetchSearchSuggest = keywords => {
+  return axios.get(`/search/suggest?keywords=${keywords}&type=mobile`)
+}
+//  搜索结果
+export const fetchSearchResult = keywords => {
+  return axios.get(`/search?keywords=${keywords}`)
+}

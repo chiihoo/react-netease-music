@@ -1,8 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import classNames from 'classnames'
 import Ticker from '@/components/ticker'
 import { usePageVisibility, useDebouncedCallback } from '@/hooks'
-
 import './index.scss'
 
 // 歌单页面顶部header
@@ -20,6 +20,8 @@ const PlaylistHeader = props => {
     setSearchValue,
     setStartSearch
   } = props
+
+  const [isInputFocus, setIsInputFocus] = useState(true)
 
   const history = useHistory()
   const location = useLocation()
@@ -110,13 +112,15 @@ const PlaylistHeader = props => {
               placeholder="搜索歌单内歌曲"
               autoFocus
               spellCheck={false}
+              ref={inputRef}
               onKeyDown={handleKeyDown}
               onKeyUp={debounceHandleKeyUp}
-              ref={inputRef}
+              onFocus={() => setIsInputFocus(true)}
+              onBlur={() => setIsInputFocus(false)}
             />
             {searchValue !== '' && <i className="iconfont icon-quxiao" onClick={cancleInput}></i>}
           </div>
-          <div className="bottom-line"></div>
+          <div className={classNames('bottom-line', { 'input-focus-line': isInputFocus })}></div>
         </div>
       )}
     </div>

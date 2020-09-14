@@ -28,6 +28,10 @@ ul {
   margin: 0;
 }
 
+dd {
+  margin: 0;
+}
+
 a {
   text-decoration: none;
   color: #3b3a3a;

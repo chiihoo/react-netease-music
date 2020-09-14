@@ -91,7 +91,7 @@ const Player = () => {
           <div className="player-lyrics-wrapper">
             <PlayerLyrics
               isPureMusic={playerStore.isPureMusic}
-              hasLyric={playerStore.hasLyric}
+              hasLyric={playerStore.lyrics.length > 0}
               lyrics={playerStore.lyrics}
               lyricUser={playerStore.lyricUser}
               transUser={playerStore.transUser}

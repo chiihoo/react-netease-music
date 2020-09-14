@@ -146,7 +146,7 @@ const PlayerLyrics = props => {
 
   // readyLine右侧的时间
   const readyPlayTime = useMemo(
-    () => lyrics.length > 0 && formatTime(Math.floor(lyrics[readyPlayIndex].time / 1000)),
+    () => lyrics.length > 0 && formatTime(Math.floor(lyrics[readyPlayIndex]?.time / 1000)),
     [lyrics, readyPlayIndex]
   )
 
@@ -172,10 +172,12 @@ const PlayerLyrics = props => {
               <p>{item.tlyric}</p>
             </li>
           ))}
-          <li className="lyric-trans-user">
-            {lyricUser && <p>歌词贡献者：{lyricUser}</p>}
-            {transUser && <p>翻译贡献者：{transUser}</p>}
-          </li>
+          {lyrics.length > 0 && (
+            <li className="lyric-trans-user">
+              {lyricUser && <p>歌词贡献者：{lyricUser}</p>}
+              {transUser && <p>翻译贡献者：{transUser}</p>}
+            </li>
+          )}
         </ul>
       </div>
 

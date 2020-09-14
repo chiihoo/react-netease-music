@@ -37,7 +37,7 @@ const Find = observer(function Find() {
   // 点击单行歌曲项，进行播放
   const handleSongItemClick = useCallback(
     songId => {
-      playerStore.addSongToPlay(songId, findStore.newSongs, [])
+      playerStore.addSongToPlay(songId, findStore.newSongs, findStore.privileges)
     },
     // eslint-disable-next-line
     [findStore.newSongs]
@@ -57,7 +57,7 @@ const Find = observer(function Find() {
             <i className="iconfont icon-rili"></i>
             <span>每日推荐</span>
           </Link>
-          <Link to="/playlist">
+          <Link to="/playlist/recommend">
             <i className="iconfont icon-gedan"></i>
             <span>歌单</span>
           </Link>

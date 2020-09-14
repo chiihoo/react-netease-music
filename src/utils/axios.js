@@ -1,13 +1,17 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:3001'
+const Axios = axios.create({
+  baseURL: 'http://localhost:3001'
+})
 
-axios.interceptors.response.use(
-  res => res.data,
+Axios.interceptors.response.use(
+  res => {
+    return res.data
+  },
   err => {
     console.log(err)
     return Promise.reject(err)
   }
 )
 
-export default axios
+export default Axios

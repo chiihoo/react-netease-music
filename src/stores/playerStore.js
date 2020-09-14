@@ -18,7 +18,6 @@ export class playerStore {
   @observable privileges = JSON.parse(localStorage.getItem('privileges')) ?? [] // 包括一些权限信息
   // 歌词不用缓存在localStorage中，因为每次播放都会自动请求歌词
   @observable isPureMusic = null // true为纯音乐
-  @observable hasLyric = false // 有歌词或者有歌词翻译
   @observable lyrics = [] // 歌词
   @observable lyricUser = null // 歌词贡献者
   @observable transUser = null // 翻译贡献者
@@ -342,17 +341,12 @@ export class playerStore {
       let lrc = res.lrc?.lyric
       let tlrc = res.tlyric?.lyric
 
-      this.isPureMusic = res?.nolyric
+      this.isPureMusic = res?.nolyric ? true : false
       this.lyricUser = res.lyricUser?.nickname
       this.transUser = res.transUser?.nickname
-
       let lyricObj = {}
-      if (!lrc && !tlrc) {
-        // 无歌词、翻译
-        this.hasLyric = false
-      } else if (lrc) {
+      if (lrc) {
         // 有歌词
-        this.hasLyric = true
         let lrcObj = parseLrc(lrc)
         for (let key in lrcObj) {
           lyricObj[key] = { lyric: lrcObj[key] }
@@ -362,7 +356,7 @@ export class playerStore {
           this.hasTlyric = true
           let tlrcObj = parseLrc(tlrc)
           for (let key in tlrcObj) {
-            // 也可以用hasOwnProperty或者undefined判断
+            // 这里也可以用lrcObj.hasOwnProperty(key) === true或者lrcObj[key] !== undefined判断
             if (key in lrcObj) {
               lyricObj[key] = { ...lyricObj[key], tlyric: tlrcObj[key] }
             } else {

@@ -5,6 +5,7 @@ import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
 import { useDeviceChangeReload } from './hooks'
 import Home from './containers/home'
+import Search from './containers/search'
 import Playlist from './containers/playlist'
 import Player from './containers/player'
 import MiniPlayer from './containers/mini-player'
@@ -35,7 +36,7 @@ function App() {
           <CacheRoute path="/playlist/subscribers" component={() => <>歌单订阅者</>} />
           <CacheRoute path="/playlist/recommend" component={() => <>歌单广场</>} />
           <CacheRoute path="/playlist/:id" component={Playlist} />
-          <CacheRoute path="/search" component={() => <>搜索</>} />
+          <CacheRoute path="/search" component={Search} />
           <CacheRoute path="/recommend/taste" component={() => <>日推</>} />
           <CacheRoute path="/player" component={Player} />
           <CacheRoute path="/user/:uid" component={() => <>用户信息</>} />
