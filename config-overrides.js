@@ -2,8 +2,7 @@ const {
   override,
   addPostcssPlugins,
   addWebpackAlias,
-  addDecoratorsLegacy,
-  addBabelPlugin
+  addDecoratorsLegacy
 } = require('customize-cra')
 const path = require('path')
 
