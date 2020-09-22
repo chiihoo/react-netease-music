@@ -1,20 +1,27 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
 import classNames from 'classnames'
 import { useEventListener, useDebouncedCallback } from '@/hooks'
 import './index.scss'
 
 const SearchHeader = props => {
-  const { showKeyword, realKeyword, searchSuggest, getSearchResult, getSearchSuggest } = props
+  const {
+    showKeyword,
+    realkeyword,
+    searchSuggest,
+    getSearchSuggest,
+    showSuggest,
+    setShowSuggest,
+    searchValue,
+    setSearchValue,
+    goSearch,
+    goBack
+  } = props
 
-  const history = useHistory()
-
-  const [searchValue, setSearchValue] = useState('')
   const [isInputFocus, setIsInputFocus] = useState(true)
 
   useEventListener('keydown', e => {
     if (e.keyCode === 13) {
-      searchValue === '' ? getSearchResult(realKeyword) : getSearchResult(searchValue)
+      searchValue === '' ? goSearch(realkeyword) : goSearch(searchValue)
     }
   })
 
@@ -27,7 +34,7 @@ const SearchHeader = props => {
   return (
     <div className="search-header">
       <div className="header-main">
-        <i className="iconfont icon-fanhui" onClick={history.goBack}></i>
+        <i className="iconfont icon-fanhui" onClick={goBack}></i>
         <div className="search-box">
           <div className="input-wrapper">
             <input
@@ -35,7 +42,10 @@ const SearchHeader = props => {
               autoFocus
               placeholder={showKeyword}
               value={searchValue}
-              onChange={e => setSearchValue(e.target.value)}
+              onChange={e => {
+                setSearchValue(e.target.value)
+                setShowSuggest(true)
+              }}
               onFocus={() => setIsInputFocus(true)}
               onBlur={() => setIsInputFocus(false)}
               onKeyUp={debounceHandleKeyUp}
@@ -53,13 +63,13 @@ const SearchHeader = props => {
         </div>
         <i className="iconfont icon-singer"></i>
       </div>
-      {searchValue !== '' && (
+      {showSuggest && (
         <ul className="search-suggest">
-          <li>
+          <li onClick={() => goSearch(searchValue)}>
             <p className="main">搜索“{searchValue}”</p>
           </li>
           {searchSuggest?.allMatch?.map(item => (
-            <li key={item.keyword}>
+            <li key={item.keyword} onClick={() => goSearch(item.keyword)}>
               <p className="main">
                 <i className="iconfont icon-sousuo"></i>
                 <span>{item.keyword}</span>

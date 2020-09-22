@@ -1,6 +1,7 @@
 .search-header {
-  padding: 15px;
+  padding: 15px 15px 10px;
   position: relative;
+  z-index: 999;
   .header-main {
     display: flex;
     justify-content: space-between;

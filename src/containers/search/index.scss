@@ -4,5 +4,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: auto;
+  .search-main {
+    position: absolute;
+    top: 57px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+  }
 }

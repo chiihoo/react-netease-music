@@ -1,0 +1,43 @@
+.search-result {
+  .tabs-nav-wrapper {
+    margin-bottom: 20px;
+    position: relative;
+    font-size: 15px;
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+      transform: scaleY(0.5);
+    }
+    .tabs-nav-list {
+      overflow-x: auto;
+      position: relative;
+      white-space: nowrap;
+      .tabs-tab {
+        display: inline-block;
+        margin: 5px 20px;
+      }
+      .tabs-tab-active {
+        color: #ff3939;
+      }
+    }
+    .tabs-ink-bar {
+      height: 2px;
+      width: 50px;
+      background-color: #ff3939;
+      position: absolute;
+      bottom: 0;
+    }
+    .tabs-ink-bar-animated {
+      transition: left 0.2s, width 0.2s;
+    }
+  }
+  .tabs-content {
+    .swiper-slide {
+      height: 500px;
+    }
+  }
+}

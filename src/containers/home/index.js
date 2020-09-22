@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Swiper from 'react-id-swiper'
 import HomeHeader from './components/home-header'
 import Find from '../find'
@@ -27,16 +27,14 @@ const Home = () => {
     }
   }, [activeIndex])
 
-  const handleActiveIndex = useCallback(index => setActiveIndex(index), [])
-
   const params = {
     containerClass: 'home-swiper',
     initialSlide: 1,
     resistanceRatio: 0,
     speed: 200,
     on: {
-      // swiper切换页面后，设置当前活动页index
-      transitionEnd: function () {
+      // swiper切换页面时，设置当前活动页activeIndex
+      slideChange: function () {
         setActiveIndex(this.activeIndex)
       }
     }
@@ -44,7 +42,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <HomeHeader changeActiveIndex={handleActiveIndex} activeIndex={activeIndex} />
+      <HomeHeader setActiveIndex={setActiveIndex} activeIndex={activeIndex} />
       <div className="home-main">
         <Swiper {...params} ref={swiperRef}>
           <div>my</div>

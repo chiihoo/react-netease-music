@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import 'mobx-react-lite/batchingForReactDom' // mobx配置批处理
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
 import { storesContext, stores } from '@/stores'
