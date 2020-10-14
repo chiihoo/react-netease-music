@@ -11,7 +11,7 @@ const Scroll = props => {
   const [isRefreshing, setIsRefreshing] = useState(false) // 是否正在刷新
   const [showLoadingIcon, setShowLoadingIcon] = useState(true) // 是否展示loading图标，停止展示-复位-重新展示，这是为了避免刷新结束时，loading图标复位出现渐变轨迹
   const [showRefreshTips, setShowRefreshTips] = useState(false) // 刷新完毕，展示Tips
-  const [isLoading, setIsLoading] = useState(false) // 是否正在进行上拉加载的请求
+  const [scrollLock, setScrollLock] = useState(false) // 如果scroll区域刚开始不是isTop，而是下拉到达isTop，之后继续下拉，而此时如果上滑会带动scroll区域上滑，所以需要设置overflow:hidden来避免该问题
 
   // 跟dom重新渲染无直接关系的变量就可以放到ref里面
   const touchStart = useRef(0) // 触摸起始位置，当isTop从false变为true，需重新赋值
@@ -19,6 +19,7 @@ const Scroll = props => {
   const isBottom = useRef(false) // 是否触底
   const isStartPull = useRef(false) // isTop为true后，设为ture，同时设置一次touchStart初始位置
   const isFirstLoad = useRef(true) // 记录是否为第一次的初始加载，只展示一次Tips
+  const isLoading = useRef(false) // 是否正在进行上拉加载的请求
   const reqTime = useRef(Date.now()) // 记录请求发出的时间
   const prevPullDownLoadingStatus = useRef(null) // 存储pullDown的前一次loading状态
   const prevPullUpLoadingStatus = useRef(null) // 存储pullUp的前一次loading状态
@@ -29,7 +30,6 @@ const Scroll = props => {
   const timerId1 = useRef()
   const timerId2 = useRef()
   const timerId3 = useRef()
-  const timerId4 = useRef()
 
   // loadingStatus传递页面初始加载时的加载状态，可以控制初始加载时tips的显示消失，跟pullDown和pullUp无关
   // 约定loadingStatus： 0：请求未完成； 1：请求完成；
@@ -95,12 +95,11 @@ const Scroll = props => {
   useEventListener(
     'touchmove',
     e => {
+      // 注意，下拉刷新是需要向下触摸拖拽才触发的，而上拉加载是只要页面滑到底部就应该进行加载
+      // 所以下拉刷新用touch事件，而上拉加载用scroll事件
+
       // 是否触顶
       isTop.current = scrollRef.current.scrollTop === 0
-      // 是否触底
-      isBottom.current =
-        scrollRef.current.scrollTop + scrollRef.current.offsetHeight + 5 >=
-        scrollRef.current.scrollHeight
 
       // 取消浏览器的默认下拉行为，比如手机QQ浏览器，会显示"已启用QQ浏览器X5内核"字样，且与自定义下拉刷新操作冲突
       // 而要取消浏览器自身的下拉刷新操作，如手机chrome浏览器，只需要给body标签增加overflow: hidden;
@@ -119,24 +118,19 @@ const Scroll = props => {
           isStartPull.current = true
         } else {
           const diff = e.touches[0].clientY - touchStart.current
-          if (0 <= diff && diff < refreshThreshold) {
+          if (diff <= 0) {
+            setScrollLock(false) // 释放滚动区域
+          } else if (0 < diff && diff < refreshThreshold) {
+            setScrollLock(true) // 锁住滚动区域，避免touchmove的时候整体区域也跟着滚动
             // 没有拉到刷新的界限
             setSlideLength(diff) // 滑块实际滑动距离
             setIsRefreshReady(false) // isRefreshReady为false时，滑块opacity为0.5，释放后归位
           } else if (refreshThreshold <= diff && diff < touchThreshold) {
+            setScrollLock(true) // 锁住滚动区域
             // 拉到可以刷新的界限，并且最多拉到TOUCH_THRESHOLD
             setSlideLength(diff) // 滑块实际滑动距离
             setIsRefreshReady(true) // isRefreshReady为true时，滑块opacity为1，释放后停留loading
           }
-        }
-      }
-
-      // 上拉加载
-      if (pullUp.callback && isBottom.current && !isLoading) {
-        // 触底，没有正在进行加载请求，并且有上拉的动作，就进行上拉加载请求
-        if (e.touches[0].clientY - touchStart.current < -10) {
-          setIsLoading(true)
-          pullUp.callback()
         }
       }
     },
@@ -149,6 +143,7 @@ const Scroll = props => {
     e => {
       // 下拉刷新
       if (pullDown.callback && !isRefreshing) {
+        setScrollLock(false) // 释放滚动区域
         // 触摸结束时，isTouchEnd设置为true，也就是释放的时候才给滑块设置transition: transform 0.2s
         setIsTouchEnd(true)
         isStartPull.current = false
@@ -227,16 +222,32 @@ const Scroll = props => {
     prevPullDownLoadingStatus.current = pullDown.loadingStatus
   }, [pullDown.callback, pullDown.loadingStatus, delayFinishPullDown])
 
+  // 滚动事件监听是否触底
+  useEventListener(
+    'scroll',
+    e => {
+      // 是否触底
+      isBottom.current =
+        scrollRef.current.scrollTop + scrollRef.current.offsetHeight + 5 >=
+        scrollRef.current.scrollHeight
+
+      // 上拉加载
+      if (pullUp.callback && pullUp.hasMore && isBottom.current && !isLoading.current) {
+        // 触底，没有正在进行加载请求，就进行上拉加载请求
+        isLoading.current = true
+        pullUp.callback()
+      }
+    },
+    scrollRef
+  )
+
   // 上拉加载
   useEffect(() => {
-    if (isLoading && prevPullUpLoadingStatus.current === 0 && pullUp.loadingStatus === 1) {
-      // 减少上拉加载的请求频率，避免在touchmove上拉动作的时候，短时间内连续触发pullUp.callback，需要稍微放大点间隔时间
-      timerId4.current = setTimeout(() => {
-        setIsLoading(false)
-      }, 1000)
+    if (isLoading.current && prevPullUpLoadingStatus.current === 0 && pullUp.loadingStatus === 1) {
+      isLoading.current = false
     }
     prevPullUpLoadingStatus.current = pullUp.loadingStatus
-  }, [isLoading, pullUp.loadingStatus])
+  }, [pullUp.loadingStatus])
 
   // 组件卸载时，删除定时器
   useEffect(() => {
@@ -244,12 +255,11 @@ const Scroll = props => {
       clearTimeout(timerId1.current)
       clearTimeout(timerId2.current)
       clearTimeout(timerId3.current)
-      clearTimeout(timerId4.current)
     }
   }, [])
 
   return (
-    <div className="scroll" ref={scrollRef}>
+    <div className="scroll" ref={scrollRef} style={{ overflow: scrollLock ? 'hidden' : 'auto' }}>
       {pullDown.callback && (
         <div className="pulldown-refresh">
           {showLoadingIcon && (
@@ -301,6 +311,12 @@ const Scroll = props => {
         </div>
       )}
       {children}
+      {pullUp.callback && pullUp.hasMore && (
+        <div className="pullup-load">
+          <img src={require('@/assets/svg-icons/loading.svg')} alt="" />
+          <span>努力加载中...</span>
+        </div>
+      )}
     </div>
   )
 }

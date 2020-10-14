@@ -4,7 +4,7 @@ import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
 import SearchHeader from './components/search-header'
 import SearchContent from './components/search-content'
-import SearchResult from './components/search-result'
+import SearchResult from '../search-result'
 import './index.scss'
 
 const Search = props => {
@@ -19,20 +19,18 @@ const Search = props => {
   useEffect(() => {
     searchStore.getSearchDefault()
     searchStore.getSearchHotDetail()
-  }, [searchStore])
+    // eslint-disable-next-line
+  }, [])
 
   const goBack = useCallback(() => {
     if (match) {
       setSearchValue('')
+      history.push('/search')
+    } else {
+      history.push('/home')
     }
-    history.goBack()
+    // history.goBack()
   }, [match, history])
-
-  // 初始暂定为搜索结果页面的综合栏目
-  const getSearchResult = useCallback(keyword => {
-    searchStore.getComplex(keyword)
-    // eslint-disable-next-line
-  }, [])
 
   const getSearchSuggest = useCallback(keywords => {
     searchStore.getSearchSuggest(keywords)
@@ -48,14 +46,14 @@ const Search = props => {
   }, [])
 
   const goSearch = useCallback(
-    keywords => {
-      setSearchValue(keywords)
-      getSearchResult(keywords)
+    keyword => {
+      setSearchValue(keyword)
       setShowSuggest(false)
-      addSearchHistory(keywords)
-      history.push('/search/result')
+      addSearchHistory(keyword)
+      history.push(`/search/result/${keyword}`)
     },
-    [getSearchResult, addSearchHistory, history]
+    // eslint-disable-next-line
+    [addSearchHistory, history]
   )
 
   return useObserver(() => (
@@ -76,10 +74,10 @@ const Search = props => {
       </div>
       <div className="search-main" onClick={() => setShowSuggest(false)}>
         <Switch>
-          <Route exact path={`/search/result`}>
-            <SearchResult columnsData={searchStore.columns} />
+          <Route exact path={`/search/result/:keyword`}>
+            <SearchResult />
           </Route>
-          <Route path="/search">
+          <Route exact path="/search">
             <SearchContent
               searchHistory={searchStore.searchHistory}
               deleteAllSearchHistory={deleteAllSearchHistory}

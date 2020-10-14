@@ -70,11 +70,13 @@ export const fetchSearchHotDetail = () => {
   return axios.get('/search/hot/detail')
 }
 //  搜索建议，搜索框有字时的推荐搜索建议
-export const fetchSearchSuggest = keywords => {
-  return axios.get(`/search/suggest?keywords=${keywords}&type=mobile`)
+export const fetchSearchSuggest = keyword => {
+  return axios.get(`/search/suggest?keywords=${keyword}&type=mobile`)
 }
 //  搜索结果
+// limit: 返回数量，默认为30
+// offset: 偏移数量，默认为0，这个的意思是返回的数据是第offset+1个limit数量的歌曲
 // type: 搜索类型。默认为1，即单曲，取值意义: 1:单曲，10:专辑，100:歌手，1000:歌单，1002:用户，1004:MV，1006:歌词，1009:电台，1014:视频，1018:综合
-export const fetchSearchResult = (keywords, type = 1) => {
-  return axios.get(`/search?keywords=${keywords}&type=${type}`)
+export const fetchSearchResult = (keyword, offset = 0, limit = 30, type = 1) => {
+  return axios.get(`/search?keywords=${keyword}&offset=${offset}&limit=${limit}&type=${type}`)
 }

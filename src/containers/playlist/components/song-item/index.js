@@ -5,21 +5,15 @@ import './index.scss'
 // 单行歌曲展示组件
 // 因为要放到React-virtualized中，所以要 key（直接挂在组件上），style（挂在组件内的外层标签上）
 const SongItem = props => {
-  const { children, style, song, privilege, handleSongItemClick, hasLeftSpace = true } = props
-  // hasLeftSpace 左侧是否留有空间，放置数字标号或者喇叭图标
-  // 当只需要正在播放项有这个图标时，比如歌单页面的搜索，可以设置hasLeftSpace={currentSongId === 当前歌曲id
+  const { children, style, song, privilege, handleSongItemClick } = props
+  // 有children的时候表示左侧需要留有空间，放置数字标号或者喇叭图标
 
   return (
-    <div className="song-item" style={style}>
+    <div className="playlist-song-item" style={style}>
       <div className="main" onClick={() => handleSongItemClick(song.id, privilege.fee === 1)}>
-        {hasLeftSpace && <div className="main-left">{children}</div>}
-        <div className="main-right" style={{ paddingLeft: !hasLeftSpace && '4.533vw' }}>
-          <p
-            className={classNames('title', 'one-line-ellipsis', {
-              // 下架
-              'off-the-shelf': privilege < 0
-            })}
-          >
+        {children && <div className="main-left">{children}</div>}
+        <div className="main-right" style={{ paddingLeft: !children && '4.533vw' }}>
+          <p className={'title one-line-ellipsis'}>
             {song.name}
             {song.alia.length > 0 && <span className="alias">（{song.alia[0]}）</span>}
           </p>
@@ -36,7 +30,7 @@ const SongItem = props => {
             {privilege.maxbr === 999000 && <i className="iconfont icon-SQ"></i>}
             <span
               className={classNames('artist-album-name', 'one-line-ellipsis', {
-                'off-the-shelf': privilege < 0
+                'off-the-shelf': privilege.st === -200
               })}
             >
               {song?.ar.reduce((total, artist, index, arr) => {
@@ -50,7 +44,7 @@ const SongItem = props => {
         </div>
       </div>
       <div className="right">
-        <i className="iconfont icon-mv1"></i>
+        {song.mv !== 0 && <i className="iconfont icon-mv1"></i>}
         <i className="iconfont icon-more"></i>
       </div>
     </div>

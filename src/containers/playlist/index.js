@@ -69,10 +69,13 @@ const Playlist = () => {
 
   // 点击单行歌曲项，进行播放
   const handleSongItemClick = useCallback((songId, isVIPSong) => {
-    // if (未登录 && isVipSong) {
-    //   需要登陆
-    // } else
     playerStore.addSongToPlay(songId, playlistStore.songs, playlistStore.privileges)
+    // eslint-disable-next-line
+  }, [])
+
+  // 点击播放全部
+  const handlePlayAllClick = useCallback(() => {
+    playerStore.playAll(playlistStore.songs, playlistStore.privileges)
     // eslint-disable-next-line
   }, [])
 
@@ -130,6 +133,7 @@ const Playlist = () => {
                 currentSongId={playerStore.currentSongId}
                 scrollElement={scrollElement}
                 handleSongItemClick={handleSongItemClick}
+                handlePlayAllClick={handlePlayAllClick}
               />
             </Scroll>
           </div>

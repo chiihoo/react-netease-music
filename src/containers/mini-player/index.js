@@ -50,7 +50,7 @@ const MiniPlayer = observer(function MiniPlayer() {
       {playerStore.swiperLoadSongs.length > 0 && (
         <Swiper {...params}>
           {playerStore.swiperLoadSongs.map(song => (
-            <div key={song.id}>
+            <div key={song.id + '-' + song?.keyId}>
               <div
                 className="main"
                 onClick={() => {

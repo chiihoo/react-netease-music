@@ -2,8 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { List, WindowScroller } from 'react-virtualized'
 import { handleNumber } from '@/utils/tools'
-import SongItem from '@/components/song-item'
-import 'react-virtualized/styles.css'
+import SongItem from '../song-item'
 import './index.scss'
 
 // 歌单页面中部 歌单信息
@@ -16,6 +15,7 @@ const PlaylistDetail = props => {
     privileges,
     scrollElement,
     handleSongItemClick,
+    handlePlayAllClick,
     currentSongId
   } = props
 
@@ -38,7 +38,7 @@ const PlaylistDetail = props => {
   return (
     <div className="playlist-detail">
       <div className="playlist-detail-nav">
-        <div className="playlist-play-all">
+        <div className="playlist-play-all" onClick={handlePlayAllClick}>
           <i className="iconfont icon-bofang6"></i>
           <span>播放全部</span>
           <span>(共{trackCount}首)</span>

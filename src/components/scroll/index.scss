@@ -41,4 +41,18 @@
       transition: transform 0.4s;
     }
   }
+  .pullup-load {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    z-index: 9999;
+    > img {
+      width: 14px;
+    }
+    > span {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.6);
+      padding-left: 6px;
+    }
+  }
 }

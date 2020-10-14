@@ -3,7 +3,8 @@ import {
   fetchSearchDefault,
   fetchSearchHotDetail,
   fetchSearchSuggest,
-  fetchSearchResult
+  fetchSearchResult,
+  fetchSongDetail
 } from '@/api'
 
 export class searchStore {
@@ -15,8 +16,8 @@ export class searchStore {
   // searchResult
   @observable lastSearch = 'complex' // 上次搜索的栏目
   @observable complex = {} // 综合
-  @observable song = {} // 单曲
-  @observable mlog = {} // 云村
+  @observable song = { songs: [], privileges: [], hasMore: true } // 单曲
+  // @observable mlog = {} // 云村
   @observable video = {} // 视频
   @observable artist = {} // 歌手
   @observable album = {} // 专辑
@@ -24,18 +25,16 @@ export class searchStore {
   @observable djRadio = {} // 主播电台
   @observable user = {} // 用户
 
-  // 搜索结果页面的栏目名臣
-  @observable columns = [
-    { name: '综合', nickname: 'complex' },
-    { name: '单曲', nickname: 'song' },
-    { name: '云村', nickname: 'mlog' },
-    { name: '视频', nickname: 'video' },
-    { name: '歌手', nickname: 'artist' },
-    { name: '专辑', nickname: 'album' },
-    { name: '歌单', nickname: 'playList' },
-    { name: '主播电台', nickname: 'djRadio' },
-    { name: '用户', nickname: 'user' }
-  ]
+  // 每次searchKeyword变化时或者第一次进入searchResult页面都需要重置结果
+  @action resetSearchResult() {
+    this.song = { songs: [], privileges: [], hasMore: true }
+    this.complex = {}
+  }
+
+  @action setSearchKeyword(keyword) {
+    this.searchKeyword = keyword
+    localStorage.setItem('searchKeyword', JSON.stringify(keyword))
+  }
 
   @action addSearchHistory(keyword) {
     if (!this.searchHistory.includes(keyword)) {
@@ -43,7 +42,6 @@ export class searchStore {
     }
   }
   @action deleteAllSearchHistory() {
-    console.log(555)
     this.searchHistory = []
   }
 
@@ -55,41 +53,70 @@ export class searchStore {
     const res = yield fetchSearchHotDetail()
     this.searchHotDetail = res.data
   })
-  getSearchSuggest = flow(function* (keywords) {
-    const res = yield fetchSearchSuggest(keywords)
+  getSearchSuggest = flow(function* (keyword) {
+    const res = yield fetchSearchSuggest(keyword)
     this.searchSuggest = res.result
   })
 
-  getComplex = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 1018)
+  getComplex = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 1018)
+    console.log('fetch complex', keyword, res)
+
+    const trackIdsString = res.result?.song.resourceIds.join(',')
+    // 用trackIds拼凑的ids字符串，请求全部的歌曲
+    const songsData = yield fetchSongDetail(trackIdsString)
+    res.result.song = {
+      ...res.result.song,
+      songs: songsData.songs,
+      privileges: songsData.privileges
+    }
+
     this.complex = res.result
   })
-  getSong = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 1)
-    this.song = res.result
+  getSong = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 1)
+    if (res.result.songCount === 0) return
+    const trackIdsString = res.result.songs.reduce((total, item, index) => {
+      if (index === 0) {
+        return total + item.id
+      }
+      return total + ',' + item.id
+    }, '')
+
+    // 用trackIds拼凑的ids字符串，请求全部的歌曲
+    const songsData = yield fetchSongDetail(trackIdsString)
+    this.song = {
+      songs: [...this.song.songs, ...songsData.songs],
+      privileges: [...this.song.privileges, ...songsData.privileges],
+      hasMore: res.result.hasMore
+    }
+
+    // 直接push不能让组件重新渲染
+    // this.song.songs.push(...songsData.songs)
+    // this.song.privileges.push(...songsData.privileges)
   })
-  getVideo = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 1004)
+  getVideo = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 1004)
     this.video = res.result
   })
-  getArtist = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 100)
+  getArtist = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 100)
     this.artist = res.result
   })
-  getAlbum = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 10)
+  getAlbum = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 10)
     this.album = res.result
   })
-  getPlayList = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 1000)
+  getPlayList = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 1000)
     this.playList = res.result
   })
-  getDjRadio = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 1009)
+  getDjRadio = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 1009)
     this.djRadio = res.result
   })
-  getUser = flow(function* (keywords) {
-    const res = yield fetchSearchResult(keywords, 1002)
+  getUser = flow(function* (keyword, offset = 0, limit = 30) {
+    const res = yield fetchSearchResult(keyword, offset, limit, 1002)
     this.user = res.result
   })
 }

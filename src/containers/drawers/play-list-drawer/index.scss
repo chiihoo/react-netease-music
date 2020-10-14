@@ -51,20 +51,14 @@
         justify-content: space-between;
         align-items: center;
         p {
-          flex: 1;
-          min-width: 0;
           padding-right: 30px;
-          display: flex;
-          align-items: center;
           .icon-laba {
             padding-right: 5px;
-            transform: translateY(1px);
           }
           .icon-VIP {
             color: #fe3a3b;
-            font-size: 24px;
+            font-size: 20px;
             padding-right: 5px;
-            transform: translateY(1px);
           }
         }
         .icon-quxiao {

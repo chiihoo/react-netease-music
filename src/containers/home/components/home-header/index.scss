@@ -4,16 +4,6 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  &::after {
-    content: '';
-    display: block;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    border-bottom: 1px solid #e0e0e0;
-    transform: scaleY(0.5);
-    transform-origin: 0 100%;
-  }
   .tabs {
     display: flex;
     justify-content: space-around;

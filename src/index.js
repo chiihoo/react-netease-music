@@ -6,6 +6,7 @@ import { storesContext, stores } from '@/stores'
 import App from './App'
 import './index.css'
 import 'swiper/css/swiper.css'
+import 'react-virtualized/styles.css'
 
 ReactDOM.render(
   <storesContext.Provider value={stores}>

@@ -6,6 +6,7 @@ import { parseLrc } from '@/utils/tools'
 // 播放有关的存储
 export class playerStore {
   @observable isPlaying = false // 是否在播放
+  @observable shouldPlay = false // 是否需要播放，见260行addSongToPlay方法中的解释
   @observable playMode = JSON.parse(localStorage.getItem('playMode')) ?? 'list' // 播放的模式： 列表播放list，随机播放random，单曲循环single
   // 这个用作当前播放列表
   @observable playList = JSON.parse(localStorage.getItem('playList')) ?? [] // 播放列表
@@ -56,8 +57,22 @@ export class playerStore {
 
   // mini-player 左右滑动 加载的3首歌
   @computed
+  // get swiperLoadSongs() {
+  //   if (this.playQueue.length >= 2) {
+  //     if (this.playQueueIndex === 0) {
+  //       return [this.playQueue[this.playQueue.length - 1], ...this.playQueue.slice(0, 2)]
+  //     } else if (this.playQueueIndex === this.playQueue.length - 1) {
+  //       return [...this.playQueue.slice(-2), this.playQueue[0]]
+  //     } else {
+  //       return this.playQueue.slice(this.playQueueIndex - 1, this.playQueueIndex + 2)
+  //     }
+  //   } else if (this.playQueue.length === 1) {
+  //     return [this.playQueue[0], this.playQueue[0], this.playQueue[0]]
+  //   }
+  //   return []
+  // }
   get swiperLoadSongs() {
-    if (this.playQueue.length >= 2) {
+    if (this.playQueue.length >= 3) {
       if (this.playQueueIndex === 0) {
         return [this.playQueue[this.playQueue.length - 1], ...this.playQueue.slice(0, 2)]
       } else if (this.playQueueIndex === this.playQueue.length - 1) {
@@ -65,11 +80,65 @@ export class playerStore {
       } else {
         return this.playQueue.slice(this.playQueueIndex - 1, this.playQueueIndex + 2)
       }
+    } else if (this.playQueue.length === 2) {
+      // 为了在播放队列长度小于等于2首的时候，由于会截取凑成3首歌，所以map时如果key={song.id}，两个this.playQueue[0]会导致重复key
+      // 所以加个keyId，map时用key={song.id + '-' + song?.keyId}来避免这个问题
+      // 播放队列长度大于等于3首时，截取出来的3首歌都会不同，所以没有这个问题
+      if (this.playQueueIndex === 1) {
+        return [
+          { ...this.playQueue[0], keyId: 1 },
+          { ...this.playQueue[1], keyId: 2 },
+          { ...this.playQueue[0], keyId: 3 }
+        ]
+      } else if (this.playQueueIndex === 0) {
+        return [
+          { ...this.playQueue[1], keyId: 1 },
+          { ...this.playQueue[0], keyId: 2 },
+          { ...this.playQueue[1], keyId: 3 }
+        ]
+      }
     } else if (this.playQueue.length === 1) {
-      return [this.playQueue[0], this.playQueue[0], this.playQueue[0]]
+      return [
+        { ...this.playQueue[0], keyId: 1 },
+        { ...this.playQueue[0], keyId: 2 },
+        { ...this.playQueue[0], keyId: 3 }
+      ]
     }
     return []
   }
+  // @computed
+  // get swiperLoadSongs() {
+  //   if (this.playQueue.length >= 3) {
+  //     if (this.playQueueIndex === 0) {
+  //       return [this.playQueue[this.playQueue.length - 1], ...this.playQueue.slice(0, 2)]
+  //     } else if (this.playQueueIndex === this.playQueue.length - 1) {
+  //       return [...this.playQueue.slice(-2), this.playQueue[0]]
+  //     } else {
+  //       return this.playQueue.slice(this.playQueueIndex - 1, this.playQueueIndex + 2)
+  //     }
+  //   } else if (this.playQueue.length === 2) {
+  //     if (this.playQueueIndex === 1) {
+  //       return [
+  //         { ...this.playQueue[0], keyId: 1 },
+  //         { ...this.playQueue[1], keyId: 2 },
+  //         { ...this.playQueue[0], keyId: 3 }
+  //       ]
+  //     } else if (this.playQueueIndex === 0) {
+  //       return [
+  //         { ...this.playQueue[1], keyId: 1 },
+  //         { ...this.playQueue[0], keyId: 2 },
+  //         { ...this.playQueue[1], keyId: 3 }
+  //       ]
+  //     }
+  //   } else if (this.playQueue.length === 1) {
+  //     return [
+  //       { ...this.playQueue[0], keyId: 1 },
+  //       { ...this.playQueue[0], keyId: 2 },
+  //       { ...this.playQueue[0], keyId: 3 }
+  //     ]
+  //   }
+  //   return []
+  // }
 
   // 根据currentTime获取当前为哪句歌词，返回歌词的索引
   @computed
@@ -256,18 +325,14 @@ export class playerStore {
   @action
   addSongToPlay(songId, songs, privileges) {
     this.changePlayList(songs, songId)
-    this.setIsPlaying(true)
+    // this.setIsPlaying(true)
+    // 这里为什么要用个shouldPlay的变量而不是直接setIsPlaying(true)呢？
+    // 因为如果直接改播放状态的话，有一个场景是在暂停状态下，切换到另一个歌单点击歌曲播放，
+    // 这时候因为网络请求获取src有延迟，所以会先播放上一首歌的部分，之后才会切换到下一首
+    // 而如果在Audio中获取src后直接设置setIsPlaying(true)，又会导致刷新页面就直接播放了，所以多加了这样一个变量，来确保只有点击之后才能播放
+    this.shouldPlay = true
     this.setPrivileges([...privileges])
     this.currentDirection = null
-  }
-
-  // 点击添加歌曲到下一首播放
-  @action
-  addSongToNextPlay(song) {
-    this.playList.splice(this.playListIndex, 0, song)
-    localStorage.setItem('playList', JSON.stringify(this.playList))
-    this.playQueue.splice(this.playQueueIndex, 0, song)
-    localStorage.setItem('playQueue', JSON.stringify(this.playQueue))
   }
 
   // 从播放列表中删除某歌曲，先删playQueue中的，之后再同步删playList
@@ -298,7 +363,7 @@ export class playerStore {
     this.changePlayListIndexWithPlayQueueIndex()
 
     if (this.playQueue.length === 0) {
-      this.isPlaying = false
+      this.setIsPlaying(false)
     }
   }
 
@@ -315,9 +380,10 @@ export class playerStore {
 
   // 播放全部
   @action
-  playAll(playList) {
+  playAll(playList, privileges) {
     this.setPlayList([...playList])
-    this.setPlayQueueIndex(this.playQueueIndex)
+    this.setPrivileges([...privileges])
+    this.setPlayQueueIndex(0)
     if (this.playMode === 'random') {
       this.setPlayQueue(shuffle(this.playList))
       for (let i = 0; i < this.playList.length; i++) {

@@ -153,6 +153,7 @@ const Audio = observer(function Audio() {
     // playerStore.updateDataArray()
 
     // 控制播放
+    // 点击播放按钮的时候，改变播放状态
     if (!playerStore.currentSongId) return
     playerStore.isPlaying ? audioRef.current.play() : audioRef.current.pause()
 
@@ -175,15 +176,12 @@ const Audio = observer(function Audio() {
       // 从接口获取url，再播放，可以跨域
       console.log('请求开始', 'id', playerStore.currentSongId)
       const res = await fetchUrl(playerStore.currentSongId)
-
       if (res.data[0].url) {
         playerStore.setBufferedTime(0)
         audioRef.current.src = res.data[0].url
-        // 底下的播放命令不要写在这里，放到canplaythrough事件里面
-        // 可以防止快速的切换歌曲导致的报错：The play() request was interrupted by a new load request
-        // playerStore.isPlaying ? audioRef.current.play() : audioRef.current.pause()
+        // 将切换播放状态写在这里，防止暂停状态下，切换歌单播放时，会短暂播放上一首歌曲的问题
+        playerStore.shouldPlay && !playerStore.isPlaying && playerStore.setIsPlaying(true)
       } else {
-        // 这里有潜在的bug，如果歌单全部是VIP歌曲，那么就死循环了
         playerStore.currentDirection === 'prev' ? playerStore.prevSong() : playerStore.nextSong()
       }
     }

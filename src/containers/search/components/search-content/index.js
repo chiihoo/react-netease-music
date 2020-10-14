@@ -3,7 +3,7 @@ import './index.scss'
 
 // 热搜榜
 const SearchContent = props => {
-  const { searchHotDetail, deleteAllSearchHistory, searchHistory, setSearchValue, goSearch } = props
+  const { searchHotDetail, deleteAllSearchHistory, searchHistory, goSearch } = props
 
   return (
     <div className="search-content">
@@ -25,9 +25,8 @@ const SearchContent = props => {
           <dt>热搜榜</dt>
           {searchHotDetail.map((item, index) => (
             <dd
-              key={item.content}
+              key={item.searchWord}
               onClick={() => {
-                setSearchValue(item.searchWord)
                 goSearch(item.searchWord)
               }}
             >

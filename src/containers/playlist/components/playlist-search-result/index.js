@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import SongItem from '@/components/song-item'
-import './index.scss'
+import SongItem from '../song-item'
 import loadingSvg from '@/assets/svg-icons/loading.svg'
+import './index.scss'
 
 // 由于"播放全部"这行需要将header背景图片的下端盖住，以保证填充圆弧部分，
 // 故header的z-index要比"播放全部"低
@@ -56,7 +56,6 @@ const PlaylistSearchResult = props => {
             song={songs[indexItem]}
             privilege={privileges[indexItem]}
             handleSongItemClick={handleSongItemClick}
-            hasLeftSpace={currentSongId === songs[indexItem].id}
           >
             {currentSongId === songs[indexItem].id && <i className="iconfont icon-laba"></i>}
           </SongItem>

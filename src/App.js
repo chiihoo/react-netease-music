@@ -36,7 +36,7 @@ function App() {
           <CacheRoute path="/playlist/subscribers" component={() => <>歌单订阅者</>} />
           <CacheRoute path="/playlist/recommend" component={() => <>歌单广场</>} />
           <CacheRoute path="/playlist/:id" component={Playlist} />
-          <CacheRoute path="/search" component={Search} />
+          <CacheRoute path="/search" component={Search} when={() => false} />
           <CacheRoute path="/recommend/taste" component={() => <>日推</>} />
           <CacheRoute path="/player" component={Player} />
           <CacheRoute path="/user/:uid" component={() => <>用户信息</>} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { useEventListener, useDebouncedCallback } from '@/hooks'
 import './index.scss'
@@ -19,17 +19,26 @@ const SearchHeader = props => {
 
   const [isInputFocus, setIsInputFocus] = useState(true)
 
+  // 回车键进行搜索，如果搜索框没内容，则直接搜索推荐词汇，如果搜索框有内容，则正常搜索
   useEventListener('keydown', e => {
     if (e.keyCode === 13) {
       searchValue === '' ? goSearch(realkeyword) : goSearch(searchValue)
     }
   })
 
+  // 搜索建议防抖
   const debounceHandleKeyUp = useDebouncedCallback(() => {
     if (searchValue !== '') {
       getSearchSuggest(searchValue)
     }
   }, 200)
+
+  // 如果搜索框没内容，将搜索建议关掉
+  useEffect(() => {
+    if (searchValue === '') {
+      setShowSuggest(false)
+    }
+  }, [searchValue, setShowSuggest])
 
   return (
     <div className="search-header">

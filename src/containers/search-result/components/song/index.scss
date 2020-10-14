@@ -1,0 +1,24 @@
+.search-result-song {
+  width: 100%;
+  height: 100%;
+
+  .search-result-song-header {
+    display: flex;
+    justify-content: space-between;
+    .play-all {
+      padding: 10px 15px;
+      .icon-bofang6 {
+        font-size: 20px;
+        padding-right: 10px;
+      }
+    }
+    .multiple-choice {
+      padding: 10px 15px;
+      display: flex;
+      .icon-caidan3 {
+        font-size: 20px;
+        padding-right: 2px;
+      }
+    }
+  }
+}

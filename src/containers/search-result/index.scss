@@ -1,6 +1,10 @@
 .search-result {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   .tabs-nav-wrapper {
-    margin-bottom: 20px;
     position: relative;
     font-size: 15px;
     &::before {
@@ -16,9 +20,11 @@
       overflow-x: auto;
       position: relative;
       white-space: nowrap;
-      .tabs-tab {
+      .tabs-tab-wrapper {
         display: inline-block;
-        margin: 5px 20px;
+        .tabs-tab {
+          margin: 5px 20px;
+        }
       }
       .tabs-tab-active {
         color: #ff3939;
@@ -36,8 +42,32 @@
     }
   }
   .tabs-content {
-    .swiper-slide {
-      height: 500px;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .swiper-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  // 各个分页的loading图标
+  .loading {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    img {
+      width: 14px;
+    }
+    span {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.6);
+      padding-left: 6px;
     }
   }
 }
