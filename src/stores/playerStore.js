@@ -106,39 +106,6 @@ export class playerStore {
     }
     return []
   }
-  // @computed
-  // get swiperLoadSongs() {
-  //   if (this.playQueue.length >= 3) {
-  //     if (this.playQueueIndex === 0) {
-  //       return [this.playQueue[this.playQueue.length - 1], ...this.playQueue.slice(0, 2)]
-  //     } else if (this.playQueueIndex === this.playQueue.length - 1) {
-  //       return [...this.playQueue.slice(-2), this.playQueue[0]]
-  //     } else {
-  //       return this.playQueue.slice(this.playQueueIndex - 1, this.playQueueIndex + 2)
-  //     }
-  //   } else if (this.playQueue.length === 2) {
-  //     if (this.playQueueIndex === 1) {
-  //       return [
-  //         { ...this.playQueue[0], keyId: 1 },
-  //         { ...this.playQueue[1], keyId: 2 },
-  //         { ...this.playQueue[0], keyId: 3 }
-  //       ]
-  //     } else if (this.playQueueIndex === 0) {
-  //       return [
-  //         { ...this.playQueue[1], keyId: 1 },
-  //         { ...this.playQueue[0], keyId: 2 },
-  //         { ...this.playQueue[1], keyId: 3 }
-  //       ]
-  //     }
-  //   } else if (this.playQueue.length === 1) {
-  //     return [
-  //       { ...this.playQueue[0], keyId: 1 },
-  //       { ...this.playQueue[0], keyId: 2 },
-  //       { ...this.playQueue[0], keyId: 3 }
-  //     ]
-  //   }
-  //   return []
-  // }
 
   // 根据currentTime获取当前为哪句歌词，返回歌词的索引
   @computed

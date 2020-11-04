@@ -49,30 +49,28 @@ const PlaylistSearchResult = props => {
 
   return (
     <div className="playlist-search-result">
-      <div className="search-result">
-        {searchIndexResult.map(indexItem => (
-          <SongItem
-            key={songs[indexItem].id}
-            song={songs[indexItem]}
-            privilege={privileges[indexItem]}
-            handleSongItemClick={handleSongItemClick}
-          >
-            {currentSongId === songs[indexItem].id && <i className="iconfont icon-laba"></i>}
-          </SongItem>
-        ))}
-        {searchValueProcessed !== '' && searchFinished && searchIndexResult.length === 0 && (
-          <div className="not-find-notice">
-            <p>未找到与"{searchValue}"相关的内容</p>
-            <p>试试搜索云音乐曲库</p>
-          </div>
-        )}
-        {searchValueProcessed !== '' && !searchFinished && (
-          <div className="loading-notice">
-            <img src={loadingSvg} alt="" className="loading" />
-            <span>努力加载中...</span>
-          </div>
-        )}
-      </div>
+      {searchIndexResult.map(indexItem => (
+        <SongItem
+          key={songs[indexItem].id}
+          song={songs[indexItem]}
+          privilege={privileges[indexItem]}
+          handleSongItemClick={handleSongItemClick}
+        >
+          {currentSongId === songs[indexItem].id && <i className="iconfont icon-laba"></i>}
+        </SongItem>
+      ))}
+      {searchValueProcessed !== '' && searchFinished && searchIndexResult.length === 0 && (
+        <div className="not-find-notice">
+          <p>未找到与"{searchValue}"相关的内容</p>
+          <p>试试搜索云音乐曲库</p>
+        </div>
+      )}
+      {searchValueProcessed !== '' && !searchFinished && (
+        <div className="loading-notice">
+          <img src={loadingSvg} alt="" className="loading" />
+          <span>努力加载中...</span>
+        </div>
+      )}
     </div>
   )
 }

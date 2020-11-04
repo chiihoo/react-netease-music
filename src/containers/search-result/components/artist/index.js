@@ -1,22 +1,11 @@
 import React, { useState } from 'react'
 import { List, WindowScroller } from 'react-virtualized'
 import Scroll from '@/components/scroll'
-import SongItem from '../song-item'
 import './index.scss'
 
-// 搜索结果-单曲
-const Song = props => {
-  const {
-    songs,
-    privileges,
-    handleSongItemClick,
-    handlePlayAllClick,
-    fetchMore,
-    loadingStatus,
-    hasLoaded,
-    hasMore,
-    keyword
-  } = props
+// 搜索结果-歌手
+const Artist = props => {
+  const { artists, fetchMore, loadingStatus, hasLoaded, hasMore, keyword } = props
 
   const [scrollElement, setScrollElement] = useState()
 
@@ -24,28 +13,41 @@ const Song = props => {
     getScrollElement: setScrollElement,
     pullUp: {
       callback() {
-        fetchMore('song')
+        fetchMore('artist')
       },
       hasMore,
       loadingStatus
     }
   }
 
+  const regex = new RegExp(keyword, 'gi')
+
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <SongItem
-        key={key}
-        style={style}
-        song={songs[index]}
-        privilege={privileges[index]}
-        handleSongItemClick={handleSongItemClick}
-        keyword={keyword}
-      />
+      <div className="artist-item" key={key} style={style}>
+        <img
+          src={
+            artists[index].picUrl
+              ? artists[index].picUrl + '?param=200y200'
+              : 'http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg?param=200y200'
+          }
+          alt=""
+        />
+        <p
+          className="item-name one-line-ellipsis"
+          dangerouslySetInnerHTML={{
+            __html: artists[index].name.replace(
+              regex,
+              x => `<span class="keyword-highlight">${x}</span>`
+            )
+          }}
+        ></p>
+      </div>
     )
   }
 
   return (
-    <div className="search-result-song">
+    <div className="search-result-artist">
       {hasLoaded === false ? (
         <div className="loading">
           <img src={require('@/assets/svg-icons/loading.svg')} alt="" />
@@ -53,18 +55,8 @@ const Song = props => {
         </div>
       ) : (
         <Scroll {...scrollParams}>
-          <div className="search-result-song-header">
-            <div className="play-all" onClick={handlePlayAllClick}>
-              <i className="iconfont icon-bofang6"></i>
-              <span>播放全部</span>
-            </div>
-            <div className="multiple-choice">
-              <i className="iconfont icon-caidan3"></i>
-              <span>多选</span>
-            </div>
-          </div>
-          <div className="result-songs">
-            {songs && (
+          <div className="result-artist">
+            {artists && (
               <WindowScroller scrollElement={scrollElement}>
                 {({ height, isScrolling, onChildScroll, scrollTop }) => (
                   <List
@@ -74,8 +66,8 @@ const Song = props => {
                     onScroll={onChildScroll}
                     scrollTop={scrollTop}
                     width={window.innerWidth}
-                    rowCount={songs.length}
-                    rowHeight={window.innerWidth * 0.14133}
+                    rowCount={artists.length}
+                    rowHeight={window.innerWidth * 0.16}
                     rowRenderer={rowRenderer}
                   />
                 )}
@@ -88,4 +80,4 @@ const Song = props => {
   )
 }
 
-export default React.memo(Song)
+export default React.memo(Artist)

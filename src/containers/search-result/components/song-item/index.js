@@ -42,7 +42,7 @@ const SongItem = props => {
               <span
                 dangerouslySetInnerHTML={{
                   __html: song.alia[0].replace(
-                    regex,
+                    regex, //或者直接keyword
                     x => `<span class="keyword-highlight">${x}</span>`
                   )
                 }}

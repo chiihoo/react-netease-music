@@ -121,3 +121,21 @@ export function formatTime(time) {
   }
   return minutes + ':' + seconds
 }
+
+/**
+ * 把毫秒时间戳格式化成类似 2020.10.01 的形式
+ * @param {Number} time
+ */
+export function formatTimeToDate(time) {
+  const date = new Date(time)
+  let year = date.getFullYear()
+  let month = date.getMonth() + 1
+  let day = date.getDay()
+  if (month < 10) {
+    month = '0' + month
+  }
+  if (day < 10) {
+    day = '0' + day
+  }
+  return year + '.' + month + '.' + day
+}
