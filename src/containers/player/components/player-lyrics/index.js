@@ -18,19 +18,16 @@ const PlayerLyrics = props => {
     showLyrics
   } = props
 
-  const bScrollRef = useRef()
-  const scrollWrapperRef = useRef()
-
   const [halfHeight, setHalfHeight] = useState(0) // scrollWrapperRef.current盒子高度的一半
-
-  // 这两个变量主要是为了手动滑动时，不进行scrollToElement，否则就滑不动了
-  const isScrolling = useRef(false) // 是否进行手动滑动
-  const timerId = useRef()
-
   const [showReadyLine, setShowReadyLine] = useState(false) // 是否显示readyLine
 
+  const bScrollRef = useRef()
+  const scrollWrapperRef = useRef()
+  
+  // 这两个变量主要是为了手动滑动时，不进行scrollToElement，否则就滑不动了
+  const isScrolling = useRef(false) // 是否进行手动滑动
+  const timerId = useRef() // 存setTimeout的id
   const lyricsRef = useRef([]) // 存储歌词li的dom元素
-
   // 手动滑动歌词，点击可以跳跃到该歌词的时间进行播放
   const lyricsHeightArr = useRef([]) // 每句歌词要被选中需要位移多少，比如第1句=0，第2句=height(1)，第3句=height(1)+height(2)，...
   const [readyPlayIndex, setReadyPlayIndex] = useState(0) // 预备播放的lyrics索引
@@ -44,16 +41,16 @@ const PlayerLyrics = props => {
       deceleration: 0.002, // momentum动画的减速度
       probeType: 3 // 派发scroll事件  1：非实时；2：实时；3：实时，在滚动动画时也会派发
     })
-
     return () => {
       bScrollRef.current && bScrollRef.current.destroy()
     }
   }, [])
 
   // 与better-scroll 1.15.2版本不同，加载数据变化需要重新进行刷新
+  // 当lyrics或者halfHeight变化时，都需要调用bScrollRef.current.refresh()，因为dom发生了变化，需要重新计算BetterScroll
   useEffect(() => {
     bScrollRef.current && bScrollRef.current.refresh()
-  }, [lyrics])
+  }, [lyrics, halfHeight])
 
   // 触摸到滚动结束，isScrolling为true，注意要清除定时器
   const beforeScrollStartHandler = useCallback(() => {
@@ -65,9 +62,9 @@ const PlayerLyrics = props => {
   const scrollEndHandler = useCallback(() => {
     // bScrollRef.current.scrollToElement也会触发'scrollEnd'，
     // 但是当isScrolling为true时，scrollToElement就没有被调用，所以没有影响
-    // 延时一段时间
+    isScrolling.current = false
+    // 延时一段时间，才让readyLine消失
     timerId.current = setTimeout(() => {
-      isScrolling.current = false
       setShowReadyLine(false)
     }, 1000)
     return () => {
