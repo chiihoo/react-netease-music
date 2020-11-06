@@ -55,19 +55,4 @@
       bottom: 0;
     }
   }
-
-  // 各个分页的loading图标
-  .loading {
-    margin-top: 80px;
-    display: flex;
-    justify-content: center;
-    img {
-      width: 14px;
-    }
-    span {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.6);
-      padding-left: 6px;
-    }
-  }
 }

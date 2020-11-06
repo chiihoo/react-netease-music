@@ -1,0 +1,26 @@
+.with-notice {
+  width: 100%;
+  height: 100%;
+  // loading努力加载中
+  .loading {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    img {
+      width: 14px;
+    }
+    span {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.6);
+      padding-left: 6px;
+    }
+  }
+  // 未找到内容时的提示
+  .not-find-notice {
+    margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}

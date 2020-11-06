@@ -5,6 +5,7 @@ import { useObserver, useLocalStore } from 'mobx-react-lite'
 import { useParams } from 'react-router-dom'
 import { runInAction } from 'mobx'
 import { useStores } from '@/stores'
+import WithNotice from './components/with-notice'
 import Complex from './components/complex'
 import Song from './components/song'
 import PlayList from './components/play-list'
@@ -16,7 +17,7 @@ import User from './components/user'
 import './index.scss'
 
 // 搜索结果
-const SearchResult = props => {
+const SearchResult = () => {
   const { searchStore, playerStore } = useStores()
 
   const tabListRef = useRef([]) // tab标签的ref集合
@@ -74,19 +75,24 @@ const SearchResult = props => {
         },
         component() {
           return (
-            <Complex
-              song={searchStore.complex.song}
-              album={searchStore.complex.album}
-              artist={searchStore.complex.artist}
-              video={searchStore.complex.video}
-              playList={searchStore.complex.playList}
-              user={searchStore.complex.user}
-              keyword={keyword}
-              handleComplexSongItemClick={handleComplexSongItemClick}
-              loadingStatus={this.loadingStatus}
+            <WithNotice
+              notFind={searchStore.complexNotFind}
               hasLoaded={this.hasLoaded}
-              changeActiveIndexByNickname={changeActiveIndexByNickname}
-            />
+              keyword={keyword}
+            >
+              <Complex
+                song={searchStore.complex.song}
+                album={searchStore.complex.album}
+                artist={searchStore.complex.artist}
+                video={searchStore.complex.video}
+                playList={searchStore.complex.playList}
+                user={searchStore.complex.user}
+                handleComplexSongItemClick={handleComplexSongItemClick}
+                changeActiveIndexByNickname={changeActiveIndexByNickname}
+                keyword={keyword}
+                loadingStatus={this.loadingStatus}
+              />
+            </WithNotice>
           )
         }
       },
@@ -114,17 +120,22 @@ const SearchResult = props => {
         // 这里也必须得手动传keyword，否则无法感知它的变化
         component(keyword) {
           return (
-            <Song
-              songs={searchStore.song.songs}
-              privileges={searchStore.song.privileges}
-              handleSongItemClick={handleSongItemClick}
-              handlePlayAllClick={handlePlayAllClick}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              hasMore={searchStore.song.hasMore}
+              notFind={searchStore.song.songs.length === 0}
               keyword={keyword}
-            />
+            >
+              <Song
+                songs={searchStore.song.songs}
+                privileges={searchStore.song.privileges}
+                handleSongItemClick={handleSongItemClick}
+                handlePlayAllClick={handlePlayAllClick}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+                hasMore={searchStore.song.hasMore}
+                keyword={keyword}
+              />
+            </WithNotice>
           )
         }
       },
@@ -151,14 +162,19 @@ const SearchResult = props => {
         },
         component() {
           return (
-            <PlayList
-              playlists={searchStore.playList.playlists}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              hasMore={searchStore.playList.hasMore}
+              notFind={searchStore.playList.playlists.length === 0}
               keyword={keyword}
-            />
+            >
+              <PlayList
+                playlists={searchStore.playList.playlists}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+                hasMore={searchStore.playList.hasMore}
+                keyword={keyword}
+              />
+            </WithNotice>
           )
         }
       },
@@ -184,14 +200,19 @@ const SearchResult = props => {
         },
         component(keyword) {
           return (
-            <Video
-              mvs={searchStore.video.mvs}
-              hasMore={searchStore.video.mvCount > (this.currentOffset + 1) * 30}
-              keyword={keyword}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
-            />
+              notFind={searchStore.video.mvs.length === 0}
+              keyword={keyword}
+            >
+              <Video
+                mvs={searchStore.video.mvs}
+                hasMore={searchStore.video.mvCount > (this.currentOffset + 1) * 30}
+                keyword={keyword}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+              />
+            </WithNotice>
           )
         }
       },
@@ -217,14 +238,19 @@ const SearchResult = props => {
         },
         component() {
           return (
-            <Artist
-              artists={searchStore.artist.artists}
-              hasMore={searchStore.artist.hasMore}
-              keyword={keyword}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
-            />
+              notFind={searchStore.artist.artists.length === 0}
+              keyword={keyword}
+            >
+              <Artist
+                artists={searchStore.artist.artists}
+                hasMore={searchStore.artist.hasMore}
+                keyword={keyword}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+              />
+            </WithNotice>
           )
         }
       },
@@ -250,14 +276,19 @@ const SearchResult = props => {
         },
         component() {
           return (
-            <Album
-              albums={searchStore.album.albums}
-              hasMore={searchStore.album.albumCount > (this.currentOffset + 1) * 30}
-              keyword={keyword}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
-            />
+              notFind={searchStore.album.albums.length === 0}
+              keyword={keyword}
+            >
+              <Album
+                albums={searchStore.album.albums}
+                hasMore={searchStore.album.albumCount > (this.currentOffset + 1) * 30}
+                keyword={keyword}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+              />
+            </WithNotice>
           )
         }
       },
@@ -284,14 +315,19 @@ const SearchResult = props => {
         },
         component() {
           return (
-            <DjRadio
-              djRadios={searchStore.djRadio.djRadios}
-              hasMore={searchStore.djRadio.djRadiosCount > (this.currentOffset + 1) * 30}
-              keyword={keyword}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
-            />
+              notFind={searchStore.djRadio.djRadios.length === 0}
+              keyword={keyword}
+            >
+              <DjRadio
+                djRadios={searchStore.djRadio.djRadios}
+                hasMore={searchStore.djRadio.djRadiosCount > (this.currentOffset + 1) * 30}
+                keyword={keyword}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+              />
+            </WithNotice>
           )
         }
       },
@@ -317,14 +353,19 @@ const SearchResult = props => {
         },
         component() {
           return (
-            <User
-              users={searchStore.user.userprofiles}
-              hasMore={searchStore.user.hasMore}
-              keyword={keyword}
+            <WithNotice
               hasLoaded={this.hasLoaded}
-              fetchMore={fetchMore}
-              loadingStatus={this.loadingStatus}
-            />
+              notFind={searchStore.user.userprofiles.length === 0}
+              keyword={keyword}
+            >
+              <User
+                users={searchStore.user.userprofiles}
+                hasMore={searchStore.user.hasMore}
+                keyword={keyword}
+                fetchMore={fetchMore}
+                loadingStatus={this.loadingStatus}
+              />
+            </WithNotice>
           )
         }
       }
@@ -378,14 +419,10 @@ const SearchResult = props => {
   // 每次切换activeIndex时，都要把当前活动的tabs移动到父级盒子中间，并且设置当前ink-bar的位置，以及跳转swiper到activeIndex所代表的页面
   useEffect(() => {
     // 要使active的那个tab移动到父级盒子中间，需要用这个tab距离父级左侧边界的距离 + 自身的一半 - 盒子的一半宽度（不是overflow的实际宽度），计算结果即为要移动到的距离
-    let toLeft =
+    const toLeft =
       tabListRef.current[searchStore.activeIndex].offsetLeft +
       tabListRef.current[searchStore.activeIndex].offsetWidth / 2 -
       navListRef.current.offsetWidth / 2
-    navListRef.current.scrollTo({
-      left: toLeft,
-      behavior: 'smooth'
-    })
 
     // 只要activeIndex改变，就设置当前ink-bar的位置
     setInkBarStyle({
@@ -397,14 +434,20 @@ const SearchResult = props => {
     // 第一次进入页面时到达上一次的标签页（包括从下一级页面返回时），都不需要过渡动画
     // 只有已经进入页面之后才需要过渡动画
     if (isFirstLoad.current) {
+      navListRef.current.scrollTo(toLeft, 0)
       swiperRef.current.swiper.slideTo(searchStore.activeIndex, 0, false)
       setShouldInkTransition(false)
       isFirstLoad.current = false
     } else {
       if (shouldTransition.current) {
+        navListRef.current.scrollTo({
+          left: toLeft,
+          behavior: 'smooth'
+        })
         setShouldInkTransition(true)
         swiperRef.current.swiper.slideTo(searchStore.activeIndex)
       } else {
+        navListRef.current.scrollTo(toLeft, 0)
         setShouldInkTransition(false)
         swiperRef.current.swiper.slideTo(searchStore.activeIndex, 0, false)
       }

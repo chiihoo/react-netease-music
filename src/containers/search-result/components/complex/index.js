@@ -13,7 +13,6 @@ const Complex = props => {
     video,
     keyword,
     handleComplexSongItemClick,
-    hasLoaded,
     changeActiveIndexByNickname
   } = props
 
@@ -23,13 +22,8 @@ const Complex = props => {
 
   return (
     <div className="search-result-complex">
-      {hasLoaded === false ? (
-        <div className="loading">
-          <img src={require('@/assets/svg-icons/loading.svg')} alt="" />
-          <span>努力加载中...</span>
-        </div>
-      ) : (
-        <Scroll>
+      <Scroll>
+        {song?.songs.length > 0 && (
           <div className="song">
             <div className="song-header">
               <h4>单曲</h4>
@@ -58,6 +52,8 @@ const Complex = props => {
               <i className="iconfont icon-gengduo"></i>
             </p>
           </div>
+        )}
+        {playList?.playLists.length > 0 && (
           <div className="play-list">
             <h4>歌单</h4>
             {playList?.playLists?.map(item => (
@@ -96,6 +92,8 @@ const Complex = props => {
               <i className="iconfont icon-gengduo"></i>
             </p>
           </div>
+        )}
+        {video?.videos?.length > 0 && (
           <div className="video">
             <h4>视频</h4>
             {video?.videos?.map(item => (
@@ -131,11 +129,11 @@ const Complex = props => {
               <i className="iconfont icon-gengduo"></i>
             </p>
           </div>
-          <div className="album"></div>
-          <div className="dj-radio"></div>
-          <div className="user"></div>
-        </Scroll>
-      )}
+        )}
+        <div className="album"></div>
+        <div className="dj-radio"></div>
+        <div className="user"></div>
+      </Scroll>
     </div>
   )
 }

@@ -6,7 +6,7 @@ import './index.scss'
 
 // 搜索结果-专辑
 const Album = props => {
-  const { albums, fetchMore, loadingStatus, hasLoaded, hasMore, keyword } = props
+  const { albums, fetchMore, loadingStatus, hasMore, keyword } = props
 
   const [scrollElement, setScrollElement] = useState()
 
@@ -54,32 +54,25 @@ const Album = props => {
 
   return (
     <div className="search-result-album">
-      {hasLoaded === false ? (
-        <div className="loading">
-          <img src={require('@/assets/svg-icons/loading.svg')} alt="" />
-          <span>努力加载中...</span>
-        </div>
-      ) : (
-        <Scroll {...scrollParams}>
-          {albums && (
-            <WindowScroller scrollElement={scrollElement}>
-              {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                <List
-                  autoHeight
-                  height={height}
-                  isScrolling={isScrolling}
-                  onScroll={onChildScroll}
-                  scrollTop={scrollTop}
-                  width={window.innerWidth}
-                  rowCount={albums.length}
-                  rowHeight={window.innerWidth * 0.185}
-                  rowRenderer={rowRenderer}
-                />
-              )}
-            </WindowScroller>
-          )}
-        </Scroll>
-      )}
+      <Scroll {...scrollParams}>
+        {albums && (
+          <WindowScroller scrollElement={scrollElement}>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <List
+                autoHeight
+                height={height}
+                isScrolling={isScrolling}
+                onScroll={onChildScroll}
+                scrollTop={scrollTop}
+                width={window.innerWidth}
+                rowCount={albums.length}
+                rowHeight={window.innerWidth * 0.185}
+                rowRenderer={rowRenderer}
+              />
+            )}
+          </WindowScroller>
+        )}
+      </Scroll>
     </div>
   )
 }

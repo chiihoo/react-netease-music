@@ -5,7 +5,7 @@ import './index.scss'
 
 // 搜索结果-主播电台
 const DjRadio = props => {
-  const { djRadios, fetchMore, loadingStatus, hasLoaded, hasMore, keyword } = props
+  const { djRadios, fetchMore, loadingStatus, hasMore, keyword } = props
 
   const [scrollElement, setScrollElement] = useState()
 
@@ -25,12 +25,12 @@ const DjRadio = props => {
   const rowRenderer = ({ key, index, style }) => {
     return (
       <div className="album-item" key={key} style={style}>
-        <img src={djRadios[index].picUrl + '?param=200y200'} alt="" />
+        <img src={djRadios[index]?.picUrl + '?param=200y200'} alt="" />
         <div className="item-text">
           <p
             className="item-name one-line-ellipsis"
             dangerouslySetInnerHTML={{
-              __html: djRadios[index].name.replace(
+              __html: djRadios[index]?.name.replace(
                 regex,
                 x => `<span class="keyword-highlight">${x}</span>`
               )
@@ -46,35 +46,28 @@ const DjRadio = props => {
 
   return (
     <div className="search-result-album">
-      {hasLoaded === false ? (
-        <div className="loading">
-          <img src={require('@/assets/svg-icons/loading.svg')} alt="" />
-          <span>努力加载中...</span>
-        </div>
-      ) : (
-        <Scroll {...scrollParams}>
-          {djRadios && (
-            <>
-              <h4 className="header-title">电台</h4>
-              <WindowScroller scrollElement={scrollElement}>
-                {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                  <List
-                    autoHeight
-                    height={height}
-                    isScrolling={isScrolling}
-                    onScroll={onChildScroll}
-                    scrollTop={scrollTop}
-                    width={window.innerWidth}
-                    rowCount={djRadios.length}
-                    rowHeight={window.innerWidth * 0.185}
-                    rowRenderer={rowRenderer}
-                  />
-                )}
-              </WindowScroller>
-            </>
-          )}
-        </Scroll>
-      )}
+      <Scroll {...scrollParams}>
+        {djRadios && (
+          <>
+            <h4 className="header-title">电台</h4>
+            <WindowScroller scrollElement={scrollElement}>
+              {({ height, isScrolling, onChildScroll, scrollTop }) => (
+                <List
+                  autoHeight
+                  height={height}
+                  isScrolling={isScrolling}
+                  onScroll={onChildScroll}
+                  scrollTop={scrollTop}
+                  width={window.innerWidth}
+                  rowCount={djRadios?.length}
+                  rowHeight={window.innerWidth * 0.185}
+                  rowRenderer={rowRenderer}
+                />
+              )}
+            </WindowScroller>
+          </>
+        )}
+      </Scroll>
     </div>
   )
 }

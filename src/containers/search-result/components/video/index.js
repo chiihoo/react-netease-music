@@ -4,9 +4,9 @@ import Scroll from '@/components/scroll'
 import { handleNumber, formatTime } from '@/utils/tools'
 import './index.scss'
 
-// 搜索结果
+// 搜索结果-视频
 const Video = props => {
-  const { mvs, fetchMore, loadingStatus, hasLoaded, hasMore, keyword } = props
+  const { mvs, fetchMore, loadingStatus, hasMore, keyword } = props
 
   const [scrollElement, setScrollElement] = useState()
 
@@ -58,34 +58,27 @@ const Video = props => {
 
   return (
     <div className="search-result-video">
-      {hasLoaded === false ? (
-        <div className="loading">
-          <img src={require('@/assets/svg-icons/loading.svg')} alt="" />
-          <span>努力加载中...</span>
+      <Scroll {...scrollParams}>
+        <div className="result-video">
+          {mvs && (
+            <WindowScroller scrollElement={scrollElement}>
+              {({ height, isScrolling, onChildScroll, scrollTop }) => (
+                <List
+                  autoHeight
+                  height={height}
+                  isScrolling={isScrolling}
+                  onScroll={onChildScroll}
+                  scrollTop={scrollTop}
+                  width={window.innerWidth}
+                  rowCount={mvs.length}
+                  rowHeight={window.innerWidth * 0.215}
+                  rowRenderer={rowRenderer}
+                />
+              )}
+            </WindowScroller>
+          )}
         </div>
-      ) : (
-        <Scroll {...scrollParams}>
-          <div className="result-video">
-            {mvs && (
-              <WindowScroller scrollElement={scrollElement}>
-                {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                  <List
-                    autoHeight
-                    height={height}
-                    isScrolling={isScrolling}
-                    onScroll={onChildScroll}
-                    scrollTop={scrollTop}
-                    width={window.innerWidth}
-                    rowCount={mvs.length}
-                    rowHeight={window.innerWidth * 0.215}
-                    rowRenderer={rowRenderer}
-                  />
-                )}
-              </WindowScroller>
-            )}
-          </div>
-        </Scroll>
-      )}
+      </Scroll>
     </div>
   )
 }

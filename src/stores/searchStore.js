@@ -1,4 +1,4 @@
-import { observable, action, flow } from 'mobx'
+import { observable, action, computed, flow } from 'mobx'
 import {
   fetchSearchDefault,
   fetchSearchHotDetail,
@@ -25,6 +25,15 @@ export class searchStore {
   @observable album = { albums: [] } // 专辑
   @observable djRadio = { djRadios: [] } // 主播电台
   @observable user = { userprofiles: [] } // 用户
+
+  @computed
+  get complexNotFind() {
+    return (
+      this.complex.song?.songs.length === 0 &&
+      this.complex.playList?.playLists.length === 0 &&
+      this.complex.video?.videos.length === 0
+    )
+  }
 
   @action changeActiveIndex(index) {
     this.activeIndex = index
@@ -66,7 +75,7 @@ export class searchStore {
     const res = yield fetchSearchHotDetail()
     this.searchHotDetail = res.data
   })
-  
+
   getSearchSuggest = flow(function* (keyword) {
     const res = yield fetchSearchSuggest(keyword)
     this.searchSuggest = res.result
@@ -81,8 +90,8 @@ export class searchStore {
       ...res.result,
       song: {
         ...res.result.song,
-        songs: songsData?.songs,
-        privileges: songsData?.privileges
+        songs: songsData?.songs || [],
+        privileges: songsData?.privileges || []
       }
     }
   })
@@ -101,8 +110,8 @@ export class searchStore {
     const songsData = yield fetchSongDetail(trackIdsString)
     this.song = {
       ...res.result,
-      songs: [...this.song.songs, ...songsData?.songs],
-      privileges: [...this.song.privileges, ...songsData?.privileges]
+      songs: [...this.song.songs, ...(songsData?.songs || [])],
+      privileges: [...this.song.privileges, ...(songsData?.privileges || [])]
     }
 
     // 直接push不能让组件重新渲染
@@ -114,35 +123,42 @@ export class searchStore {
     const res = yield fetchSearchResult(keyword, offset, limit, 1000)
     this.playList = {
       ...res.result,
-      playlists: [...this.playList.playlists, ...res.result?.playlists]
+      playlists: [...this.playList.playlists, ...(res.result?.playlists || [])]
     }
   })
 
   getVideo = flow(function* (keyword, offset = 0, limit = 30) {
     const res = yield fetchSearchResult(keyword, offset, limit, 1004)
-    this.video = { ...res.result, mvs: [...this.video.mvs, ...res.result?.mvs] }
+    this.video = { ...res.result, mvs: [...this.video.mvs, ...(res.result?.mvs || [])] }
   })
 
   getArtist = flow(function* (keyword, offset = 0, limit = 30) {
     const res = yield fetchSearchResult(keyword, offset, limit, 100)
-    this.artist = { ...res.result, artists: [...this.artist.artists, ...res.result?.artists] }
+    this.artist = {
+      ...res.result,
+      artists: [...this.artist.artists, ...(res.result?.artists || [])]
+    }
   })
 
   getAlbum = flow(function* (keyword, offset = 0, limit = 30) {
     const res = yield fetchSearchResult(keyword, offset, limit, 10)
-    this.album = { ...res.result, albums: [...this.album.albums, ...res.result?.albums] }
+    this.album = { ...res.result, albums: [...this.album.albums, ...(res.result?.albums || [])] }
   })
 
   getDjRadio = flow(function* (keyword, offset = 0, limit = 30) {
     const res = yield fetchSearchResult(keyword, offset, limit, 1009)
-    this.djRadio = { ...res.result, djRadios: [...this.djRadio.djRadios, ...res.result?.djRadios] }
+    this.djRadio = {
+      ...res.result,
+      // 这里可能会返回res={result:{}, code:200}，所以必须加上 || []，避免...undefined报错
+      djRadios: [...this.djRadio?.djRadios, ...(res.result?.djRadios || [])]
+    }
   })
 
   getUser = flow(function* (keyword, offset = 0, limit = 30) {
     const res = yield fetchSearchResult(keyword, offset, limit, 1002)
     this.user = {
       ...res.result,
-      userprofiles: [...this.user.userprofiles, ...res.result?.userprofiles]
+      userprofiles: [...this.user.userprofiles, ...(res.result?.userprofiles || [])]
     }
   })
 }
