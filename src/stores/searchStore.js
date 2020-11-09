@@ -8,12 +8,12 @@ import {
 } from '@/api'
 
 export class searchStore {
-  @observable searchDefault = {}
-  @observable searchHotDetail = []
-  @observable searchSuggest = {}
-  @observable searchHistory = []
+  @observable searchDefault = {} // 搜索默认词
+  @observable searchHotDetail = [] // 热搜榜
+  @observable searchSuggest = {} //搜索建议
+  @observable searchHistory = [] // 搜索历史
 
-  @observable activeIndex = 0
+  @observable activeIndex = 0 // 当前tab的索引
 
   // searchResult
   @observable lastSearch = 'complex' // 上次搜索的栏目
@@ -86,6 +86,7 @@ export class searchStore {
     const trackIdsString = res.result?.song.resourceIds.join(',')
     // 用trackIds拼凑的ids字符串，请求全部的歌曲
     const songsData = yield fetchSongDetail(trackIdsString)
+    console.log('complex', res.result)
     this.complex = {
       ...res.result,
       song: {

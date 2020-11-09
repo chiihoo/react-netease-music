@@ -44,7 +44,7 @@ const Video = props => {
             }}
           ></p>
           <p className="item-info one-line-ellipsis">
-            <span>{formatTime(mvs[index].duration / 1000)}</span>
+            <sqan>{formatTime(mvs[index].duration / 1000)}</sqan>
             <span>
               {mvs[index]?.artists?.reduce((total, item, index, arr) => {
                 return index !== arr.length - 1 ? total + item.name + '/' : total + item.name

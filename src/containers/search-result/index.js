@@ -82,10 +82,11 @@ const SearchResult = () => {
             >
               <Complex
                 song={searchStore.complex.song}
-                album={searchStore.complex.album}
-                artist={searchStore.complex.artist}
-                video={searchStore.complex.video}
                 playList={searchStore.complex.playList}
+                video={searchStore.complex.video}
+                artist={searchStore.complex.artist}
+                album={searchStore.complex.album}
+                djRadio={searchStore.complex.djRadio}
                 user={searchStore.complex.user}
                 handleComplexSongItemClick={handleComplexSongItemClick}
                 changeActiveIndexByNickname={changeActiveIndexByNickname}

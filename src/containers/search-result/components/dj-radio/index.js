@@ -24,7 +24,7 @@ const DjRadio = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="album-item" key={key} style={style}>
+      <div className="dj-radio-item" key={key} style={style}>
         <img src={djRadios[index]?.picUrl + '?param=200y200'} alt="" />
         <div className="item-text">
           <p
@@ -45,7 +45,7 @@ const DjRadio = props => {
   }
 
   return (
-    <div className="search-result-album">
+    <div className="search-result-dj-radio">
       <Scroll {...scrollParams}>
         {djRadios && (
           <>

@@ -4,7 +4,17 @@
   .keyword-highlight {
     color: #3f70a7;
   }
+  .find-more {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+    .icon-gengduo {
+      font-size: 14px;
+    }
+  }
   .song {
+    padding-bottom: 15px;
     .song-header {
       display: flex;
       justify-content: space-between;
@@ -35,15 +45,6 @@
           font-size: 12px;
           padding-right: 5px;
         }
-      }
-    }
-    > p {
-      margin-top: 5px;
-      text-align: center;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.5);
-      .icon-gengduo {
-        font-size: 14px;
       }
     }
   }
@@ -80,15 +81,6 @@
             }
           }
         }
-      }
-    }
-    > p {
-      margin-top: 5px;
-      text-align: center;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.5);
-      .icon-gengduo {
-        font-size: 14px;
       }
     }
   }
@@ -141,13 +133,150 @@
         }
       }
     }
-    > p {
-      margin-top: 5px;
-      text-align: center;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.5);
-      .icon-gengduo {
-        font-size: 14px;
+  }
+  .artist {
+    padding: 15px;
+    h4 {
+      margin: 0 0 15px;
+      font-size: 16px;
+    }
+    .artist-item {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-right: 10px;
+      }
+      .item-name {
+        min-width: 0;
+        flex-grow: 1;
+        font-size: 15px;
+      }
+    }
+  }
+  .album {
+    padding: 15px;
+    h4 {
+      margin: 0 0 15px;
+      font-size: 16px;
+    }
+    .album-item {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 7px;
+        margin-right: 10px;
+        flex: 0;
+      }
+      .item-text {
+        min-width: 0;
+        flex-grow: 1;
+        .item-name {
+          font-size: 14px;
+          padding-bottom: 5px;
+        }
+        .item-info {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.5);
+          span {
+            &:first-child {
+              padding-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .dj-radio {
+    padding: 15px;
+    h4 {
+      margin: 0 0 15px;
+      font-size: 16px;
+    }
+    .dj-radio-item {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 7px;
+        margin-right: 10px;
+        flex: 0;
+      }
+      .item-text {
+        min-width: 0;
+        flex-grow: 1;
+        .item-name {
+          font-size: 14px;
+          padding-bottom: 5px;
+        }
+        .item-info {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.5);
+          span {
+            &:first-child {
+              padding-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .user {
+    padding: 15px;
+    h4 {
+      margin: 0 0 15px;
+      font-size: 16px;
+    }
+    .user-item {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-right: 10px;
+      }
+      .item-text {
+        min-width: 0;
+        flex-grow: 1;
+        .item-name {
+          font-size: 14px;
+          padding-bottom: 5px;
+          .icon-nan {
+            font-size: 13px;
+            color: #33a2da;
+            padding-left: 3px;
+          }
+          .icon-nv {
+            font-size: 13px;
+            color: #fc6da6;
+            padding-left: 3px;
+          }
+        }
+        .item-info {
+          font-size: 12px;
+          color: rgba(0, 0, 0, 0.5);
+          span {
+            &:first-child {
+              padding-right: 5px;
+            }
+          }
+        }
       }
     }
   }

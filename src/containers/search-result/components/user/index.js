@@ -24,7 +24,7 @@ const User = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="artist-item" key={key} style={style}>
+      <div className="user-item" key={key} style={style}>
         <img
           src={
             users[index].avatarUrl
@@ -55,9 +55,9 @@ const User = props => {
   }
 
   return (
-    <div className="search-result-artist">
+    <div className="search-result-user">
       <Scroll {...scrollParams}>
-        <div className="result-artist">
+        <div className="result-user">
           {users && (
             <WindowScroller scrollElement={scrollElement}>
               {({ height, isScrolling, onChildScroll, scrollTop }) => (

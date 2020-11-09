@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import Scroll from '@/components/scroll'
 import SongItem from '../song-item'
-import { handleNumber, formatTime } from '@/utils/tools'
+import { handleNumber, formatTime, formatTimeToDate } from '@/utils/tools'
 import './index.scss'
 
 // 搜索结果-综合
@@ -11,6 +11,10 @@ const Complex = props => {
     song,
     playList,
     video,
+    artist,
+    album,
+    djRadio,
+    user,
     keyword,
     handleComplexSongItemClick,
     changeActiveIndexByNickname
@@ -43,14 +47,24 @@ const Complex = props => {
                 />
               ))}
             </div>
-            <p
-              onClick={() => {
-                changeActiveIndexByNickname('song')
-              }}
-            >
-              <span>{song?.moreText}</span>
-              <i className="iconfont icon-gengduo"></i>
-            </p>
+            {song?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('song')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: song?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
           </div>
         )}
         {playList?.playLists.length > 0 && (
@@ -83,14 +97,24 @@ const Complex = props => {
                 </div>
               </div>
             ))}
-            <p
-              onClick={() => {
-                changeActiveIndexByNickname('playList')
-              }}
-            >
-              <span>{playList?.moreText}</span>
-              <i className="iconfont icon-gengduo"></i>
-            </p>
+            {playList?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('playList')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: playList?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
           </div>
         )}
         {video?.videos?.length > 0 && (
@@ -106,7 +130,15 @@ const Complex = props => {
                   </div>
                 </div>
                 <div className="item-text">
-                  <p className="item-name">{item.title}</p>
+                  <p
+                    className="item-name"
+                    dangerouslySetInnerHTML={{
+                      __html: item.title.replace(
+                        regex,
+                        x => `<span class="keyword-highlight">${x}</span>`
+                      )
+                    }}
+                  ></p>
                   <p className="item-info one-line-ellipsis">
                     <span>{formatTime(item.durationms / 1000)}</span>
                     <span>
@@ -120,19 +152,213 @@ const Complex = props => {
                 </div>
               </div>
             ))}
-            <p
-              onClick={() => {
-                changeActiveIndexByNickname('video')
-              }}
-            >
-              <span>{video?.moreText}</span>
-              <i className="iconfont icon-gengduo"></i>
-            </p>
+            {video?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('video')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: video?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
           </div>
         )}
-        <div className="album"></div>
-        <div className="dj-radio"></div>
-        <div className="user"></div>
+        {artist?.artists?.length > 0 && (
+          <div className="artist">
+            <h4>歌手</h4>
+            {artist?.artists?.map(item => (
+              <div className="artist-item" key={item.id}>
+                <img
+                  src={
+                    item.picUrl
+                      ? item.picUrl + '?param=200y200'
+                      : 'http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg?param=200y200'
+                  }
+                  alt=""
+                />
+                <p
+                  className="item-name one-line-ellipsis"
+                  dangerouslySetInnerHTML={{
+                    __html: item.name.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></p>
+              </div>
+            ))}
+            {artist?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('artist')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: artist?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
+          </div>
+        )}
+        {album?.albums?.length > 0 && (
+          <div className="album">
+            <h4>专辑</h4>
+            {album?.albums?.map(item => (
+              <div className="album-item" key={item.id}>
+                <img src={item.picUrl + '?param=200y200'} alt="" />
+                <div className="item-text">
+                  <p
+                    className="item-name one-line-ellipsis"
+                    dangerouslySetInnerHTML={{
+                      __html: item.name.replace(
+                        regex,
+                        x => `<span class="keyword-highlight">${x}</span>`
+                      )
+                    }}
+                  ></p>
+                  <p className="item-info one-line-ellipsis">
+                    <span>
+                      {item?.artists.reduce((total, artist, index, arr) => {
+                        return index !== arr.length - 1
+                          ? total + artist.name + '/'
+                          : total + artist.name + ' '
+                      }, '')}
+                      {formatTimeToDate(item.publishTime)}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            ))}
+            {album?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('album')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: album?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
+          </div>
+        )}
+        {djRadio?.djRadios?.length > 0 && (
+          <div className="dj-radio">
+            <h4>专辑</h4>
+            {djRadio?.djRadios?.map(item => (
+              <div className="dj-radio-item" key={item.id}>
+                <img src={item?.picUrl + '?param=200y200'} alt="" />
+                <div className="item-text">
+                  <p
+                    className="item-name one-line-ellipsis"
+                    dangerouslySetInnerHTML={{
+                      __html: item?.name.replace(
+                        regex,
+                        x => `<span class="keyword-highlight">${x}</span>`
+                      )
+                    }}
+                  ></p>
+                  <p className="item-info one-line-ellipsis">
+                    <span>{item?.dj?.nickname}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+            {djRadio?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('djRadio')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: djRadio?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
+          </div>
+        )}
+        {user?.users?.length > 0 && (
+          <div className="user">
+            <h4>用户</h4>
+            {user?.users?.map(item => (
+              <div className="user-item" key={item.userId}>
+                <img
+                  src={
+                    item.avatarUrl
+                      ? item.avatarUrl + '?param=200y200'
+                      : 'http://p1.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg?param=200y200'
+                  }
+                  alt=""
+                />
+                <div className="item-text">
+                  <p className="item-name one-line-ellipsis">
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: item.nickname.replace(
+                          regex,
+                          x => `<span class="keyword-highlight">${x}</span>`
+                        )
+                      }}
+                    ></span>
+                    {item.gender === 1 && <i className="iconfont icon-nan"></i>}
+                    {item.gender === 2 && <i className="iconfont icon-nv"></i>}
+                  </p>
+                  {item?.signature && (
+                    <p className="item-info one-line-ellipsis">{item?.signature}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+            {user?.more && (
+              <p
+                className="find-more"
+                onClick={() => {
+                  changeActiveIndexByNickname('user')
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: user?.moreText.replace(
+                      regex,
+                      x => `<span class="keyword-highlight">${x}</span>`
+                    )
+                  }}
+                ></span>
+                <i className="iconfont icon-gengduo"></i>
+              </p>
+            )}
+          </div>
+        )}
       </Scroll>
     </div>
   )
