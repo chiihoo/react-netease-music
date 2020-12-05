@@ -10,6 +10,7 @@ import Playlist from './containers/playlist'
 import Player from './containers/player'
 import MiniPlayer from './containers/mini-player'
 import Audio from './containers/audio'
+import Login from './containers/login'
 import { PlayListDrawer } from './containers/drawers'
 import { DeleteAllDialog } from './containers/dialogs'
 import './App.css'
@@ -43,6 +44,7 @@ function App() {
           <CacheRoute path="/toplist" component={() => <>排行榜</>} />
           <CacheRoute path="/radio" component={() => <>电台</>} />
           <CacheRoute path="/hotwall" component={() => <>云村热评墙</>} />
+          <CacheRoute path="/login" component={Login} />
         </CacheSwitch>
       </div>
       <Audio />

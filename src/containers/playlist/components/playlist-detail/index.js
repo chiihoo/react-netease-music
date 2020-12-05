@@ -6,7 +6,7 @@ import SongItem from '../song-item'
 import './index.scss'
 
 // 歌单页面中部 歌单信息
-const PlaylistDetail = props => {
+const PlaylistDetail = React.forwardRef((props, ref) => {
   const {
     trackCount,
     subscribers,
@@ -37,7 +37,7 @@ const PlaylistDetail = props => {
 
   return (
     <div className="playlist-detail">
-      <div className="playlist-detail-nav">
+      <div className="playlist-detail-nav" ref={ref}>
         <div className="playlist-play-all" onClick={handlePlayAllClick}>
           <i className="iconfont icon-bofang6"></i>
           <span>播放全部</span>
@@ -92,6 +92,6 @@ const PlaylistDetail = props => {
       </div>
     </div>
   )
-}
+})
 
 export default React.memo(PlaylistDetail)

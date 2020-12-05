@@ -6,19 +6,19 @@ import { usePageVisibility, useDebouncedCallback } from '@/hooks'
 import './index.scss'
 
 // 歌单页面顶部header
-const PlaylistHeader = props => {
+const PlaylistHeader = React.forwardRef((props, ref) => {
   const {
     playlistName,
     playlistId,
     isTicker,
     blurCoverImgUrl,
     opacity,
-    scrollElement,
     isSearch,
     setIsSearch,
     searchValue,
     setSearchValue,
-    setStartSearch
+    setStartSearch,
+    goTop
   } = props
 
   const [isInputFocus, setIsInputFocus] = useState(true)
@@ -36,11 +36,6 @@ const PlaylistHeader = props => {
     } else {
       history.goBack()
     }
-  }
-
-  // 点击标题，回到顶部
-  const goTop = () => {
-    scrollElement.scrollTo(0, 0)
   }
 
   // 点击搜索，弹出搜索框
@@ -71,7 +66,7 @@ const PlaylistHeader = props => {
   }
 
   return (
-    <div className="playlist-header">
+    <div className="playlist-header" ref={ref}>
       <div
         className="playlist-header-bg-img"
         style={{
@@ -125,6 +120,6 @@ const PlaylistHeader = props => {
       )}
     </div>
   )
-}
+})
 
 export default React.memo(PlaylistHeader)

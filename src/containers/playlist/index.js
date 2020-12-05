@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useObserver } from 'mobx-react-lite'
 import { isEmpty } from 'lodash-es'
@@ -12,7 +12,7 @@ import PlaylistDetail from './components/playlist-detail'
 import PlaylistSkeleton from '@/skeletons/playlist-skeleton'
 import './index.scss'
 
-const HEADER_HEIGHT = window.innerWidth * 0.14667
+// 播放全部的这个dom元素与header底部的距离，大概是198.375px
 const TARGET_HEIGHT = window.innerWidth * 0.529
 
 // 歌单详情页面
@@ -31,6 +31,8 @@ const Playlist = () => {
   const [searchValue, setSearchValue] = useState('')
   // 防抖操作，连续输入后，一段时间不输入，置为true，再还原false
   const [startSearch, setStartSearch] = useState(false)
+
+  const headerRef = useRef()
 
   const params = useParams()
 
@@ -58,7 +60,7 @@ const Playlist = () => {
   const scrollProps = {
     getScrollElement: setScrollElement,
     onScrollFn: e => {
-      setIsTicker(e.target.scrollTop >= HEADER_HEIGHT)
+      setIsTicker(e.target.scrollTop >= headerRef.current.offsetHeight)
       if (e.target.scrollTop >= TARGET_HEIGHT) {
         setOpacity(0)
       } else {
@@ -79,6 +81,11 @@ const Playlist = () => {
     // eslint-disable-next-line
   }, [])
 
+  // 点击标题，回到顶部
+  const goTop = useCallback(() => {
+    scrollElement.scrollTo(0, 0)
+  }, [scrollElement])
+
   return useObserver(() => (
     <div className="playlist">
       {playlistStore.loadingStatus === 0 ? (
@@ -91,12 +98,13 @@ const Playlist = () => {
             isTicker={isTicker}
             blurCoverImgUrl={blurCoverImgUrl}
             opacity={1 - opacity}
-            scrollElement={scrollElement}
+            goTop={goTop}
             isSearch={isSearch}
             setIsSearch={setIsSearch}
             searchValue={searchValue}
             setSearchValue={setSearchValue}
             setStartSearch={setStartSearch}
+            ref={headerRef}
           />
           <div className="scroll-wrapper">
             <Scroll {...scrollProps}>

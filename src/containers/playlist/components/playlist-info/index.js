@@ -36,7 +36,7 @@ const PlaylistInfo = props => {
           </div>
           <div className="playlist-desc ">
             <p className="two-lines-ellipsis">{description}</p>
-            <i className="iconfont icon-gengduo"></i>
+            {description && <i className="iconfont icon-gengduo"></i>}
           </div>
         </div>
       </div>

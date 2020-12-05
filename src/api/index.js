@@ -1,6 +1,24 @@
 import axios from '../utils/axios'
 
 /**
+ * login信息
+ */
+
+// 需要登录状态才可调用
+// 获取账户信息
+export const fetchAccountInfo = () => {
+  return axios.get('/user/account')
+}
+// 获取用户的歌单，收藏，mv，dj数量
+export const fetchSubcount = () => {
+  return axios.get('/user/subcount')
+}
+// 获取用户歌单，uid：用户id
+export const fetchUserPlaylist = uid => {
+  return axios.get(`/user/playlist?uid=${uid}`)
+}
+
+/**
  * Find页面
  */
 
@@ -79,4 +97,39 @@ export const fetchSearchSuggest = keyword => {
 // type: 搜索类型。默认为1，即单曲，取值意义: 1:单曲，10:专辑，100:歌手，1000:歌单，1002:用户，1004:MV，1006:歌词，1009:电台，1014:视频，1018:综合
 export const fetchSearchResult = (keyword, offset = 0, limit = 30, type = 1) => {
   return axios.get(`/search?keywords=${keyword}&offset=${offset}&limit=${limit}&type=${type}`)
+}
+
+/**
+ * Login页面
+ */
+
+//  检测手机号码是否已注册
+export const fetchCheckCellphoneExistence = phone => {
+  return axios.get(`/cellphone/existence/check?phone=${phone}`)
+}
+// 手机号密码登录
+export const fetchLogin = (phone, password) => {
+  return axios.get(`/login/cellphone?phone=${phone}&password=${encodeURIComponent(password)}`)
+}
+//  发送手机验证码
+export const fetchSentVerificationCode = phone => {
+  return axios.get(`/captcha/sent?phone=${phone}`)
+}
+//  校验手机验证码
+// captcha为验证码
+export const fetchVerifyVerificationCode = (phone, verificationCode) => {
+  return axios.get(`/captcha/verify?phone=${phone}&captcha=${verificationCode}`)
+}
+// 注册
+export const fetchRegister = (phone, password, verificationCode, nickname) => {
+  return axios.get(
+    `/register/cellphone?phone=${phone}&password=${encodeURIComponent(
+      password
+    )}&captcha=${verificationCode}&nickname=${nickname}`
+  )
+}
+// 登出账号
+export const fetchLogout = () => {
+  console.log('登出')
+  return axios.get(`/logout`)
 }

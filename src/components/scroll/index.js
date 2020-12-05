@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useImperativeHandle } from 'react'
 import { useEventListener } from '@/hooks'
 import './index.scss'
 
 // 滚动组件，包括下拉刷新
-const Scroll = props => {
+const Scroll = React.forwardRef((props, ref) => {
   // 与dom变换有关的需要触发重新渲染的，放在state里面
   const [slideLength, setSlideLength] = useState(0) // 滑块实际需要滑动的距离，需要乘以适当系数
   const [isTouchEnd, setIsTouchEnd] = useState(true) //是否释放触摸
@@ -62,10 +62,30 @@ const Scroll = props => {
     // eslint-disable-next-line
   }, [])
 
-  // 获取scroll的container dom
+  // -------------------------------------------------------
+  // 以下是获取scroll的container dom的两种方式
+
+  // 方法一：通过调用回调函数
   useEffect(() => {
     getScrollElement && getScrollElement(scrollRef.current)
   }, [getScrollElement])
+
+  // 方法二：通过React.forwardRef转发ref，并且使用useImperativeHandle
+  // 注意：useImperativeHandle需要和React.forwardRef配合使用
+  // 直接转发ref是将React.forwardRef中函数上的ref参数直接应用在了返回元素的ref属性上，其实父、子组件引用的是同一个ref的current对象
+  // 而使用useImperativeHandle后，可以让父、子组件分别有自己的 ref，通过React.forwardRef将父组件的ref透传过来，通过useImperativeHandle方法来自定义开放给父组件的current
+  // 通过useImperativeHandle将子组件的实例属性输出到父组件时，在子组件内部通过ref更改current对象后，组件不会重新渲染
+  useImperativeHandle(
+    ref,
+    () => ({
+      getScrollElement() {
+        return scrollRef.current
+      }
+    }),
+    []
+  )
+
+  // -------------------------------------------------------
 
   // 如果传入了onScrollFn，则监听scroll事件
   useEffect(() => {
@@ -319,6 +339,6 @@ const Scroll = props => {
       )}
     </div>
   )
-}
+})
 
 export default React.memo(Scroll)
