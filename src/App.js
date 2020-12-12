@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, useRouteMatch } from 'react-router-dom'
 import CacheRoute, { CacheSwitch } from 'react-router-cache-route'
 import { useObserver } from 'mobx-react-lite'
@@ -11,7 +11,7 @@ import Player from './containers/player'
 import MiniPlayer from './containers/mini-player'
 import Audio from './containers/audio'
 import Login from './containers/login'
-import { PlayListDrawer } from './containers/drawers'
+import { PlayListDrawer, HomeLeftDrawer } from './containers/drawers'
 import { DeleteAllDialog } from './containers/dialogs'
 import './App.css'
 
@@ -19,9 +19,17 @@ function App() {
   // Chrome调试模式 PC端与移动端互相切换时，swiper无法滑动，需要手动刷新
   useDeviceChangeReload()
 
-  const { playerStore } = useStores()
+  const { loginStore, playerStore } = useStores()
 
   const playerMatch = useRouteMatch('/player')
+
+  useEffect(() => {
+    // 如果是登录状态，则需要获取账户信息
+    if (loginStore.isLogin) {
+      loginStore.getAccountInfo()
+    }
+    // eslint-disable-next-line
+  }, [loginStore.isLogin])
 
   return useObserver(() => (
     <div className="App">
@@ -51,6 +59,7 @@ function App() {
       <MiniPlayer />
       <div className="drawer-wrapper">
         <PlayListDrawer />
+        <HomeLeftDrawer />
       </div>
       <div className="dialog-wrapper">
         <DeleteAllDialog />

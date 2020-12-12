@@ -1,15 +1,14 @@
-import { observable, computed, flow } from 'mobx'
-import { fetchAccountInfo, fetchUserPlaylist } from '@/api'
+import { observable, computed, action, flow } from 'mobx'
+import { fetchAccountInfo, fetchUserPlaylist, fetchLogout } from '@/api'
 
 export class loginStore {
+  // 账户信息
   @observable accountInfo = {}
   // 用户歌单
   @observable userPlaylist = []
 
-  @computed
-  get isLogin() {
-    return document.cookie.indexOf('MUSIC_U=') !== -1
-  }
+  @observable isLogin = document.cookie.indexOf('MUSIC_U=') !== -1
+
   @computed
   get userId() {
     return this.accountInfo?.account?.id
@@ -33,12 +32,20 @@ export class loginStore {
   getAccountInfo = flow(function* () {
     const res = yield fetchAccountInfo()
     this.accountInfo = res
-    console.log(res)
   })
 
   getUserPlaylist = flow(function* (uid) {
     const { playlist } = yield fetchUserPlaylist(uid)
-    console.log(playlist)
     this.userPlaylist = playlist
   })
+
+  logout = flow(function* () {
+    yield fetchLogout()
+    this.accountInfo = {}
+  })
+
+  @action
+  changeLoginStatus(isLogin) {
+    this.isLogin = isLogin
+  }
 }

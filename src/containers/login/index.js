@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import './index.scss'
 import toast from '@/components/toast'
 import VerificationCodeInput from '@/components/verification-code-input'
 import { useEventListener } from '@/hooks'
@@ -12,10 +11,14 @@ import {
 } from '@/api'
 import { fetchLogin } from '@/api'
 import { useInterval } from '@/hooks'
+import { useStores } from '@/stores'
+import './index.scss'
 
 // 登录界面
 const Login = props => {
   const history = useHistory()
+
+  const { loginStore } = useStores()
 
   const [phone, setPhone] = useState('')
 
@@ -79,7 +82,10 @@ const Login = props => {
         toast.info(res.msg)
       } else {
         toast.info('登录成功')
+        console.log(res)
         history.goBack()
+        loginStore.getAccountInfo()
+        loginStore.changeLoginStatus(true)
       }
     })
   }

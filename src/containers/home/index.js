@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Swiper from 'react-id-swiper'
 import HomeHeader from './components/home-header'
 import My from './my'
@@ -12,13 +12,7 @@ const INITIAL_INDEX = 1
 
 // 首页
 const Home = () => {
-  const { loginStore } = useStores()
-
-  useEffect(() => {
-    console.log('x')
-    loginStore.getAccountInfo()
-    // eslint-disable-next-line
-  }, [loginStore.userId, loginStore.isLogin])
+  const { triggerStore } = useStores()
 
   // swiper实例
   const swiperRef = useRef()
@@ -48,6 +42,11 @@ const Home = () => {
     }
   }, [activeIndex])
 
+  const changeShowHomeLeftDrawer = useCallback(() => {
+    triggerStore.changeShowHomeLeftDrawer(true)
+    // eslint-disable-next-line
+  }, [])
+
   const params = {
     containerClass: 'home-swiper',
     initialSlide: INITIAL_INDEX,
@@ -64,7 +63,11 @@ const Home = () => {
   return (
     <div className="home">
       <div className="home-header-wrapper">
-        <HomeHeader setActiveIndex={setActiveIndex} activeIndex={activeIndex} />
+        <HomeHeader
+          setActiveIndex={setActiveIndex}
+          activeIndex={activeIndex}
+          changeShowHomeLeftDrawer={changeShowHomeLeftDrawer}
+        />
       </div>
       <div className="home-main">
         <Swiper {...params} ref={swiperRef}>

@@ -5,11 +5,11 @@ import './index.scss'
 
 const HomeHeader = props => {
   // 首页swiper当前活动页的index，以及改变这个index存储的方法
-  const { activeIndex, setActiveIndex } = props
+  const { activeIndex, setActiveIndex, changeShowHomeLeftDrawer } = props
 
   return (
     <div className="home-header">
-      <i className="iconfont icon-caidan"></i>
+      <i className="iconfont icon-caidan" onClick={changeShowHomeLeftDrawer}></i>
       <div className="tabs">
         <div
           className={classNames('tab', { active: activeIndex === 0 })}

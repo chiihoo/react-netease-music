@@ -86,7 +86,6 @@ export class searchStore {
     const trackIdsString = res.result?.song.resourceIds.join(',')
     // 用trackIds拼凑的ids字符串，请求全部的歌曲
     const songsData = yield fetchSongDetail(trackIdsString)
-    console.log('complex', res.result)
     this.complex = {
       ...res.result,
       song: {

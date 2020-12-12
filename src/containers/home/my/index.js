@@ -60,18 +60,7 @@ const My = props => {
     getScrollElement: setScrollElement,
     onScrollFn: e => {
       setIsSticky(e.target.scrollTop >= playlistOptionsRef.current.offsetTop)
-      // if (e.target.scrollTop >= TARGET_HEIGHT) {
-      //   setOpacity(0)
-      // } else {
-      //   setOpacity(1 - e.target.scrollTop / TARGET_HEIGHT)
-      // }
       // offsetTop是相对于最近定位父元素计算的，此处即为scroll的那个dom元素
-      console.log(
-        myCreatedPlaylistRef.current.offsetTop,
-        myCollectedPlaylistRef.current.offsetTop,
-        e.target.scrollTop,
-        playlistOptionsRef.current.offsetHeight
-      )
       setActiveItem(
         e.target.scrollTop >=
           myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight

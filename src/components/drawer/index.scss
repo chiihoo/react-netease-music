@@ -14,14 +14,22 @@
   }
   .drawer-top {
     top: 0;
-  }
-  .drawer-right {
+    left: 0;
     right: 0;
   }
   .drawer-bottom {
     bottom: 0;
+    left: 0;
+    right: 0;
   }
   .drawer-left {
     left: 0;
+    top: 0;
+    bottom: 0;
+  }
+  .drawer-right {
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 }
