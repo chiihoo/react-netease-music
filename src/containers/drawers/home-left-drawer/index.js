@@ -23,13 +23,15 @@ const HomeLeftDrawer = () => {
           <div className="header">
             {loginStore.isLogin ? (
               <div className="has-login">
-                <div
-                  className="avatar"
-                  style={{
-                    background: `url(${loginStore.accountInfo.profile?.avatarUrl}?parmas=200y200) center/cover no-repeat`
-                  }}
-                ></div>
-                <p>{loginStore.accountInfo.profile?.nickname}</p>
+                <div className="wrapper">
+                  <div
+                    className="avatar"
+                    style={{
+                      background: `url(${loginStore.accountInfo.profile?.avatarUrl}?parmas=200y200) center/cover no-repeat`
+                    }}
+                  ></div>
+                  <p>{loginStore.accountInfo.profile?.nickname}</p>
+                </div>
               </div>
             ) : (
               <div className="no-login">

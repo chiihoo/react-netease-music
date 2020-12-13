@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useObserver } from 'mobx-react-lite'
 import { isEmpty } from 'lodash-es'
 import { useStores } from '@/stores'
@@ -10,6 +10,7 @@ import PlaylistSearchResult from './components/playlist-search-result'
 import PlaylistInfo from './components/playlist-info'
 import PlaylistDetail from './components/playlist-detail'
 import PlaylistSkeleton from '@/skeletons/playlist-skeleton'
+import toast from '@/components/toast'
 import './index.scss'
 
 // 播放全部的这个dom元素与header底部的距离，大概是198.375px
@@ -35,8 +36,9 @@ const Playlist = () => {
   const headerRef = useRef()
 
   const params = useParams()
+  const history = useHistory()
 
-  const { playlistStore, playerStore } = useStores()
+  const { playlistStore, playerStore, loginStore } = useStores()
 
   useEffect(() => {
     playlistStore.getPlaylistData(params.id)
@@ -85,6 +87,40 @@ const Playlist = () => {
   const goTop = useCallback(() => {
     scrollElement.scrollTo(0, 0)
   }, [scrollElement])
+
+  // 收藏歌单
+  const handleSubscribePlaylist = useCallback(() => {
+    if (loginStore.isLogin) {
+      playlistStore
+        .subscribePlaylist(params?.id)
+        .then(() => {
+          toast.info('收藏成功')
+        })
+        .catch(err => {
+          toast.info('接口出错')
+        })
+    } else {
+      history.push('/login')
+    }
+    // eslint-disable-next-line
+  }, [history, loginStore.isLogin, params?.id])
+
+  // 取消收藏歌单
+  const handleUnsubscribePlaylist = useCallback(() => {
+    if (loginStore.isLogin) {
+      playlistStore
+        .unsubscribePlaylist(params?.id)
+        .then(() => {
+          toast.info('取消收藏')
+        })
+        .catch(err => {
+          toast.info('接口出错')
+        })
+    } else {
+      history.push('/login')
+    }
+    // eslint-disable-next-line
+  }, [history, loginStore.isLogin, params?.id])
 
   return useObserver(() => (
     <div className="playlist">
@@ -136,12 +172,15 @@ const Playlist = () => {
                 trackCount={playlistStore.playlistData.trackCount}
                 subscribers={playlistStore.playlistData.subscribers}
                 subscribedCount={playlistStore.playlistData.subscribedCount}
+                subscribed={playlistStore.subscribed}
                 songs={playlistStore.songs}
                 privileges={playlistStore.privileges}
                 currentSongId={playerStore.currentSongId}
                 scrollElement={scrollElement}
                 handleSongItemClick={handleSongItemClick}
                 handlePlayAllClick={handlePlayAllClick}
+                handleSubscribePlaylist={handleSubscribePlaylist}
+                handleUnsubscribePlaylist={handleUnsubscribePlaylist}
               />
             </Scroll>
           </div>

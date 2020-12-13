@@ -2,7 +2,8 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import Scroll from '@/components/scroll'
 import SongItem from '../song-item'
-import { handleNumber, formatTime, formatTimeToDate } from '@/utils/tools'
+import { handleNumber, formatTime, formatTimeToDate, hasNotDoneToast } from '@/utils/tools'
+
 import './index.scss'
 
 // 搜索结果-综合
@@ -31,10 +32,6 @@ const Complex = props => {
           <div className="song">
             <div className="song-header">
               <h4>单曲</h4>
-              <div className="play-all">
-                <i className="iconfont icon-bofang6"></i>
-                <span>播放全部</span>
-              </div>
             </div>
             <div>
               {song?.songs?.map((item, index) => (
@@ -121,7 +118,7 @@ const Complex = props => {
           <div className="video">
             <h4>视频</h4>
             {video?.videos?.map(item => (
-              <div className="video-item" key={item.vid}>
+              <div className="video-item" key={item.vid} onClick={hasNotDoneToast}>
                 <div className="video-img">
                   <img src={item.coverUrl} alt="" />
                   <div className="play-count">
@@ -176,7 +173,7 @@ const Complex = props => {
           <div className="artist">
             <h4>歌手</h4>
             {artist?.artists?.map(item => (
-              <div className="artist-item" key={item.id}>
+              <div className="artist-item" key={item.id} onClick={hasNotDoneToast}>
                 <img
                   src={
                     item.picUrl
@@ -220,7 +217,7 @@ const Complex = props => {
           <div className="album">
             <h4>专辑</h4>
             {album?.albums?.map(item => (
-              <div className="album-item" key={item.id}>
+              <div className="album-item" key={item.id} onClick={hasNotDoneToast}>
                 <img src={item.picUrl + '?param=200y200'} alt="" />
                 <div className="item-text">
                   <p
@@ -269,7 +266,7 @@ const Complex = props => {
           <div className="dj-radio">
             <h4>专辑</h4>
             {djRadio?.djRadios?.map(item => (
-              <div className="dj-radio-item" key={item.id}>
+              <div className="dj-radio-item" key={item.id} onClick={hasNotDoneToast}>
                 <img src={item?.picUrl + '?param=200y200'} alt="" />
                 <div className="item-text">
                   <p
@@ -311,7 +308,7 @@ const Complex = props => {
           <div className="user">
             <h4>用户</h4>
             {user?.users?.map(item => (
-              <div className="user-item" key={item.userId}>
+              <div className="user-item" key={item.userId} onClick={hasNotDoneToast}>
                 <img
                   src={
                     item.avatarUrl

@@ -82,7 +82,6 @@ const Login = props => {
         toast.info(res.msg)
       } else {
         toast.info('登录成功')
-        console.log(res)
         history.goBack()
         loginStore.getAccountInfo()
         loginStore.changeLoginStatus(true)

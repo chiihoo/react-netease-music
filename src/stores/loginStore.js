@@ -16,7 +16,7 @@ export class loginStore {
   // 我喜欢的音乐
   @computed
   get myFavoritePlaylist() {
-    return this.userPlaylist[0] || {}
+    return this.userPlaylist.length > 0 ? this.userPlaylist[0] : {}
   }
   // 我创建的歌单
   @computed
@@ -36,6 +36,7 @@ export class loginStore {
 
   getUserPlaylist = flow(function* (uid) {
     const { playlist } = yield fetchUserPlaylist(uid)
+    console.log(playlist)
     this.userPlaylist = playlist
   })
 

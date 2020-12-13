@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { List, WindowScroller } from 'react-virtualized'
 import Scroll from '@/components/scroll'
-import { handleNumber, formatTime } from '@/utils/tools'
+import { handleNumber, formatTime, hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 搜索结果-视频
@@ -25,7 +25,7 @@ const Video = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="video-item" key={key} style={style}>
+      <div className="video-item" key={key} style={style} onClick={hasNotDoneToast}>
         <div className="video-img">
           <img src={mvs[index].cover + '?param=200y115'} alt="" />
           <div className="play-count">

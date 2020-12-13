@@ -107,7 +107,6 @@ const My = props => {
             )}
           </div>
           <span>{loginStore.accountInfo.profile?.nickname || '立即登录'}</span>
-          <i className="iconfont icon-gengduo"></i>
         </div>
         <div
           className="like-music"

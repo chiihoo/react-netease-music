@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { List, WindowScroller } from 'react-virtualized'
 import Scroll from '@/components/scroll'
-import { formatTimeToDate } from '@/utils/tools'
+import { formatTimeToDate, hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 搜索结果-专辑
@@ -25,7 +25,7 @@ const Album = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="album-item" key={key} style={style}>
+      <div className="album-item" key={key} style={style} onClick={hasNotDoneToast}>
         <img src={albums[index].picUrl + '?param=200y200'} alt="" />
         <div className="item-text">
           <p

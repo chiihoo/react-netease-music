@@ -2,11 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Swiper from 'react-id-swiper'
 import PlaylistCoverImg from '@/components/playlist-cover-img'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 歌单推荐导航卡片
 const PlaylistRecommend = props => {
-  const { playlists, title, intro, linkTo } = props
+  const { playlists, title, intro } = props
 
   const params = {
     slidesPerView: 'auto',
@@ -28,9 +29,9 @@ const PlaylistRecommend = props => {
           <p className="title">{title}</p>
           <p className="intro">{intro}</p>
         </div>
-        <Link to={linkTo} className="header-right">
+        <div className="header-right" onClick={hasNotDoneToast}>
           查看更多
-        </Link>
+        </div>
       </div>
       <Swiper {...params}>
         {playlists.map(item => {

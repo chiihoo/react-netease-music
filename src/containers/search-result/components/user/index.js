@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { List, WindowScroller } from 'react-virtualized'
 import Scroll from '@/components/scroll'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 搜索结果-用户
@@ -24,7 +25,7 @@ const User = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="user-item" key={key} style={style}>
+      <div className="user-item" key={key} style={style} onClick={hasNotDoneToast}>
         <img
           src={
             users[index].avatarUrl

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Swiper from 'react-id-swiper'
 import classNames from 'classnames'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 新歌新碟导航卡片
@@ -42,9 +42,9 @@ const NewSongsAlbumsRecommend = props => {
             </span>
           </div>
         </div>
-        <Link to="/" className="header-right">
+        <div className="header-right" onClick={hasNotDoneToast}>
           {currentTab === 'newSong' ? '更多新歌' : '更多新碟'}
-        </Link>
+        </div>
       </div>
       <div className="swiper-area-wrapper">
         <div
@@ -111,7 +111,7 @@ const NewSongsAlbumsRecommend = props => {
                 <div key={itemArr[0].id}>
                   {itemArr.map(item => {
                     return (
-                      <div className="item-info" key={item.id}>
+                      <div className="item-info" key={item.id} onClick={hasNotDoneToast}>
                         <img
                           src={item?.picUrl + '?param=200y200'}
                           alt={item.name}

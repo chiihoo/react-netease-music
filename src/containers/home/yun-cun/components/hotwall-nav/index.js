@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useInterval } from '@/hooks'
 import { imgBlurToBase64 } from '@/utils/tools'
@@ -54,7 +53,7 @@ const HotwallNav = props => {
           transition: songCoverUrlCache.length > 1 && 'background-image 1s'
         }}
       ></div>
-      <Link to="/hotwall">
+      <div className="hot-nav-main">
         <div className="left-side">
           <div className="title">
             <span>云村热评墙</span>
@@ -79,7 +78,7 @@ const HotwallNav = props => {
           <span className="month">{month}</span>
           <span className="day">{day}</span>
         </div>
-      </Link>
+      </div>
     </div>
   )
 }

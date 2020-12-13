@@ -42,16 +42,9 @@ function App() {
         <CacheSwitch>
           <CacheRoute path="/" exact render={() => <Redirect to="/home" />} />
           <CacheRoute path="/home" component={Home} />
-          <CacheRoute path="/playlist/subscribers" component={() => <>歌单订阅者</>} />
-          <CacheRoute path="/playlist/recommend" component={() => <>歌单广场</>} />
           <CacheRoute path="/playlist/:id" component={Playlist} />
           <CacheRoute path="/search" component={Search} when={() => false} />
-          <CacheRoute path="/recommend/taste" component={() => <>日推</>} />
           <CacheRoute path="/player" component={Player} />
-          <CacheRoute path="/user/:uid" component={() => <>用户信息</>} />
-          <CacheRoute path="/toplist" component={() => <>排行榜</>} />
-          <CacheRoute path="/radio" component={() => <>电台</>} />
-          <CacheRoute path="/hotwall" component={() => <>云村热评墙</>} />
           <CacheRoute path="/login" component={Login} />
         </CacheSwitch>
       </div>

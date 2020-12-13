@@ -10,13 +10,16 @@ const PlaylistDetail = React.forwardRef((props, ref) => {
   const {
     trackCount,
     subscribers,
+    subscribed,
     subscribedCount,
     songs,
     privileges,
     scrollElement,
     handleSongItemClick,
     handlePlayAllClick,
-    currentSongId
+    currentSongId,
+    handleSubscribePlaylist,
+    handleUnsubscribePlaylist,
   } = props
 
   const history = useHistory()
@@ -34,6 +37,7 @@ const PlaylistDetail = React.forwardRef((props, ref) => {
       </SongItem>
     )
   }
+  React.useEffect(()=>{console.log('subscribed',subscribed)})
 
   return (
     <div className="playlist-detail">
@@ -43,11 +47,18 @@ const PlaylistDetail = React.forwardRef((props, ref) => {
           <span>播放全部</span>
           <span>(共{trackCount}首)</span>
         </div>
-        <div className="subscribe-btn">
-          <i className="iconfont icon-jiahao"></i>
-          <span>收藏</span>
-          <span>({handleNumber(subscribedCount)})</span>
-        </div>
+        {subscribed ? (
+          <div className="subscribe-success" onClick={handleUnsubscribePlaylist}>
+            <i className="iconfont icon-subscribe-success"></i>
+            <span>{trackCount}</span>
+          </div>
+        ) : (
+          <div className="subscribe-btn" onClick={handleSubscribePlaylist}>
+            <i className="iconfont icon-jiahao"></i>
+            <span>收藏</span>
+            <span>({handleNumber(subscribedCount)})</span>
+          </div>
+        )}
       </div>
       <div className="playlist-detail-songs">
         {songs && (

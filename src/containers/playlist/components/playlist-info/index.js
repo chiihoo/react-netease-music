@@ -1,7 +1,8 @@
 import React from 'react'
 import PlaylistCoverImg from '@/components/playlist-cover-img'
-
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
+
 // 歌单页面中部 歌单信息
 const PlaylistInfo = props => {
   const {
@@ -41,19 +42,19 @@ const PlaylistInfo = props => {
         </div>
       </div>
       <div className="playlist-options" style={{ opacity }}>
-        <div className="playlist-comment">
+        <div className="playlist-comment" onClick={hasNotDoneToast}>
           <i className="iconfont icon-pinglun"></i>
           <span>{commentCount || '评论'}</span>
         </div>
-        <div className="playlist-share">
+        <div className="playlist-share" onClick={hasNotDoneToast}>
           <i className="iconfont icon-fenxiang"></i>
           <span>{shareCount || '分享'}</span>
         </div>
-        <div className="playlist-download">
+        <div className="playlist-download" onClick={hasNotDoneToast}>
           <i className="iconfont icon-xiazai"></i>
           <span>下载</span>
         </div>
-        <div className="playlist-multiple-choice">
+        <div className="playlist-multiple-choice" onClick={hasNotDoneToast}>
           <i className="iconfont icon-duoxuan"></i>
           <span>多选</span>
         </div>

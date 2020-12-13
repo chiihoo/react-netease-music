@@ -48,6 +48,17 @@
         padding-left: 5px;
       }
     }
+    > .subscribe-success {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 5px 0;
+      width: 100px;
+      color: #777676;
+      i {
+        padding-right: 5px;
+      }
+    }
   }
   .playlist-detail-songs {
     .icon-laba {

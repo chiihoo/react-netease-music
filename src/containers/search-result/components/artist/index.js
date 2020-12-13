@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { List, WindowScroller } from 'react-virtualized'
 import Scroll from '@/components/scroll'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 搜索结果-歌手
@@ -24,7 +25,7 @@ const Artist = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="artist-item" key={key} style={style}>
+      <div className="artist-item" key={key} style={style} onClick={hasNotDoneToast}>
         <img
           src={
             artists[index].picUrl

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
-import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { chunk } from 'lodash-es'
 import { useStores } from '@/stores'
@@ -7,6 +6,7 @@ import Carousel from '@/components/carousel'
 import Scroll from '@/components/scroll'
 import PlaylistRecommend from './components/playlist-recommend'
 import NewSongsAlbumsRecommend from './components/new-songs-albums-recommend'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 首页发现页面
@@ -53,22 +53,22 @@ const Find = observer(function Find() {
           <Carousel bannerList={findStore.bannerList}></Carousel>
         </div>
         <div className="find-nav">
-          <Link to="/recommend/taste">
+          <div onClick={hasNotDoneToast}>
             <i className="iconfont icon-rili"></i>
             <span>每日推荐</span>
-          </Link>
-          <Link to="/playlist/recommend">
+          </div>
+          <div onClick={hasNotDoneToast}>
             <i className="iconfont icon-gedan"></i>
             <span>歌单</span>
-          </Link>
-          <Link to="/toplist">
+          </div>
+          <div onClick={hasNotDoneToast}>
             <i className="iconfont icon-paihangbang"></i>
             <span>排行榜</span>
-          </Link>
-          <Link to="/radio">
+          </div>
+          <div onClick={hasNotDoneToast}>
             <i className="iconfont icon-diantai"></i>
             <span>电台</span>
-          </Link>
+          </div>
         </div>
         <div className="recommend-nav">
           <div className="playlist-recommend-wrapper">
@@ -76,7 +76,6 @@ const Find = observer(function Find() {
               playlists={findStore.recommendPlaylists}
               title={'歌单推荐'}
               intro={'为你精挑细选'}
-              linkTo={'/playlist/recommend'}
             />
           </div>
           <div className="scene-recommend-wrapper">
@@ -84,7 +83,6 @@ const Find = observer(function Find() {
               playlists={findStore.sceneRecommendPlaylists}
               title={'场景推荐'}
               intro={'音乐 照亮你心坎'}
-              linkTo={'/playlist/recommend/official'}
             />
           </div>
           <div className="new-songs-albums-recommend-wrapper">

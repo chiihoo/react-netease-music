@@ -58,7 +58,7 @@
       }
     }
     .item-info {
-      width: 355px;
+      width: 345px;
       display: flex;
       border-radius: 6px;
       z-index: 15;
@@ -73,7 +73,7 @@
         justify-content: space-between;
         align-items: center;
         flex-grow: 1;
-        padding: 0 10px;
+        padding-left: 10px;
         .item-desc {
           width: 220px;
           .title {

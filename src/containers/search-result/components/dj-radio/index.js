@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { List, WindowScroller } from 'react-virtualized'
 import Scroll from '@/components/scroll'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 // 搜索结果-主播电台
@@ -24,7 +25,7 @@ const DjRadio = props => {
 
   const rowRenderer = ({ key, index, style }) => {
     return (
-      <div className="dj-radio-item" key={key} style={style}>
+      <div className="dj-radio-item" key={key} style={style} onClick={hasNotDoneToast}>
         <img src={djRadios[index]?.picUrl + '?param=200y200'} alt="" />
         <div className="item-text">
           <p

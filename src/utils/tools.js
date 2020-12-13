@@ -1,6 +1,8 @@
 import * as StackBlur from 'stackblur-canvas'
 // import glfx from 'glfx'
 
+import toast from '@/components/toast'
+
 /**
  * 图片高斯模糊 glfx库
  * @param {String} url 图片链接
@@ -138,4 +140,8 @@ export function formatTimeToDate(time) {
     day = '0' + day
   }
   return year + '.' + month + '.' + day
+}
+
+export function hasNotDoneToast() {
+  toast.info('未做')
 }
