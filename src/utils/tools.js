@@ -143,5 +143,5 @@ export function formatTimeToDate(time) {
 }
 
 export function hasNotDoneToast() {
-  toast.info('未做')
+  toast.info('没做')
 }

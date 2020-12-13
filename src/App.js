@@ -1,19 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, lazy, Suspense } from 'react'
 import { Redirect, useRouteMatch } from 'react-router-dom'
 import CacheRoute, { CacheSwitch } from 'react-router-cache-route'
 import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
 import { useDeviceChangeReload } from './hooks'
-import Home from './containers/home'
-import Search from './containers/search'
-import Playlist from './containers/playlist'
-import Player from './containers/player'
-import MiniPlayer from './containers/mini-player'
 import Audio from './containers/audio'
-import Login from './containers/login'
+import MiniPlayer from './containers/mini-player'
 import { PlayListDrawer, HomeLeftDrawer } from './containers/drawers'
 import { DeleteAllDialog } from './containers/dialogs'
 import './App.css'
+
+const LazyHome = lazy(() => import('./containers/home'))
+const LazyPlaylist = lazy(() => import('./containers/playlist'))
+const LazySearch = lazy(() => import('./containers/search'))
+const LazyPlayer = lazy(() => import('./containers/player'))
+const LazyLogin = lazy(() => import('./containers/login'))
 
 function App() {
   // Chrome调试模式 PC端与移动端互相切换时，swiper无法滑动，需要手动刷新
@@ -36,17 +37,21 @@ function App() {
       <div
         className="app-main"
         style={{
-          bottom: !(playerStore.playList.length === 0 || playerMatch) && '13.333vw'
+          // 如果播放队列有歌曲，并且不是在player页面的话，则需要给底下的mini-player组件留出空间
+          // bottom: !(playerStore.playList.length === 0 || playerMatch) && '13.333vw'
+          bottom: playerStore.playList.length > 0 && !playerMatch && '13.333vw'
         }}
       >
-        <CacheSwitch>
-          <CacheRoute path="/" exact render={() => <Redirect to="/home" />} />
-          <CacheRoute path="/home" component={Home} />
-          <CacheRoute path="/playlist/:id" component={Playlist} />
-          <CacheRoute path="/search" component={Search} when={() => false} />
-          <CacheRoute path="/player" component={Player} />
-          <CacheRoute path="/login" component={Login} />
-        </CacheSwitch>
+        <Suspense fallback={null}>
+          <CacheSwitch>
+            <CacheRoute path="/" exact render={() => <Redirect to="/home" />} />
+            <CacheRoute path="/home" component={LazyHome} />
+            <CacheRoute path="/playlist/:id" component={LazyPlaylist} />
+            <CacheRoute path="/search" component={LazySearch} />
+            <CacheRoute path="/player" component={LazyPlayer} />
+            <CacheRoute path="/login" component={LazyLogin} />
+          </CacheSwitch>
+        </Suspense>
       </div>
       <Audio />
       <MiniPlayer />

@@ -2,7 +2,6 @@
   width: 100%;
   height: 100%;
   background-color: #f8f8f8;
-  // padding: 0 10px;
   box-sizing: border-box;
   .my-header {
     display: flex;
@@ -101,11 +100,16 @@
         font-size: 14px;
         color: #9c9c9c;
         margin-bottom: 5px;
+        > div {
+          .icon-jiahao {
+            margin-right: 5px;
+          }
+        }
       }
       .bottom {
         display: flex;
         align-items: center;
-        padding-top: 15px;
+        margin-top: 15px;
         .left {
           width: 45px;
           height: 45px;

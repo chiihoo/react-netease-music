@@ -36,7 +36,6 @@ export class loginStore {
 
   getUserPlaylist = flow(function* (uid) {
     const { playlist } = yield fetchUserPlaylist(uid)
-    console.log(playlist)
     this.userPlaylist = playlist
   })
 

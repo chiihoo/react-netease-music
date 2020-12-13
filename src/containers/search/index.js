@@ -1,13 +1,14 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useState, lazy, Suspense } from 'react'
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
-import { useObserver } from 'mobx-react-lite'
+import { useObserver, Observer } from 'mobx-react-lite'
 import { useStores } from '@/stores'
 import SearchHeader from './components/search-header'
-import SearchContent from './components/search-content'
-import SearchResult from '../search-result'
 import './index.scss'
 
 const Search = props => {
+  const LazySearchContent = lazy(() => import('./components/search-content'))
+  const LazySearchResult = lazy(() => import('../search-result'))
+
   const { searchStore } = useStores()
 
   const [showSuggest, setShowSuggest] = useState(false) // 是否展示搜索建议
@@ -73,20 +74,28 @@ const Search = props => {
         />
       </div>
       <div className="search-main" onClick={() => setShowSuggest(false)}>
-        <Switch>
-          <Route exact path={`/search/result/:keyword`}>
-            <SearchResult />
-          </Route>
-          <Route exact path="/search">
-            <SearchContent
-              searchHistory={searchStore.searchHistory}
-              deleteAllSearchHistory={deleteAllSearchHistory}
-              searchHotDetail={searchStore.searchHotDetail}
-              goSearch={goSearch}
-              setSearchValue={setSearchValue}
-            />
-          </Route>
-        </Switch>
+        <Suspense fallback={null}>
+          <Switch>
+            <Route exact path={`/search/result/:keyword`} component={LazySearchResult} />
+            <Route
+              exact
+              path="/search"
+              render={() => (
+                <Observer>
+                  {() => (
+                    <LazySearchContent
+                      searchHistory={searchStore.searchHistory}
+                      deleteAllSearchHistory={deleteAllSearchHistory}
+                      searchHotDetail={searchStore.searchHotDetail}
+                      goSearch={goSearch}
+                      setSearchValue={setSearchValue}
+                    />
+                  )}
+                </Observer>
+              )}
+            ></Route>
+          </Switch>
+        </Suspense>
       </div>
     </div>
   ))

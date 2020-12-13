@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { List, WindowScroller, AutoSizer } from 'react-virtualized'
 import classNames from 'classnames'
-import Scroll from '@/components/scroll'
-import { useStores } from '@/stores'
 import { useObserver } from 'mobx-react-lite'
+import { useStores } from '@/stores'
+import Scroll from '@/components/scroll'
+import { hasNotDoneToast } from '@/utils/tools'
 import './index.scss'
 
 const My = props => {
@@ -180,7 +181,7 @@ const My = props => {
                 )}
               </WindowScroller>
             )}
-            <div className="bottom">
+            <div className="bottom" onClick={hasNotDoneToast}>
               <div className="left">
                 <i className="iconfont icon-daoru"></i>
               </div>

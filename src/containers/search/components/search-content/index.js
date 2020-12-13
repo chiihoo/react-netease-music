@@ -32,13 +32,13 @@ const SearchContent = props => {
             >
               <p className="index">{index + 1}</p>
               <div className="main">
-                <p>
+                <p className="one-line-ellipsis">
                   <span className="search-word">{item.searchWord}</span>
                   <span className="score">{item.score}</span>
                   {item.iconType !== 0 && <i className="iconfont icon-hot"></i>}
                   {item.source !== 0 && <i className="iconfont icon-shangjiantou"></i>}
                 </p>
-                <p>{item.content}</p>
+                <p className="one-line-ellipsis">{item.content}</p>
               </div>
             </dd>
           ))}

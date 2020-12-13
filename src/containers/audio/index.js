@@ -22,21 +22,21 @@ const Audio = observer(function Audio() {
   useEventListener(
     'play',
     () => {
-      console.log('播放')
+      // console.log('播放')
     },
     audioRef
   )
   useEventListener(
     'playing',
     () => {
-      console.log('播放ing')
+      // console.log('播放ing')
     },
     audioRef
   )
   useEventListener(
     'pause',
     () => {
-      console.log('暂停')
+      // console.log('暂停')
     },
     audioRef
   )
@@ -44,7 +44,7 @@ const Audio = observer(function Audio() {
   useEventListener(
     'progress',
     () => {
-      console.log('缓冲下载中，可用于缓存效果')
+      // console.log('缓冲下载中，可用于缓存效果')
       if (audioRef.current.buffered.length > 0) {
         const bufferedTime = audioRef.current.buffered.end(0) // 已缓存区域的时间
         playerStore.setBufferedTime(bufferedTime)
@@ -56,7 +56,7 @@ const Audio = observer(function Audio() {
   useEventListener(
     'canplay',
     () => {
-      console.log('canplay', audioRef.current.duration)
+      // console.log('canplay', audioRef.current.duration)
       playerStore.setTotalTime(audioRef.current.duration)
     },
     audioRef
@@ -65,7 +65,7 @@ const Audio = observer(function Audio() {
   useEventListener(
     'canplaythrough',
     () => {
-      console.log('canplaythrough')
+      // console.log('canplaythrough')
       // 每次改变当前的播放时间，都会触发这个事件，并重新检测播放状态
       playerStore.isPlaying ? audioRef.current.play() : audioRef.current.pause()
     },
@@ -82,7 +82,7 @@ const Audio = observer(function Audio() {
   useEventListener(
     'ended',
     () => {
-      console.log('---------------ended---------------')
+      // console.log('---------------ended---------------')
       // 单曲循环在audio标签上设置了loop模式，其他播放模式直接下一首
       if (playerStore.playMode !== 'single') {
         playerStore.nextSong()
@@ -94,21 +94,21 @@ const Audio = observer(function Audio() {
   useEventListener(
     'stalled',
     () => {
-      console.log('当浏览器尝试获取媒体数据，但数据不可用时触发。')
+      // console.log('当浏览器尝试获取媒体数据，但数据不可用时触发。')
     },
     audioRef
   )
   useEventListener(
     'seeked',
     () => {
-      console.log('当用户已移动/跳跃到音频/视频中的新位置时触发。')
+      // console.log('当用户已移动/跳跃到音频/视频中的新位置时触发。')
     },
     audioRef
   )
   useEventListener(
     'error',
     e => {
-      console.log('歌曲播放出错')
+      // console.log('歌曲播放出错')
       playerStore.currentDirection === 'prev' ? playerStore.prevSong() : playerStore.nextSong()
     },
     audioRef
@@ -174,7 +174,7 @@ const Audio = observer(function Audio() {
       // audioRef.current.play()
 
       // 从接口获取url，再播放，可以跨域
-      console.log('请求开始', 'id', playerStore.currentSongId)
+      // console.log(`请求开始  歌曲id为${playerStore.currentSongId}`)
       const res = await fetchUrl(playerStore.currentSongId)
       if (res.data[0].url) {
         playerStore.setBufferedTime(0)
