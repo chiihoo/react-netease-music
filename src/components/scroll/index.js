@@ -47,6 +47,7 @@ const Scroll = React.forwardRef((props, ref) => {
     pullUp = {},
     getScrollElement,
     onScrollFn,
+    onTouchMoveFn,
     refreshThreshold = 70, // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
     touchThreshold = 132, // 滑块最多滑动到的距离 132
     loadingStop = 70, // 下拉刷新 loading时，滑块停留的位置 70
@@ -115,6 +116,8 @@ const Scroll = React.forwardRef((props, ref) => {
   useEventListener(
     'touchmove',
     e => {
+      onTouchMoveFn && onTouchMoveFn()
+
       // 注意，下拉刷新是需要向下触摸拖拽才触发的，而上拉加载是只要页面滑到底部就应该进行加载
       // 所以下拉刷新用touch事件，而上拉加载用scroll事件
 

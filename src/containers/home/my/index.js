@@ -15,6 +15,14 @@ const My = props => {
 
   const [scrollElement, setScrollElement] = useState()
 
+  // 点击按钮，setActiveItem('myCreatedPlaylist')，并且会滚动到特定位置，但是滚动的过程中会反复的触发onScrollFn中的
+  // setActiveItem(e.target.scrollTop >= myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight ? 'myCollectedPlaylist' : 'myCreatedPlaylist')
+  // 在收藏歌单区域没高度的时候，点击收藏歌单按钮，setActiveItem('myCollectedPlaylist')，页面会滚动到底，但是此时e.target.scrollTop < myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
+  // 所以又会setActiveItem('myCreatedPlaylist')，不符合预期
+  // 所以记录一下点击的状态，如果是点击按钮导致的scrollTo滚动，则不执行onScrollFn中的setActiveItem()，如果是滚轮或者触摸导致的滚动，则执行
+  // 是否刚刚点击了创建歌单或者收藏歌单按钮
+  const [justClick, setJustClick] = useState(false)
+
   // 创建歌单和收藏歌单选项是否sticky了
   const [isSticky, setIsSticky] = useState(false)
   // 当前滑动到我创建的歌单还是我收藏的歌单了
@@ -59,26 +67,47 @@ const My = props => {
 
   const scrollProps = {
     getScrollElement: setScrollElement,
-    onScrollFn: e => {
-      setIsSticky(e.target.scrollTop >= playlistOptionsRef.current.offsetTop)
+    onScrollFn(e) {
       // offsetTop是相对于最近定位父元素计算的，此处即为scroll的那个dom元素
-      setActiveItem(
-        e.target.scrollTop >=
-          myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
-          ? 'myCollectedPlaylist'
-          : 'myCreatedPlaylist'
-      )
+      setIsSticky(e.target.scrollTop >= playlistOptionsRef.current.offsetTop)
+      // 手动滚动到特定位置，将自动切换标签
+      !justClick &&
+        setActiveItem(
+          e.target.scrollTop >=
+            myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
+            ? 'myCollectedPlaylist'
+            : 'myCreatedPlaylist'
+        )
     }
+    // 要么不用justClick，把onScrollFn中的setActiveItem()换到onTouchMoveFn里面，也是可以的，但是滚轮的滚动就没法触发自动切换标签了
+    // onTouchMoveFn(e) {
+    //   setActiveItem(
+    //     scrollElement.scrollTop >=
+    //       myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
+    //       ? 'myCollectedPlaylist'
+    //       : 'myCreatedPlaylist'
+    //   )
+    // }
   }
 
   const scrollToMyCreatedPlaylist = () => {
+    setJustClick(true)
     scrollElement.scrollTo({ top: myCreatedPlaylistRef.current.offsetTop, behavior: 'smooth' })
+    // 由于不能设置scrollTo的具体时长，暂时使用500ms，TAT
+    // 更好的手段是判断代码scrollTo导致的滚动还是mouse、touch导致的滚动，如果是scrollTo导致的滚动则不运行onScrollFn里的setActiveItem()，反之则运行
+    setTimeout(() => {
+      setJustClick(false)
+    }, 500)
   }
   const scrollToMyCollectedPlaylist = () => {
+    setJustClick(true)
     scrollElement.scrollTo({
       top: myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight,
       behavior: 'smooth'
     })
+    setTimeout(() => {
+      setJustClick(false)
+    }, 500)
   }
 
   return useObserver(() => (
@@ -112,7 +141,9 @@ const My = props => {
         <div
           className="like-music"
           onClick={() => {
-            if (loginStore.myFavoritePlaylist?.id) {
+            if (!loginStore.isLogin) {
+              history.push('/login')
+            } else if (loginStore.myFavoritePlaylist?.id) {
               history.push(`/playlist/${loginStore.myFavoritePlaylist?.id}`)
             }
           }}
@@ -140,13 +171,19 @@ const My = props => {
         >
           <li
             className={classNames({ avtive: activeItem === 'myCreatedPlaylist' })}
-            onClick={scrollToMyCreatedPlaylist}
+            onClick={() => {
+              setActiveItem('myCreatedPlaylist')
+              scrollToMyCreatedPlaylist()
+            }}
           >
             创建歌单
           </li>
           <li
             className={classNames({ avtive: activeItem === 'myCollectedPlaylist' })}
-            onClick={scrollToMyCollectedPlaylist}
+            onClick={() => {
+              setActiveItem('myCollectedPlaylist')
+              scrollToMyCollectedPlaylist()
+            }}
           >
             收藏歌单
           </li>
@@ -156,11 +193,11 @@ const My = props => {
             <div className="header">
               <span>创建歌单({loginStore.myCreatedPlaylist.length}个)</span>
               <div>
-                <i className="iconfont icon-jiahao"></i>
+                <i className="iconfont icon-jiahao" onClick={hasNotDoneToast}></i>
                 <i className="iconfont icon-more"></i>
               </div>
             </div>
-            {loginStore.myCreatedPlaylist.length > 0 && (
+            {loginStore.myCreatedPlaylist.length > 0 ? (
               <WindowScroller scrollElement={scrollElement}>
                 {({ height, isScrolling, onChildScroll, scrollTop }) => (
                   <AutoSizer disableHeight>
@@ -180,13 +217,11 @@ const My = props => {
                   </AutoSizer>
                 )}
               </WindowScroller>
-            )}
-            <div className="bottom" onClick={hasNotDoneToast}>
-              <div className="left">
-                <i className="iconfont icon-daoru"></i>
+            ) : (
+              <div className="bottom">
+                <span className="no-collect">暂无创建的歌单</span>
               </div>
-              <span>导入外部歌单</span>
-            </div>
+            )}
           </div>
           <div className="playlist-collect" ref={myCollectedPlaylistRef}>
             <div className="header">

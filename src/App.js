@@ -47,7 +47,7 @@ function App() {
             <CacheRoute path="/" exact render={() => <Redirect to="/home" />} />
             <CacheRoute path="/home" component={LazyHome} />
             <CacheRoute path="/playlist/:id" component={LazyPlaylist} />
-            <CacheRoute path="/search" component={LazySearch} />
+            <CacheRoute path="/search" component={LazySearch} when={() => false} />
             <CacheRoute path="/player" component={LazyPlayer} />
             <CacheRoute path="/login" component={LazyLogin} />
           </CacheSwitch>

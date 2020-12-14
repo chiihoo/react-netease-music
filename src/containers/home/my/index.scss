@@ -94,11 +94,11 @@
       background-color: #fff;
       padding: 10px;
       border-radius: 7px;
+      color: #9c9c9c;
       .header {
         display: flex;
         justify-content: space-between;
         font-size: 14px;
-        color: #9c9c9c;
         margin-bottom: 5px;
         > div {
           .icon-jiahao {
@@ -107,22 +107,10 @@
         }
       }
       .bottom {
-        display: flex;
-        align-items: center;
-        margin-top: 15px;
-        .left {
-          width: 45px;
-          height: 45px;
-          border-radius: 7px;
-          margin-right: 10px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-shrink: 0;
-          background-color: #f3f3f3;
-          .icon-daoru {
-            font-size: 22px;
-          }
+        padding: 20px 0;
+        text-align: center;
+        .no-collect {
+          font-size: 15px;
         }
       }
     }

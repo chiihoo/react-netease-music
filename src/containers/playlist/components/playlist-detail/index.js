@@ -19,7 +19,7 @@ const PlaylistDetail = React.forwardRef((props, ref) => {
     handlePlayAllClick,
     currentSongId,
     handleSubscribePlaylist,
-    handleUnsubscribePlaylist,
+    handleUnsubscribePlaylist
   } = props
 
   const history = useHistory()
@@ -37,7 +37,6 @@ const PlaylistDetail = React.forwardRef((props, ref) => {
       </SongItem>
     )
   }
-  React.useEffect(()=>{console.log('subscribed',subscribed)})
 
   return (
     <div className="playlist-detail">

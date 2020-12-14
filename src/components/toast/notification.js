@@ -38,7 +38,9 @@ class Notification extends React.Component {
             timeout={this.transitionTime}
             classNames="toast-notice-wrapper notice"
           >
-            <p>{item.content}</p>
+            <div>
+              <p>{item.content}</p>
+            </div>
           </CSSTransition>
         ))}
       </TransitionGroup>
