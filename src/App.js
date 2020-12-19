@@ -38,8 +38,7 @@ function App() {
         className="app-main"
         style={{
           // 如果播放队列有歌曲，并且不是在player页面的话，则需要给底下的mini-player组件留出空间
-          // bottom: !(playerStore.playList.length === 0 || playerMatch) && '13.333vw'
-          bottom: playerStore.playList.length > 0 && !playerMatch && '13.333vw'
+          bottom: playerStore.playList.length > 0 && !playerMatch && '18.667vw'
         }}
       >
         <Suspense fallback={null}>

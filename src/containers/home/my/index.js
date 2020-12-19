@@ -15,20 +15,14 @@ const My = props => {
 
   const [scrollElement, setScrollElement] = useState()
 
-  // 点击按钮，setActiveItem('myCreatedPlaylist')，并且会滚动到特定位置，但是滚动的过程中会反复的触发onScrollFn中的
-  // setActiveItem(e.target.scrollTop >= myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight ? 'myCollectedPlaylist' : 'myCreatedPlaylist')
-  // 在收藏歌单区域没高度的时候，点击收藏歌单按钮，setActiveItem('myCollectedPlaylist')，页面会滚动到底，但是此时e.target.scrollTop < myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
-  // 所以又会setActiveItem('myCreatedPlaylist')，不符合预期
-  // 所以记录一下点击的状态，如果是点击按钮导致的scrollTo滚动，则不执行onScrollFn中的setActiveItem()，如果是滚轮或者触摸导致的滚动，则执行
-  // 是否刚刚点击了创建歌单或者收藏歌单按钮
-  const [justClick, setJustClick] = useState(false)
-
   // 创建歌单和收藏歌单选项是否sticky了
   const [isSticky, setIsSticky] = useState(false)
   // 当前滑动到我创建的歌单还是我收藏的歌单了
   const [activeItem, setActiveItem] = useState('myCreatedPlaylist') // myCreatedPlaylist、myCollectedPlaylist
   // 创建歌单和收藏歌单选项
   const playlistOptionsRef = useRef()
+  // 记录playlistOptionsRef.current.offsetTop的初始值
+  const playlistOptionsInitialScrollTop = useRef()
   // 我创建的歌单
   const myCreatedPlaylistRef = useRef()
   // 我收藏的歌单
@@ -65,49 +59,47 @@ const My = props => {
   const rowRenderer_created = rowRendererGenerator(loginStore.myCreatedPlaylist, false)
   const rowRenderer_collected = rowRendererGenerator(loginStore.myCollectedPlaylist)
 
+  // 记录playlistOptionsRef.current.offsetTop的初始值
+  useEffect(() => {
+    playlistOptionsInitialScrollTop.current = playlistOptionsRef.current.offsetTop
+  }, [])
+
   const scrollProps = {
     getScrollElement: setScrollElement,
     onScrollFn(e) {
       // offsetTop是相对于最近定位父元素计算的，此处即为scroll的那个dom元素
-      setIsSticky(e.target.scrollTop >= playlistOptionsRef.current.offsetTop)
-      // 手动滚动到特定位置，将自动切换标签
-      !justClick &&
-        setActiveItem(
-          e.target.scrollTop >=
-            myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
-            ? 'myCollectedPlaylist'
-            : 'myCreatedPlaylist'
-        )
+      // 由于当options的区域sticky定位时，再向下滚动，playlistOptionsRef.current.offsetTop也会开始变大，与e.target.scrollTop保持一致，在移动端会不断闪烁
+      // setIsSticky(e.target.scrollTop >= playlistOptionsRef.current.offsetTop)不对
+      setIsSticky(e.target.scrollTop >= playlistOptionsInitialScrollTop.current)
+    },
+    onTouchMoveFn(e) {
+      // 如果setActiveItem(...)放到了onScrollFn中，而不是放到onTouchMoveFn里面，则会发生的情况 >>>
+      // 点击按钮，setActiveItem('myCreatedPlaylist')，并且还会滚动到特定位置，但是滚动的过程中会反复的触发onScrollFn中的
+      // setActiveItem(e.target.scrollTop >= myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight ? 'myCollectedPlaylist' : 'myCreatedPlaylist')
+      // 在收藏歌单区域没高度的时候，点击收藏歌单按钮，setActiveItem('myCollectedPlaylist')，页面会滚动到底，但是此时e.target.scrollTop < myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
+      // 所以又会setActiveItem('myCreatedPlaylist')，不符合预期
+      // 我想到的解决办法：
+      // 方法一：记录一下点击的状态，如果是点击按钮导致的scrollTo滚动，则不执行onScrollFn中的setActiveItem()，如果是滚轮或者触摸导致的滚动，则执行，但是怎么识别呢？？
+      // 方法二：只在touch事件里面触发setActiveItem()，这样scrollTo造成的滚动是不会触发touch事件的
+
+      // 手动滑动到特定位置，将自动切换标签
+      setActiveItem(
+        scrollElement.scrollTop >=
+          myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
+          ? 'myCollectedPlaylist'
+          : 'myCreatedPlaylist'
+      )
     }
-    // 要么不用justClick，把onScrollFn中的setActiveItem()换到onTouchMoveFn里面，也是可以的，但是滚轮的滚动就没法触发自动切换标签了
-    // onTouchMoveFn(e) {
-    //   setActiveItem(
-    //     scrollElement.scrollTop >=
-    //       myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight
-    //       ? 'myCollectedPlaylist'
-    //       : 'myCreatedPlaylist'
-    //   )
-    // }
   }
 
   const scrollToMyCreatedPlaylist = () => {
-    setJustClick(true)
     scrollElement.scrollTo({ top: myCreatedPlaylistRef.current.offsetTop, behavior: 'smooth' })
-    // 由于不能设置scrollTo的具体时长，暂时使用500ms，TAT
-    // 更好的手段是判断代码scrollTo导致的滚动还是mouse、touch导致的滚动，如果是scrollTo导致的滚动则不运行onScrollFn里的setActiveItem()，反之则运行
-    setTimeout(() => {
-      setJustClick(false)
-    }, 500)
   }
   const scrollToMyCollectedPlaylist = () => {
-    setJustClick(true)
     scrollElement.scrollTo({
       top: myCollectedPlaylistRef.current.offsetTop - playlistOptionsRef.current.offsetHeight,
       behavior: 'smooth'
     })
-    setTimeout(() => {
-      setJustClick(false)
-    }, 500)
   }
 
   return useObserver(() => (

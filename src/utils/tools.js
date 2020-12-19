@@ -63,14 +63,18 @@ export function guidGenerator() {
  * 判断设备是PC还是Mobile
  */
 export function isPC() {
-  const useAgent = navigator.userAgent
+  const userAgent = navigator.userAgent
   const arr = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
   for (let i = 0; i < arr.length; i++) {
-    if (useAgent.includes(arr[i])) {
+    if (userAgent.includes(arr[i])) {
       return false
     }
   }
   return true
+}
+// 判断设备是否是IOS
+export function isIOS() {
+  return /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
 }
 
 /**

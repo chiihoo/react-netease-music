@@ -25,7 +25,8 @@ const PlayListDrawer = () => {
       // 如果目标行在区域下方，不在视野内，则会挪到视野内最后一行
       // listRef.current.scrollToRow(playerStore.playListIndex)
     }
-  }, [triggerStore.showPlayListDrawer, playerStore.playListIndex])
+    // eslint-disable-next-line
+  }, [triggerStore.showPlayListDrawer])
 
   // 这里用observer（针对组件）和useObserver都不行，只有用Observer才有效的观察到了color的更新
   // https://mobx-react.js.org/observer-component

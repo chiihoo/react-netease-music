@@ -74,7 +74,8 @@
     display: flex;
     justify-content: space-around;
     position: sticky;
-    top: 0;
+    // top: 0的话移动端会有条细缝
+    top: -1px;
     margin: 15px 0;
     padding: 0 50px;
     z-index: 10;

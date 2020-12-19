@@ -11,7 +11,7 @@ const PlayerController = props => {
     playMode,
     changePlayMode,
     isPlaying,
-    changeIsPlaying,
+    changePlayStatus,
     bufferedTime,
     totalTime,
     currentTime,
@@ -126,9 +126,9 @@ const PlayerController = props => {
         <i className="iconfont icon-shangyiqu" onClick={prevSong}></i>
         <div className="play-pause">
           {isPlaying === false ? (
-            <i className="iconfont icon-bofang" onClick={() => changeIsPlaying(true)}></i>
+            <i className="iconfont icon-bofang" onClick={() => changePlayStatus(true)}></i>
           ) : (
-            <i className="iconfont icon-zanting" onClick={() => changeIsPlaying(false)}></i>
+            <i className="iconfont icon-zanting" onClick={() => changePlayStatus(false)}></i>
           )}
         </div>
         <i className="iconfont icon-xiayiqu" onClick={nextSong}></i>

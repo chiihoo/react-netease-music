@@ -98,6 +98,10 @@ const MiniPlayer = observer(function MiniPlayer() {
         <div
           className="play-btn"
           onClick={() => {
+            playerStore.initAudioContext()
+            playerStore.isPlaying
+              ? playerStore.audio.current.pause()
+              : playerStore.audio.current.play()
             playerStore.setIsPlaying(!playerStore.isPlaying)
           }}
         >

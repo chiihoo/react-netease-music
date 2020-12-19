@@ -121,13 +121,14 @@ const AudioAnimation = props => {
       <canvas ref={canvasRef} width={width} height={height}></canvas>
       <div className="player-cover" ref={coverRef}>
         <img src={require('@/assets/svg-icons/cover-bg.svg')} alt="" />
+        {picUrl &&
         <img
           key={picUrl}
           className="rotate"
           style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}
           src={picUrl + '?param=500y500'}
           alt=""
-        />
+        />}
       </div>
     </div>
   )

@@ -72,8 +72,8 @@ const Playlist = () => {
   }
 
   // 点击单行歌曲项，进行播放
-  const handleSongItemClick = useCallback((songId, isVIPSong) => {
-    playerStore.addSongToPlay(songId, playlistStore.songs, playlistStore.privileges)
+  const handleSongItemClick = useCallback(async (songId, isVIPSong) => {
+    await playerStore.addSongToPlay(songId, playlistStore.songs, playlistStore.privileges)
     // eslint-disable-next-line
   }, [])
 

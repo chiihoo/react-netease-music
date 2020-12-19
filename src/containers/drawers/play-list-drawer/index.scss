@@ -38,6 +38,8 @@
       }
       .icon-delete {
         font-size: 15px;
+        display: flex;
+        align-items: center;
       }
     }
     .virtualized-wrapper {
@@ -51,7 +53,10 @@
         justify-content: space-between;
         align-items: center;
         p {
-          padding-right: 30px;
+          min-width: 0;
+          flex-grow: 1;
+          line-height: 45px;
+          padding-right: 20px;
           .icon-laba {
             padding-right: 5px;
           }
@@ -63,6 +68,12 @@
         }
         .icon-quxiao {
           color: rgba(0, 0, 0, 0.5);
+          flex-shrink: 0;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
     }

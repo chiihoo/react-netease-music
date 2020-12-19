@@ -1,12 +1,15 @@
 import { observable, computed, action, flow } from 'mobx'
 import { shuffle } from 'lodash-es'
-import { fetchLyrics } from '@/api'
-import { parseLrc } from '@/utils/tools'
+import { fetchLyrics, fetchUrl } from '@/api'
+import { parseLrc, isIOS } from '@/utils/tools'
 
 // 播放有关的存储
 export class playerStore {
+  @observable audio = null // audio的引用，audio.current
+
   @observable isPlaying = false // 是否在播放
-  @observable shouldPlay = false // 是否需要播放，见260行addSongToPlay方法中的解释
+  @observable prevPlaySongId = null // 播放的上一首的id
+
   @observable playMode = JSON.parse(localStorage.getItem('playMode')) ?? 'list' // 播放的模式： 列表播放list，随机播放random，单曲循环single
   // 这个用作当前播放列表
   @observable playList = JSON.parse(localStorage.getItem('playList')) ?? [] // 播放列表
@@ -17,6 +20,7 @@ export class playerStore {
   // privilege.fee === 1 会员
   // /1152|1028|1088|1092|1284/.test(privilege.flag) 试听
   @observable privileges = JSON.parse(localStorage.getItem('privileges')) ?? [] // 包括一些权限信息
+
   // 歌词不用缓存在localStorage中，因为每次播放都会自动请求歌词
   @observable isPureMusic = null // true为纯音乐
   @observable lyrics = [] // 歌词
@@ -32,6 +36,8 @@ export class playerStore {
   @observable volume = 0.6 // 音量大小  [0,1]之间的小数
 
   // Audio组件中对audio的解析，获取频率数组，由于音频可视化动画是放在Player中的，所以需要存一下
+  @observable ctx = null // AudioContext
+  @observable source = null // sourceNode
   @observable analyser = null // AnalyserNode
   @observable dataArray = new Array(256).fill(0) // 频率数组
 
@@ -57,20 +63,6 @@ export class playerStore {
 
   // mini-player 左右滑动 加载的3首歌
   @computed
-  // get swiperLoadSongs() {
-  //   if (this.playQueue.length >= 2) {
-  //     if (this.playQueueIndex === 0) {
-  //       return [this.playQueue[this.playQueue.length - 1], ...this.playQueue.slice(0, 2)]
-  //     } else if (this.playQueueIndex === this.playQueue.length - 1) {
-  //       return [...this.playQueue.slice(-2), this.playQueue[0]]
-  //     } else {
-  //       return this.playQueue.slice(this.playQueueIndex - 1, this.playQueueIndex + 2)
-  //     }
-  //   } else if (this.playQueue.length === 1) {
-  //     return [this.playQueue[0], this.playQueue[0], this.playQueue[0]]
-  //   }
-  //   return []
-  // }
   get swiperLoadSongs() {
     if (this.playQueue.length >= 3) {
       if (this.playQueueIndex === 0) {
@@ -127,6 +119,10 @@ export class playerStore {
   }
 
   @action
+  setAudio(audio) {
+    this.audio = audio
+  }
+  @action
   setBufferedTime(time) {
     this.bufferedTime = time
   }
@@ -146,22 +142,6 @@ export class playerStore {
   setVolume(volume) {
     this.volume = volume
   }
-
-  @action
-  setAnalyser(analyser) {
-    this.analyser = analyser
-  }
-  @action
-  setDataArray(dataArray) {
-    this.dataArray = dataArray
-  }
-  @action
-  updateDataArray() {
-    if (this.analyser) {
-      this.analyser.getByteFrequencyData(this.dataArray)
-    }
-  }
-
   @action
   setIsPlaying(status) {
     this.isPlaying = status
@@ -258,7 +238,7 @@ export class playerStore {
     this.setPlayQueueIndex(
       this.playQueueIndex === 0 ? this.playQueue.length - 1 : this.playQueueIndex - 1
     )
-    this.setIsPlaying(true)
+    this.requestMusicAndPlay()
     this.changePlayListIndexWithPlayQueueIndex()
     this.currentDirection = 'prev'
   }
@@ -269,7 +249,7 @@ export class playerStore {
     this.setPlayQueueIndex(
       this.playQueueIndex === this.playQueue.length - 1 ? 0 : this.playQueueIndex + 1
     )
-    this.setIsPlaying(true)
+    this.requestMusicAndPlay()
     this.changePlayListIndexWithPlayQueueIndex()
     this.currentDirection = 'next'
   }
@@ -283,7 +263,7 @@ export class playerStore {
         break
       }
     }
-    this.setIsPlaying(true)
+    this.requestMusicAndPlay()
     this.changePlayListIndexWithPlayQueueIndex()
     this.currentDirection = 'next'
   }
@@ -292,12 +272,7 @@ export class playerStore {
   @action
   addSongToPlay(songId, songs, privileges) {
     this.changePlayList(songs, songId)
-    // this.setIsPlaying(true)
-    // 这里为什么要用个shouldPlay的变量而不是直接setIsPlaying(true)呢？
-    // 因为如果直接改播放状态的话，有一个场景是在暂停状态下，切换到另一个歌单点击歌曲播放，
-    // 这时候因为网络请求获取src有延迟，所以会先播放上一首歌的部分，之后才会切换到下一首
-    // 而如果在Audio中获取src后直接设置setIsPlaying(true)，又会导致刷新页面就直接播放了，所以多加了这样一个变量，来确保只有点击之后才能播放
-    this.shouldPlay = true
+    this.requestMusicAndPlay()
     this.setPrivileges([...privileges])
     this.currentDirection = null
   }
@@ -330,13 +305,17 @@ export class playerStore {
     this.changePlayListIndexWithPlayQueueIndex()
 
     if (this.playQueue.length === 0) {
+      this.audio.current.pause()
       this.setIsPlaying(false)
+    } else if (this.currentSongId !== this.prevPlaySongId) {
+      this.isPlaying ? this.requestMusicAndPlay() : this.requestMusicUrl()
     }
   }
 
   // 删除播放列表的全部歌曲
   @action
   deleteAll() {
+    this.audio.current.pause()
     this.setIsPlaying(false)
     this.setPrivileges([])
     this.setPlayList([])
@@ -363,7 +342,7 @@ export class playerStore {
       this.setPlayQueue(playList)
       this.setPlayListIndex(0)
     }
-    this.setIsPlaying(true)
+    this.requestMusicAndPlay()
   }
 
   // 获取歌词
@@ -411,5 +390,94 @@ export class playerStore {
       lyrics.sort((a, b) => a.time - b.time)
       this.lyrics = [...lyrics]
     }
+  })
+
+  // 音频可视化相关操作
+  // 初始化AudioContext，并做connect操作
+  @action
+  initAudioContext() {
+    // createMediaElementSource方法在ios上有bug
+    // https://www.zhihu.com/question/277535711/answer/394718335
+    // https://stackoverflow.com/questions/58306894/has-ios13-broken-audio-tags-used-as-audio-buffers-connected-to-the-audio-conte
+    if (isIOS()) return
+
+    // 只初始化一次
+    if (this.ctx) return
+    // 创建Audio上下文
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // 创建AnalyserNode，用于获取音频的频率数据（FrequencyData）和时域数据（TimeDomainData）。从而实现音频的可视化。
+    this.analyser = this.ctx.createAnalyser()
+    //快速傅里叶变换的一个参数，2的幂次方，数字越大，得到的结果越精细。fftSize决定了frequencyData的长度，具体为fftSize的一半
+    this.analyser.fftSize = 512
+
+    // 设置SourceNode
+    // createMediaElementSource可以用createBufferSource来降级，但是实在是麻烦
+    this.source = this.ctx.createMediaElementSource(this.audio.current)
+
+    // 连接操作
+    this.source.connect(this.analyser)
+    this.analyser.connect(this.ctx.destination)
+
+    // 获取频率数组
+    // frequencyBinCount为fftSize值的一半. 该属性通常用于可视化的数据值的数量.
+    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount)
+    // getByteFrequencyData 更新操作，是对已有的数组元素进行赋值，而不是创建后返回新的数组
+    this.analyser.getByteFrequencyData(this.dataArray)
+  }
+
+  // 更新DataArray
+  @action
+  updateDataArray() {
+    if (this.analyser) {
+      this.analyser.getByteFrequencyData(this.dataArray)
+    }
+  }
+
+  // 只请求歌曲url，赋给audio的src
+  requestMusicUrl = flow(function* () {
+    console.log('requestMusicUrl')
+    // this.initAudioContext()
+    if (this.currentSongId) {
+      // 从接口获取url，再播放
+      const res = yield fetchUrl(this.currentSongId)
+      if (!res.data?.[0].url) {
+        this.currentDirection === 'prev' ? this.prevSong() : this.nextSong()
+      }
+      this.audio.current.src = res.data[0].url
+      this.setBufferedTime(0)
+    }
+  })
+
+  // 请求歌曲url，赋给audio的src，并播放
+  requestMusicAndPlay = flow(function* () {
+    if (!this.currentSongId) {
+      return
+    }
+    // 如果当前点击的歌曲与正在播放的歌曲时同一首，则不做处理，如果是同一首，但是是未播放状态，则继续播放
+    if (this.currentSongId === this.prevPlaySongId) {
+      if (!this.isPlaying) {
+        this.audio.current.play()
+        this.isPlaying = true
+      }
+      return
+    }
+
+    // 初始化之前肯定已经经过了用户手势操作
+    this.initAudioContext()
+
+    this.audio.current.pause()
+    this.audio.current.currentTime = 0
+
+    this.setIsPlaying(true)
+    // 从接口获取url，再播放
+    const res = yield fetchUrl(this.currentSongId)
+    if (!res.data?.[0].url) {
+      this.currentDirection === 'prev' ? this.prevSong() : this.nextSong()
+    }
+    this.audio.current.src = res.data?.[0].url
+    this.setBufferedTime(0)
+    this.audio.current.play()
+    this.prevPlaySongId = this.currentSongId
   })
 }
