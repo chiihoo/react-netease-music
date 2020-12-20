@@ -4,7 +4,7 @@ import { useStores } from '@/stores'
 import { useEventListener } from '@/hooks'
 
 // Audio组件，常驻页面，控制音乐的播放
-const Audio = observer(function Audio(props, ref) {
+const Audio = observer(function Audio(props) {
   const audioRef = useRef()
 
   const { playerStore } = useStores()
@@ -19,21 +19,21 @@ const Audio = observer(function Audio(props, ref) {
   useEventListener(
     'play',
     () => {
-      console.log('play：播放')
+      // console.log('play：播放')
     },
     audioRef
   )
   useEventListener(
     'playing',
     () => {
-      console.log('playing：正在播放')
+      // console.log('playing：正在播放')
     },
     audioRef
   )
   useEventListener(
     'pause',
     () => {
-      console.log('pause：暂停')
+      // console.log('pause：暂停')
     },
     audioRef
   )
@@ -41,7 +41,7 @@ const Audio = observer(function Audio(props, ref) {
   useEventListener(
     'progress',
     () => {
-      console.log('progress：缓冲下载中')
+      // console.log('progress：缓冲下载中')
       if (audioRef.current.buffered.length > 0) {
         const bufferedTime = audioRef.current.buffered.end(0) // 已缓存区域的时间
         playerStore.setBufferedTime(bufferedTime)
@@ -53,7 +53,7 @@ const Audio = observer(function Audio(props, ref) {
   useEventListener(
     'canplay',
     () => {
-      console.log('canplay，歌曲总时间为：', audioRef.current.duration)
+      // console.log('canplay，歌曲总时间为：', audioRef.current.duration)
       playerStore.setTotalTime(audioRef.current.duration)
     },
     audioRef
@@ -62,7 +62,7 @@ const Audio = observer(function Audio(props, ref) {
   useEventListener(
     'canplaythrough',
     () => {
-      console.log('canplaythrough')
+      // console.log('canplaythrough')
     },
     audioRef
   )
@@ -77,7 +77,7 @@ const Audio = observer(function Audio(props, ref) {
   useEventListener(
     'ended',
     () => {
-      console.log('ended')
+      // console.log('ended')
       // 单曲循环在audio标签上设置了loop模式，其他播放模式直接下一首
       if (playerStore.playMode !== 'single') {
         playerStore.nextSong()
@@ -89,21 +89,21 @@ const Audio = observer(function Audio(props, ref) {
   useEventListener(
     'stalled',
     () => {
-      console.log('stalled：当浏览器尝试获取媒体数据，但数据不可用时触发。')
+      // console.log('stalled：当浏览器尝试获取媒体数据，但数据不可用时触发。')
     },
     audioRef
   )
   useEventListener(
     'seeked',
     () => {
-      console.log('seeked：当用户已移动/跳跃到音频/视频中的新位置时触发。')
+      // console.log('seeked：当用户已移动/跳跃到音频/视频中的新位置时触发。')
     },
     audioRef
   )
   useEventListener(
     'error',
     e => {
-      console.log('error：歌曲播放出错')
+      // console.log('error：歌曲播放出错')
       playerStore.currentDirection === 'prev' ? playerStore.prevSong() : playerStore.nextSong()
     },
     audioRef
@@ -139,14 +139,12 @@ const Audio = observer(function Audio(props, ref) {
   }, [playerStore.volume])
 
   return (
-    <>
-      <audio
-        ref={audioRef}
-        preload="auto"
-        crossOrigin="anonymous"
-        loop={playerStore.playMode === 'single'}
-      ></audio>
-    </>
+    <audio
+      ref={audioRef}
+      preload="auto"
+      crossOrigin="anonymous"
+      loop={playerStore.playMode === 'single'}
+    ></audio>
   )
 })
 

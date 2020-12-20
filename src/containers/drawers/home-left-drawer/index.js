@@ -68,6 +68,7 @@ const HomeLeftDrawer = () => {
             <p
               className="logout"
               onClick={async () => {
+                // 由于接口做了缓存处理（2分钟），因此短时间内的再次退出登录，可能会无效
                 await loginStore.logout()
                 loginStore.changeLoginStatus(false)
                 document.location.reload()

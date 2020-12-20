@@ -436,8 +436,6 @@ export class playerStore {
 
   // 只请求歌曲url，赋给audio的src
   requestMusicUrl = flow(function* () {
-    console.log('requestMusicUrl')
-    // this.initAudioContext()
     if (this.currentSongId) {
       // 从接口获取url，再播放
       const res = yield fetchUrl(this.currentSongId)
