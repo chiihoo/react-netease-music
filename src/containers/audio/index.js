@@ -120,23 +120,10 @@ const Audio = observer(function Audio(props) {
   }, [])
 
   useEffect(() => {
-    // 根据timeToPlay来设置当前播放时间
-    if (playerStore.timeToPlay !== null) {
-      audioRef.current.currentTime = playerStore.timeToPlay
-      playerStore.setTimeToPlay(null)
-    }
-    // eslint-disable-next-line
-  }, [playerStore.timeToPlay])
-
-  useEffect(() => {
     if (!playerStore.currentSongId) return
     playerStore.getLyrics()
     // eslint-disable-next-line
   }, [playerStore.currentSongId])
-
-  useEffect(() => {
-    audioRef.current.volume = playerStore.volume
-  }, [playerStore.volume])
 
   return (
     <audio

@@ -32,13 +32,12 @@ const PlayerController = props => {
   // 进度条的max={Math.floor(totalTime)}，step={1}，value={Math.floor(time)}
   // 也就是最大值是总时间秒数，步长为1s，value就是步数stepCount，也就是当前播放时间。
   // 滑块滑动结束、点击进度条时的钩子函数为onAfterChange，这时候就需要更改播放时间并进行播放，
-  // 做法是在onAfterChange钩子中对playerStore.timeToPlay这个状态进行改变，并在Audio组件中会对这个状态进行监听，
-  // 如果有改变，就设置audioRef.current.currentTime = playerStore.timeToPlay，并进行播放
+  // 做法是在onAfterChange钩子中对audioRef.current.currentTime这个状态进行改变
 
   // 跟input range的区别：input range也有value，value可以控制input range的位置，同时滑动滑块也可以改变value的值
   // 滑动的过程中是不会改变value的，只有滑动完毕松手或者直接点击的时候才会把当前位置赋给value
 
-  // 而我这个组件，提供了onAfterChange钩子，是在滑动完毕或直接点击时调用，通过改变timeToPlay，使Audio组件更改播放时间currentTime
+  // 而我这个组件，提供了onAfterChange钩子，是在滑动完毕或直接点击时调用，更改播放时间currentTime
   // 在没有触摸滑块时，setTime(currentTime)改变了time，而value={Math.floor(time)}，则播放时间动态的控制了滑块的位置
   // 而onMoving钩子，用于在touchmove的时候，用滑块的位置动态的修改timeTemp，从而显示在进度条左侧
 
@@ -86,7 +85,7 @@ const PlayerController = props => {
   // 进度条改变stepCount完成，包括滑块滑动结束、点击进度条
   const onAfterChange = useCallback(
     stepCount => {
-      // 设置需要更改的播放时间，并在Audio组件中进行设置并播放
+      // 设置需要更改的播放时间
       changeTimeToPlay(stepCount)
     },
     [changeTimeToPlay]

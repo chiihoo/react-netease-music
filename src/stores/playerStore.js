@@ -32,7 +32,6 @@ export class playerStore {
   @observable bufferedTime = 0 // 已缓存区域的时间 秒
   @observable totalTime = 0 // 歌曲总时间
   @observable currentTime = 0 // 当前播放的时间，只有显示作用
-  @observable timeToPlay = null // 改变的播放时间
   @observable volume = 0.6 // 音量大小  [0,1]之间的小数
 
   // Audio组件中对audio的解析，获取频率数组，由于音频可视化动画是放在Player中的，所以需要存一下
@@ -119,6 +118,11 @@ export class playerStore {
   }
 
   @action
+  changeTimeToPlay(time) {
+    this.audio.current.currentTime = time
+  }
+
+  @action
   setAudio(audio) {
     this.audio = audio
   }
@@ -135,12 +139,9 @@ export class playerStore {
     this.currentTime = time
   }
   @action
-  setTimeToPlay(time) {
-    this.timeToPlay = time
-  }
-  @action
   setVolume(volume) {
     this.volume = volume
+    this.audio.current.volume = volume
   }
   @action
   setIsPlaying(status) {

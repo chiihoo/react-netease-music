@@ -47,12 +47,8 @@ const Player = () => {
     status ? playerStore.audio.current.play() : playerStore.audio.current.pause()
     // eslint-disable-next-line
   }, [])
-  const changeCurrentTime = useCallback(time => {
-    playerStore.setCurrentTime(time)
-    // eslint-disable-next-line
-  }, [])
   const changeTimeToPlay = useCallback(time => {
-    playerStore.setTimeToPlay(time)
+    playerStore.changeTimeToPlay(time)
     // eslint-disable-next-line
   }, [])
   const changeVolume = useCallback(volume => {
@@ -116,7 +112,6 @@ const Player = () => {
           bufferedTime={playerStore.bufferedTime}
           totalTime={playerStore.totalTime}
           currentTime={playerStore.currentTime}
-          changeCurrentTime={changeCurrentTime}
           changeTimeToPlay={changeTimeToPlay}
           showPlayListDrawer={showPlayListDrawer}
         />

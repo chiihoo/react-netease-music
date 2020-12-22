@@ -303,7 +303,6 @@ const Login = props => {
               type="checkbox"
               checked={isAggrementChecked}
               onChange={e => {
-                console.log(e.target.checked)
                 setIsAggrementChecked(e.target.checked)
               }}
             />
