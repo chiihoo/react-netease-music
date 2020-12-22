@@ -317,6 +317,7 @@ export class playerStore {
   @action
   deleteAll() {
     this.audio.current.pause()
+    this.audio.current.currentTime = 0
     this.setIsPlaying(false)
     this.setPrivileges([])
     this.setPlayList([])
