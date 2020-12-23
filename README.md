@@ -1,68 +1,78 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 高仿网易云音乐 移动端
 
-## Available Scripts
+<p>
+  <img src="https://img.shields.io/badge/react-16.13.0-brightgreen" alt="react">
+  <img src="https://img.shields.io/static/v1?label=react-router-dom&message=5.2.0&color=green" alt="react-router-dom">
+  <img src="https://img.shields.io/badge/mobx-5.15.7-yellowgreen" alt="mobx">
+  <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license">
+</p>
 
-In the project directory, you can run:
 
-### `yarn start`
+## 项目线上地址	http://121.196.155.101:3000
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**请使用移动端浏览器预览，如果使用PC端，请切换到Chrome的移动端调试模式**
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+本项目的音频可视化效果用到了 `AudioContext`接口的 `createMediaElementSource`方法，该方法在iOS上存在[**BUG**](https://stackoverflow.com/questions/58306894/has-ios13-broken-audio-tags-used-as-audio-buffers-connected-to-the-audio-conte)，会导致歌曲无法播放，因此针对iOS系统，去除了音频可视化效果，**建议在Android系统上进行预览**
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+## 项目说明
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+前端使用React进行开发（全面拥抱Hooks），状态管理库使用Mobx，并用vw布局进行移动端适配
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+后端使用开源项目[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)进行搭建
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+本项目UI参考网易云音乐Android App 7.x版本，除Swiper外，未使用第三方UI组件
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+主要动画效果均为手动实现，包括但不局限于：
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* 下拉刷新
+* 上拉加载
+* 滑动输入条Slider
+* 类似marquee的横向无限滚动展示组件Ticker
+* 抽屉Drawer
+* 全局提示Toast
+* 对话框Dialog
+* 验证码输入框
+* ......
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+部分动画效果参考了：
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* kurodaakira-jp/cloud-music-master (使用Vue的一个高仿网易云音乐项目，原作者貌似改名了，未找到项目地址)
 
-### Code Splitting
+* [ant-design](https://github.com/ant-design/ant-design)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+* [react-ticker](https://github.com/AndreasFaust/react-ticker)
 
-### Analyzing the Bundle Size
+* [react-components](https://github.com/clancysong/react-components)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+* [cursor-vcode](https://github.com/useryangtao/cursor-vcode)
 
-### Making a Progressive Web App
+* [Web Audio在音频可视化中的应用](https://juejin.cn/post/6844903953130323976)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-### Advanced Configuration
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+本项目的音频可视化只是将连续的音频点进行平滑连接，但在起始和末尾相连的地方不够平整，更好的方法是用傅里叶变换进行采样，再进行平滑处理，具体可见网易云音乐大前端团队的文章——[Android 音频可视化](https://juejin.cn/post/6873253309944168456)
 
-### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
 
-### `yarn build` fails to minify
+## 功能预览
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+![1](./gif/1.gif)
+
+![2](./gif/2.gif)
+
+![3](./gif/3.gif)
+
+![4](./gif/4.gif)
+
+![5](./gif/5.gif)
+
+![6](./gif/6.gif)
+
