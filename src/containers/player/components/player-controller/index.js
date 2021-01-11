@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import Slider from '@/components/slider'
+import toast from '@/components/toast'
 import { formatTime } from '@/utils/tools'
 import './index.scss'
 
@@ -113,13 +114,31 @@ const PlayerController = props => {
       <div className="play-control">
         <div className="play-mode">
           {playMode === 'list' && (
-            <i className="iconfont icon-xunhuanbofang" onClick={() => changePlayMode('random')}></i>
+            <i
+              className="iconfont icon-xunhuanbofang"
+              onClick={() => {
+                changePlayMode('random')
+                toast.info('随机播放')
+              }}
+            ></i>
           )}
           {playMode === 'random' && (
-            <i className="iconfont icon-suijibofang" onClick={() => changePlayMode('single')}></i>
+            <i
+              className="iconfont icon-suijibofang"
+              onClick={() => {
+                changePlayMode('single')
+                toast.info('单曲循环')
+              }}
+            ></i>
           )}
           {playMode === 'single' && (
-            <i className="iconfont icon-danquxunhuan" onClick={() => changePlayMode('list')}></i>
+            <i
+              className="iconfont icon-danquxunhuan"
+              onClick={() => {
+                changePlayMode('list')
+                toast.info('列表循环')
+              }}
+            ></i>
           )}
         </div>
         <i className="iconfont icon-shangyiqu" onClick={prevSong}></i>

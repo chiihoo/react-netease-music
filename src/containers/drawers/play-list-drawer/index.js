@@ -3,6 +3,7 @@ import { useObserver, Observer } from 'mobx-react-lite'
 import { List, AutoSizer } from 'react-virtualized'
 import { useStores } from '@/stores'
 import Drawer from '@/components/drawer'
+import toast from '@/components/toast'
 import './index.scss'
 
 // player和mini-player的当前播放列表，点击右下角的菜单键触发
@@ -72,6 +73,7 @@ const PlayListDrawer = () => {
                 <div
                   onClick={() => {
                     playerStore.changePlayMode('random')
+                    toast.info('随机播放')
                   }}
                 >
                   <i className="iconfont icon-xunhuanbofang"></i>
@@ -79,13 +81,23 @@ const PlayListDrawer = () => {
                 </div>
               )}
               {playerStore.playMode === 'random' && (
-                <div onClick={() => playerStore.changePlayMode('single')}>
+                <div
+                  onClick={() => {
+                    playerStore.changePlayMode('single')
+                    toast.info('单曲循环')
+                  }}
+                >
                   <i className="iconfont icon-suijibofang"></i>
                   <span>随机播放</span>
                 </div>
               )}
               {playerStore.playMode === 'single' && (
-                <div onClick={() => playerStore.changePlayMode('list')}>
+                <div
+                  onClick={() => {
+                    playerStore.changePlayMode('list')
+                    toast.info('列表循环')
+                  }}
+                >
                   <i className="iconfont icon-danquxunhuan"></i>
                   <span>单曲循环</span>
                 </div>
