@@ -88,7 +88,7 @@ const Complex = props => {
                   <p className="item-info one-line-ellipsis">
                     <span>{item.trackCount}首</span>
                     <span>
-                      by {item?.creator.nickname}，播放{handleNumber(item?.playCount)}次
+                      by {item?.creator?.nickname}，播放{handleNumber(item?.playCount)}次
                     </span>
                   </p>
                 </div>

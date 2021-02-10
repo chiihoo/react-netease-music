@@ -459,7 +459,7 @@ const SearchResult = () => {
   // 通过nickname来变换activeIndex，主要用于综合页面的"查看全部XX首单曲"类似这种的按钮跳转，并且不能有平滑滚动
   const changeActiveIndexByNickname = useCallback(nickname => {
     for (let i = 0; i < store.columns.length; i++) {
-      if (store.columns[i].nickname === nickname) {
+      if (store.columns[i]?.nickname === nickname) {
         shouldTransition.current = false
         searchStore.changeActiveIndex(i)
         break

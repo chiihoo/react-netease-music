@@ -48,7 +48,7 @@ const PlayList = props => {
           <p className="item-info one-line-ellipsis">
             <span>{playlists[index].trackCount}首</span>
             <span>
-              by {playlists[index]?.creator.nickname}，播放
+              by {playlists[index]?.creator?.nickname}，播放
               {handleNumber(playlists[index]?.playCount)}次
             </span>
           </p>
