@@ -3,7 +3,7 @@ import { Redirect, useRouteMatch } from 'react-router-dom'
 import CacheRoute, { CacheSwitch } from 'react-router-cache-route'
 import { useObserver } from 'mobx-react-lite'
 import { useStores } from '@/stores'
-import { useDeviceChangeReload } from './hooks'
+import { useDeviceChangeReload, useIsHeightChange } from './hooks'
 import Audio from './containers/audio'
 import MiniPlayer from './containers/mini-player'
 import { PlayListDrawer, HomeLeftDrawer } from './containers/drawers'
@@ -22,7 +22,11 @@ function App() {
 
   const { loginStore, playerStore } = useStores()
 
-  const playerMatch = useRouteMatch('/player')
+  const match = useRouteMatch(['/player', '/login'])
+
+  // 安卓移动端唤起输入法时，输入法的区域不占页面高度，就会把页面高度变小，此时固定在页面底部的元素会被顶起
+  // 因此可以通过页面高度来判断是否唤起了输入法
+  const isHeightChange = useIsHeightChange()
 
   useEffect(() => {
     // 如果是登录状态，则需要获取账户信息
@@ -37,8 +41,9 @@ function App() {
       <div
         className="app-main"
         style={{
-          // 如果播放队列有歌曲，并且不是在player页面的话，则需要给底下的mini-player组件留出空间
-          bottom: playerStore.playList.length > 0 && !playerMatch && '18.667vw'
+          // 如果播放队列有歌曲，并且不是在player页面和login页面的话，则需要给底下的mini-player组件留出空间
+          // 移动端如果唤起了输入法，isHeightChange为true，则要把留出的空间给还原
+          bottom: playerStore.playList.length > 0 && !match && !isHeightChange && '18.667vw'
         }}
       >
         <Suspense fallback={null}>
@@ -53,7 +58,14 @@ function App() {
         </Suspense>
       </div>
       <Audio />
-      <MiniPlayer />
+      <div
+        style={{
+          visibility:
+            playerStore.playList.length === 0 || match || isHeightChange ? 'hidden' : 'visible'
+        }}
+      >
+        <MiniPlayer />
+      </div>
       <div className="drawer-wrapper">
         <PlayListDrawer />
         <HomeLeftDrawer />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useRouteMatch, useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import Swiper from 'react-id-swiper'
 import { useStores } from '@/stores'
@@ -14,7 +14,6 @@ const MiniPlayer = observer(function MiniPlayer() {
   const { playerStore, triggerStore } = useStores()
 
   const history = useHistory()
-  const playerMatch = useRouteMatch('/player')
   const location = useLocation()
   const isVisible = usePageVisibility()
 
@@ -43,10 +42,7 @@ const MiniPlayer = observer(function MiniPlayer() {
   }
 
   return (
-    <div
-      className="mini-player"
-      style={{ visibility: (playerStore.playList.length === 0 || playerMatch) && 'hidden' }}
-    >
+    <div className="mini-player">
       {playerStore.swiperLoadSongs.length > 0 && (
         <Swiper {...params}>
           {playerStore.swiperLoadSongs.map(song => (

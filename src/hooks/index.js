@@ -6,6 +6,7 @@ import useRafLoop from './useRafLoop'
 import useDeviceChangeReload from './useDeviceChangeReload'
 import usePageVisibility from './usePageVisibility'
 import useDebouncedCallback from './useDebouncedCallback'
+import useIsHeightChange from './useIsHeightChange'
 
 export {
   useInterval,
@@ -15,5 +16,6 @@ export {
   useRafLoop,
   useDeviceChangeReload,
   usePageVisibility,
-  useDebouncedCallback
+  useDebouncedCallback,
+  useIsHeightChange
 }
