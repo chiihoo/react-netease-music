@@ -1,4 +1,4 @@
-# 高仿网易云音乐 移动端
+# moonlite-music 音乐播放站点 移动端
 
 <p>
   <img src="https://img.shields.io/badge/react-16.13.0-brightgreen" alt="react">
