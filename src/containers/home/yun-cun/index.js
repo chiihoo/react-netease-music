@@ -20,6 +20,7 @@ const Yuncun = () => {
           <HotwallNav hotwallNavList={yuncunStore.hotwallNavList} />
         )}
       </div>
+      <p>此页面接口失效，暂不显示</p>
     </div>
   ))
 }
