@@ -5,7 +5,7 @@ import './index.scss'
 // 滚动组件，包括下拉刷新
 const Scroll = React.forwardRef((props, ref) => {
   // 与dom变换有关的需要触发重新渲染的，放在state里面
-  const [slideLength, setSlideLength] = useState(0) // 滑块实际需要滑动的距离，需要乘以适当系数
+  const [slideLength, setSlideLength] = useState(0) // 滑块实际需要滑动的距离
   const [isTouchEnd, setIsTouchEnd] = useState(true) //是否释放触摸
   const [isRefreshReady, setIsRefreshReady] = useState(false) // 是否达到刷新界限（释放触摸+拉动距离达标）
   const [isRefreshing, setIsRefreshing] = useState(false) // 是否正在刷新
@@ -51,8 +51,7 @@ const Scroll = React.forwardRef((props, ref) => {
     refreshThreshold = 70, // 下拉达到刷新的距离界限 70 (以375px屏幕为例)
     touchThreshold = 132, // 滑块最多滑动到的距离 132
     loadingStop = 70, // 下拉刷新 loading时，滑块停留的位置 70
-    tipsStop = 50, // tips停留的位置 50
-    ratio = 2.67 // 375的屏幕是2.67，1024的屏幕是0.98，这个系数是要乘以下拉的距离，来得到旋转的角度。屏幕越大，下拉距离也越大
+    tipsStop = 50 // tips停留的位置 50
   } = props
 
   // 切换路由时页面可能需要缓存，此处可以还原滚动位置
@@ -300,7 +299,7 @@ const Scroll = React.forwardRef((props, ref) => {
                     className="loading-in"
                     src={require('@/assets/svg-icons/refresh-loading-in.svg')}
                     style={{
-                      transform: `rotate(${-slideLength * ratio}deg)`,
+                      transform: `rotate(${-slideLength}deg)`,
                       opacity: isRefreshReady ? 1 : 0.5
                     }}
                     alt=""
@@ -309,7 +308,7 @@ const Scroll = React.forwardRef((props, ref) => {
                     className="loading-out"
                     src={require('@/assets/svg-icons/refresh-loading-out.svg')}
                     style={{
-                      transform: `rotate(${slideLength * ratio}deg)`,
+                      transform: `rotate(${slideLength}deg)`,
                       opacity: isRefreshReady ? 1 : 0.5
                     }}
                     alt=""
@@ -326,7 +325,7 @@ const Scroll = React.forwardRef((props, ref) => {
         <div className="refresh-tips">
           <span
             style={{
-              transform: showRefreshTips && `translateY(${tipsStop}px)`
+              transform: showRefreshTips && `translateY(${tipsStop}PX)`
             }}
           >
             {tips}
