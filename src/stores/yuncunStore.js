@@ -7,7 +7,7 @@ export class yuncunStore {
   // 云村热评墙数据
   @computed
   get hotwallNavList() {
-    return this.hotwallList.map(item => ({
+    return this.hotwallList?.map(item => ({
       id: item.id,
       content: item.content,
       avatar: item.simpleUserInfo.avatar,

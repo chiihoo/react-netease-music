@@ -16,7 +16,7 @@ const Yuncun = () => {
   return useObserver(() => (
     <div className="yun-cun">
       <div className="hotwall-nav-wrapper">
-        {yuncunStore.hotwallNavList.length > 0 && (
+        {yuncunStore.hotwallNavList?.length > 0 && (
           <HotwallNav hotwallNavList={yuncunStore.hotwallNavList} />
         )}
       </div>
