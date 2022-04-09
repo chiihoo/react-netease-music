@@ -11,7 +11,7 @@ export class searchStore {
   @observable searchDefault = {} // 搜索默认词
   @observable searchHotDetail = [] // 热搜榜
   @observable searchSuggest = {} //搜索建议
-  @observable searchHistory = [] // 搜索历史
+  @observable searchHistory = JSON.parse(localStorage.getItem('searchHistory')) ?? [] // 搜索历史
 
   @observable activeIndex = 0 // 当前tab的索引
 
@@ -39,7 +39,7 @@ export class searchStore {
     this.activeIndex = index
   }
 
-  // 每次searchKeyword变化时或者第一次进入searchResult页面都需要重置结果
+  // 每次搜索词汇变化时或者第一次进入searchResult页面都需要重置结果
   @action resetSearchResult() {
     this.complex = {} // 综合
     this.song = { songs: [], privileges: [] } // 单曲
@@ -51,14 +51,10 @@ export class searchStore {
     this.user = { userprofiles: [] } // 用户
   }
 
-  @action setSearchKeyword(keyword) {
-    this.searchKeyword = keyword
-    localStorage.setItem('searchKeyword', JSON.stringify(keyword))
-  }
-
   @action addSearchHistory(keyword) {
     if (!this.searchHistory.includes(keyword)) {
       this.searchHistory.unshift(keyword)
+      localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
     }
   }
 
