@@ -52,11 +52,11 @@ const HomeLeftDrawer = () => {
             )}
           </div>
           <ul>
-            <li>开发者：chiihooy</li>
+            <li>开发者：chiihoo</li>
             <li>
               GitHub：
               <a
-                href="https://github.com/chiihooy/react-netease-music"
+                href="https://github.com/chiihoo/react-netease-music"
                 target="_blank"
                 rel="noopener noreferrer"
               >

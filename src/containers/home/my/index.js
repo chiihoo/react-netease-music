@@ -35,7 +35,7 @@ const My = props => {
     // eslint-disable-next-line
   }, [loginStore.userId])
 
-  // 我创建的歌单是不需要写'by chiihooy'的，而我收藏的歌单需要写'by 创建者'
+  // 我创建的歌单是不需要写'by chiihoo'的，而我收藏的歌单需要写'by 创建者'
   function rowRendererGenerator(data, needBy = true) {
     return ({ key, index, style }) => {
       return (
